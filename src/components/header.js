@@ -1,8 +1,6 @@
 import React from 'react'; // eslint-disable-line no-unused-vars
 import styles from 'chip8/styles/header.scss';
 
-console.log(styles);
-
 class Header extends React.Component {
     constructor(props) {
         super(props);

@@ -10,8 +10,6 @@ const Screen = (props) => {
         );
     }
 
-    console.log(props.romData);
-
     let formattedData = [];
     for (let i in props.romData) {
         let value = props.romData[i].toString(16).padStart(2, '0');
