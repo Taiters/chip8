@@ -1,0 +1,30 @@
+.header {
+    background-color: #607D8B;
+    padding: 0.75em;
+    border-bottom: 3px solid darken(#607D8B, 10%);
+
+    &__title {
+        font-size: 1.5em;
+        line-height: 1em;
+        display: inline;
+    }
+
+    &__button {
+        background-color: darken(#607D8B, 10%);
+        height: 1.5em;
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        display: inline-block;
+        float: right;
+        margin-left: 0.5em;
+        cursor: pointer;
+
+        &:hover {
+            background-color: lighten(#607D8B, 10%);
+        }
+    }
+}
+
