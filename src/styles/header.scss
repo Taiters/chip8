@@ -26,5 +26,17 @@
             background-color: lighten(#607D8B, 10%);
         }
     }
+
+    &__status {
+        height: 1.5em;
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        display: inline-block;
+        float: right;
+        margin-left: 0.5em;
+    }
 }
 

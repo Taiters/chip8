@@ -5,6 +5,10 @@ class Header extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            loading: false
+        };
+
         this.fileSelectorRef = React.createRef();
         this.handleLoad = this.handleLoad.bind(this);
         this.handleFileSelected = this.handleFileSelected.bind(this);
@@ -18,6 +22,8 @@ class Header extends React.Component {
     handleFileSelected(e) {
         e.preventDefault();
 
+        this.setState({loading: true});
+
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = this.onFileLoaded;
@@ -30,15 +36,19 @@ class Header extends React.Component {
         const data = new Uint8Array(e.target.result);
 
         this.props.onROMLoaded(data);
+        this.setState({loading: false});
     }
 
     render() {
+        const loadControl = !this.state.loading
+            ? <button 
+                onClick={this.handleLoad} 
+                className={styles.header__button}>Load</button>
+            : <span className={styles.header__status}>Loading...</span>;
         return (
             <div className={styles.header}>
                 <h1 className={styles.header__title}>Chip8</h1>
-                <button 
-                    onClick={this.handleLoad} 
-                    className={styles.header__button}>Load</button>
+                {loadControl}
                 <input 
                     type="file" 
                     ref={this.fileSelectorRef} 
