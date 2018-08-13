@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "npx",
+        "test": "jest",
         "build": "webpack",
         "start": "node server.js",
         "start:dev": "webpack-dev-server",
