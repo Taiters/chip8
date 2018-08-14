@@ -2,6 +2,8 @@ import React from 'react'; // eslint-disable-line no-unused-vars
 import Header from 'chip8/components/header.js'; // eslint-disable-line no-unused-vars
 import Screen from 'chip8/components/screen.js'; // eslint-disable-line no-unused-vars
 
+import Cpu from 'chip8/cpu/cpu.js';
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -12,6 +14,9 @@ class App extends React.Component {
     }
 
     handleROMLoaded(romData) {
+        let cpu = new Cpu();
+        cpu.load(romData);
+        cpu.executeInstruction();
         this.setState({romData});
     }
 
