@@ -3,6 +3,17 @@ class Opcode {
         this.opcode = opcode;
     }
 
+    get(index) {
+        const shift = (3 - index) * 4;
+        const mask = 0xF << shift;
+
+        return (this.opcode & mask) >> shift;
+    }
+
+    equals(opcode) {
+        return this.opcode == opcode;
+    }
+
     get i () {
         return (this.opcode & 0xF000) >> 12;
     }
@@ -25,6 +36,10 @@ class Opcode {
 
     get n() {
         return this.opcode & 0x000F;
+    }
+
+    toString() {
+        return this.opcode.toString(16).padStart(4, '0');
     }
 }
 

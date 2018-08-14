@@ -9,15 +9,21 @@ class App extends React.Component {
         super(props);
         this.state = {};
 
+        this.cpu = new Cpu();
         this.screen = React.createRef();
         this.handleROMLoaded = this.handleROMLoaded.bind(this);
+        this.runCpu = this.runCpu.bind(this);
     }
 
     handleROMLoaded(romData) {
-        let cpu = new Cpu();
-        cpu.load(romData);
-        cpu.executeInstruction();
+        this.cpu.load(romData);
         this.setState({romData});
+        window.requestAnimationFrame(this.runCpu);
+    }
+
+    runCpu() {
+        this.cpu.executeInstruction();
+        window.requestAnimationFrame(this.runCpu);
     }
 
     componentDidMount() {

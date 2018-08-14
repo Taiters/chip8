@@ -1,5 +1,33 @@
 import Opcode from 'chip8/cpu/opcode.js'
 
+test('get i returns expected values', () => {
+    // Hex: FABC
+    const opcode = new Opcode(64188)
+
+    const results = [
+        opcode.get(0),
+        opcode.get(1),
+        opcode.get(2),
+        opcode.get(3),
+    ];
+
+    expect(results).toEqual([15, 10, 11, 12]);
+});
+
+test('equals returns true if opcodes match', () => {
+    // Hex: FABC
+    const opcode = new Opcode(64188)
+
+    expect(opcode.equals(0xFABC)).toBe(true);
+});
+
+test('equals returns true if opcodes match', () => {
+    // Hex: FABC
+    const opcode = new Opcode(64188)
+
+    expect(opcode.equals(0xFABD)).toBe(false);
+});
+
 test('returns expected i', () => {
     // Hex: FABC
     const opcode = new Opcode(64188)
