@@ -7,6 +7,7 @@ class App extends React.Component {
         super(props);
         this.state = {};
 
+        this.screen = React.createRef();
         this.handleROMLoaded = this.handleROMLoaded.bind(this);
     }
 
@@ -14,11 +15,20 @@ class App extends React.Component {
         this.setState({romData});
     }
 
+    componentDidMount() {
+        this.screen.current.updateDisplay([
+            0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0
+        ]);
+    }
+
     render() {
         return (
             <React.Fragment>
                 <Header onROMLoaded={this.handleROMLoaded}/>
-                <Screen romData={this.state.romData}/>
+                <Screen 
+                    ref={this.screen}
+                    background='#000'
+                    foreground='#f0f'/>
             </React.Fragment>
         );
     }
