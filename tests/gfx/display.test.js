@@ -17,7 +17,8 @@ beforeEach(() => {
     };
 
     canvas.getContext.mockReturnValueOnce(ctx);
-    display = new Display(canvas);
+    display = new Display('fg', 'bg');
+    display.attachCanvas(canvas);
 });
 
 afterEach(() => {
@@ -27,49 +28,68 @@ afterEach(() => {
 });
 
 describe('clear', () => {
-    test('sets fill style to expected color', () => {
-        display.clear('a color');
+    test('fills entire available space with expected color', () => {
+        display.clear();
 
-        expect(ctx.fillStyle).toBe('a color')
-    });
-
-    test('fills entire available space', () => {
-        display.clear('a color');
-
+        expect(ctx.fillStyle).toBe('bg')
         expect(ctx.fillRect).toBeCalledWith(0, 0, 640, 160);
     });
 });
 
-describe('renderCell', () => {
-    test('sets fill style to expected color', () => {
-        display.renderCell(1, 2, 'another color');
-
-        expect(ctx.fillStyle).toBe('another color')
-    });
-
+describe('fillCell', () => {
     test('fills rect in expected location', () => {
-        display.renderCell(4, 6, 'another');
+        display.fillCell(4, 6);
 
+        expect(ctx.fillStyle).toBe('fg')
         expect(ctx.fillRect).toBeCalledWith(40, 30, 10, 5);
     });
 
     test('throws exception if x < 0', () => {
-        expect(() => display.renderCell(-1, 2, 'ok'))
+        expect(() => display.fillCell(-1, 2, 'ok'))
             .toThrowError();
     });
 
     test('throws exception if x >= 64', () => {
-        expect(() => display.renderCell(64, 2, 'ok'))
+        expect(() => display.fillCell(64, 2, 'ok'))
             .toThrowError();
     });
 
     test('throws exception if y < 0', () => {
-        expect(() => display.renderCell(10, -1, 'ok'))
+        expect(() => display.fillCell(10, -1, 'ok'))
             .toThrowError();
     });
 
     test('throws exception if y >= 32', () => {
-        expect(() => display.renderCell(10, 32, 'ok'))
+        expect(() => display.fillCell(10, 32, 'ok'))
+            .toThrowError();
+    });
+});
+
+describe('clearCell', () => {
+    test('clears rect in expected location', () => {
+        display.clearCell(3, 4);
+
+        expect(ctx.fillStyle).toBe('bg')
+        expect(ctx.fillRect).toBeCalledWith(30, 20, 10, 5);
+    });
+
+    test('throws exception if x < 0', () => {
+        expect(() => display.clearCell(-1, 2, 'ok'))
+            .toThrowError();
+    });
+
+    test('throws exception if x >= 64', () => {
+        expect(() => display.clearCell(64, 2, 'ok'))
+            .toThrowError();
+    });
+
+    test('throws exception if y < 0', () => {
+        expect(() => display.clearCell(10, -1, 'ok'))
+            .toThrowError();
+    });
+
+    test('throws exception if y >= 32', () => {
+        expect(() => display.clearCell(10, 32, 'ok'))
             .toThrowError();
     });
 });

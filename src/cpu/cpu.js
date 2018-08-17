@@ -39,7 +39,6 @@ class Cpu {
 
     executeInstruction() {
         const opcode = this.getCurrentOpcode();
-        console.log(this.pc + ': ' + opcode); //eslint-disable-line no-console
         switch(opcode.get(0)) {
             case 0x0: {
                 if (opcode.equals(0x00E0)) {
@@ -205,15 +204,14 @@ class Cpu {
             }
             case 0xD: {
                 // Dxyn: Vx, Vy, n
-                //debugger; //eslint-disable-line no-debugger
                 const x1 = this.registers[opcode.vx];
                 const y1 = this.registers[opcode.vy];
                 const n = opcode.n;
                 let flipped = false;
-                for (let y2 = 0; y2 < n; y2++) {
+                for (let y2 = 0; y2 < n && y1 + y2 < 32; y2++) {
                     const line = this.mem[this.i + y2];
                     const bits = line.toString(2).padStart('0', 8);
-                    for (let x2 = 0; x2 < 8; x2++) {
+                    for (let x2 = 0; x2 < 8 && x1 + x2 < 64; x2++) {
                         const bit = bits[x2];
                         const index = ((y1 + y2) * 64) + x1 + x2;
                         if (bit === '1') {

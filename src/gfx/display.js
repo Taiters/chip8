@@ -27,10 +27,10 @@ class Display {
     }
 
     renderCell(x, y, color) {
-        // if (x < 0 | 64 <= x)
-        //     throw 'x coordinate is out of bounds';
-        // if (y < 0 | 32 <= y)
-        //    throw 'y coordinate is out of bounds';
+        if (x < 0 | 64 <= x)
+            throw 'x coordinate is out of bounds';
+        if (y < 0 | 32 <= y)
+            throw 'y coordinate is out of bounds';
 
         const x0 = x * this.cellWidth;
         const y0 = y * this.cellHeight;
