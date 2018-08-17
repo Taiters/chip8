@@ -2,7 +2,8 @@ import Opcode from 'chip8/cpu/opcode.js';
 
 
 class Cpu {
-    constructor() {
+    constructor(keyboard) {
+        this.keyboard = keyboard;
         this.mem = new Uint8Array(4096);
         this.registers = new Uint8Array(16);
     }
@@ -199,6 +200,98 @@ class Cpu {
                 // Dxyn: Vx, Vy, n
                 // TODO: More gfx
                 this.pc += 2;
+                break;
+            }
+            case 0xE: {
+                const vx = this.registers[opcode.vx];
+                const isPressed = this.keyboard.isPressed(vx);
+                switch (opcode.nn) {
+                    case 0x9E:
+                        // Ex9E: SKP Vx
+                        this.pc += isPressed ? 4 : 2;
+                        break;
+                    case 0xA1:
+                        // ExA1: SKNP Vx
+                        this.pc += isPressed ? 2 : 4;
+                        break;
+                    default:
+                        throw opcode + ' not handled';
+                }
+                break;
+            }
+            case 0xF: {
+                switch (opcode.nn) {
+                    case 0x07: {
+                        // Fx07: LD Vx, DT
+                        this.registers[opcode.vx] = this.delay & 0xFF;
+                        this.pc += 2;
+                        break;
+                    }
+                    case 0x0A: {
+                        // Fx0A: LD Vx, K
+                        this.registers[opcode.vx] = this.keyboard.waitKey();
+                        this.pc += 2;
+                        break;
+                    }
+                    case 0x15: {
+                        // Fx15: LD DT, Vx
+                        this.delay = this.registers[opcode.vx];
+                        this.pc += 2;
+                        break;
+                    }
+                    case 0x18: {
+                        // Fx18: LD ST, Vx
+                        this.sound = this.registers[opcode.vx];
+                        this.pc += 2;
+                        break;
+                    }
+                    case 0x1E: {
+                        // Fx1E: ADD I, Vx
+                        this.i += this.registers[opcode.vx];
+                        this.pc += 2;
+                        break;
+                    }
+                    case 0x29: {
+                        // Fx29: LD F, Vx
+                        this.i = this.registers[opcode.vx] * 5;
+                        this.pc += 2;
+                        break;
+                    }
+                    case 0x33: {
+                        // Fx33: LD B, Vx
+                        const vx = this.registers[opcode.vx];
+                        const hundreds = Math.floor(vx / 100);
+                        const tens = Math.floor(vx / 10) % 10;
+                        const ones = vx % 10;
+                        this.mem[this.i] = hundreds;
+                        this.mem[this.i + 1] = tens;
+                        this.mem[this.i + 2] = ones;
+                        this.pc += 2;
+                        break;
+                    }
+                    case 0x55: {
+                        // Fx55: LD I, Vx
+                        const vx = opcode.vx;
+                        for (let i = 0; i <= vx; i++) {
+                            const register = this.registers[i];
+                            this.mem[this.i + i] = register;
+                        }
+                        this.pc += 2;
+                        break;
+                    }
+                    case 0x65: {
+                        // Fx65: LD Vx, I
+                        const vx = opcode.vx;
+                        for (let i = 0; i <= vx; i++) {
+                            const value = this.mem[this.i + i];
+                            this.registers[i] = value;
+                        }
+                        this.pc += 2;
+                        break;
+                    }
+                    default:
+                        throw opcode + 'not handled';
+                }
                 break;
             }
             default: {

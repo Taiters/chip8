@@ -15,15 +15,15 @@ class Opcode {
     }
 
     get i () {
-        return (this.opcode & 0xF000) >> 12;
+        return this.get(0);
     }
 
     get vx() {
-        return (this.opcode & 0x0F00) >> 8;
+        return this.get(1);
     }
 
     get vy() {
-        return (this.opcode & 0x00F0) >> 4;
+        return this.get(2);
     }
 
     get nnn() {
@@ -35,7 +35,7 @@ class Opcode {
     }
 
     get n() {
-        return this.opcode & 0x000F;
+        return this.get(3);
     }
 
     toString() {
