@@ -1,16 +1,22 @@
 import Opcode from 'chip8/cpu/opcode.js';
+import font from 'chip8/cpu/font.js';
 
 
 class Cpu {
-    constructor(keyboard) {
+    constructor(keyboard, display) {
         this.keyboard = keyboard;
+        this.display = display;
         this.mem = new Uint8Array(4096);
         this.registers = new Uint8Array(16);
+        this.gfx = new Array(2048);
     }
 
     reset() {
         this.mem.fill(0);
+        this.mem.set(font);
         this.registers.fill(0);
+        this.gfx.fill(0);
+        this.display.clear();
         this.i = 0;
         this.delay = 0;
         this.sound = 0;
@@ -38,7 +44,8 @@ class Cpu {
             case 0x0: {
                 if (opcode.equals(0x00E0)) {
                     // 00E0: CLS
-                    // TODO: hook up gfx
+                    this.gfx.fill(0);
+                    this.display.clear();
                     this.pc += 2;
                 } else if (opcode.equals(0x00EE)) {
                     // 00EE: RET
@@ -198,7 +205,30 @@ class Cpu {
             }
             case 0xD: {
                 // Dxyn: Vx, Vy, n
-                // TODO: More gfx
+                //debugger; //eslint-disable-line no-debugger
+                const x1 = this.registers[opcode.vx];
+                const y1 = this.registers[opcode.vy];
+                const n = opcode.n;
+                let flipped = false;
+                for (let y2 = 0; y2 < n; y2++) {
+                    const line = this.mem[this.i + y2];
+                    const bits = line.toString(2).padStart('0', 8);
+                    for (let x2 = 0; x2 < 8; x2++) {
+                        const bit = bits[x2];
+                        const index = ((y1 + y2) * 64) + x1 + x2;
+                        if (bit === '1') {
+                            this.gfx[index] = 1;
+                            this.display.fillCell(x1 + x2, y1 + y2);
+                        } else {
+                            if (this.gfx[index]) {
+                                flipped = true;
+                            }
+                            this.gfx[index] = 0;
+                            this.display.clearCell(x1 + x2, y1 + y2);
+                        }
+                    }
+                }
+                this.registers[0x0F] = flipped ? 1 : 0;
                 this.pc += 2;
                 break;
             }
