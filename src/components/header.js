@@ -43,11 +43,11 @@ class Header extends React.Component {
         const loadControl = !this.state.loading
             ? <button 
                 onClick={this.handleLoad} 
-                className={styles.header__button}>Load</button>
-            : <span className={styles.header__status}>Loading...</span>;
+                className={styles.button}><i className='fa fa-folder-open'></i></button>
+            : <span className={styles.status}>Loading...</span>;
         return (
-            <div className={styles.header}>
-                <h1 className={styles.header__title}>Chip8</h1>
+            <div className={styles.container}>
+                <h1 className={styles.title}>Chip8</h1>
                 {loadControl}
                 <input 
                     type="file" 

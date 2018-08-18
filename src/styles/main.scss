@@ -1,9 +1,13 @@
+$fa-font-path: "../../node_modules/font-awesome/fonts";
+@import '~font-awesome/scss/font-awesome.scss';
 @import url('https://fonts.googleapis.com/css?family=Aldrich');
+@import 'chip8/styles/colors.scss';
 
 body {
-    background-color: #9E9E9E;
+    background-color: $background;
     margin: 0;
     font-family: 'Aldrich', sans-serif;
+    color: $text;
 }
 
 

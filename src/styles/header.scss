@@ -1,42 +1,39 @@
-.header {
-    background-color: #607D8B;
-    padding: 0.75em;
-    border-bottom: 3px solid darken(#607D8B, 10%);
+@import 'chip8/styles/colors.scss';
 
-    &__title {
-        font-size: 1.5em;
-        line-height: 1em;
-        display: inline;
-    }
+:local(.container) {
+    height: 50px;
+}
 
-    &__button {
-        background-color: darken(#607D8B, 10%);
-        height: 1.5em;
-        border: none;
-        color: white;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        display: inline-block;
-        float: right;
-        margin-left: 0.5em;
-        cursor: pointer;
+:local(.title) {
+    margin-left: 5px;
+    line-height: 50px;
+    display: inline;
+}
 
-        &:hover {
-            background-color: lighten(#607D8B, 10%);
-        }
-    }
+:local(.button) {
+    background-color: darken($background, 7%);
+    height: 50px;
+    width: 100px;;
+    border: none;
+    color: $text;
+    text-align: center;
+    text-decoration: none;
+    float: right;
+    cursor: pointer;
 
-    &__status {
-        height: 1.5em;
-        border: none;
-        color: white;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        display: inline-block;
-        float: right;
-        margin-left: 0.5em;
+    &:hover {
+        background-color: darken($background, 5%);
     }
 }
 
+:local(.status) {
+    height: 1.5em;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-block;
+    float: right;
+    margin-left: 0.5em;
+}

@@ -39,6 +39,10 @@ class Cpu {
 
     executeInstruction() {
         const opcode = this.getCurrentOpcode();
+        if (this.delay > 0)
+            this.delay--;
+        if (this.sound > 0)
+            this.sound--;
         switch(opcode.get(0)) {
             case 0x0: {
                 if (opcode.equals(0x00E0)) {
