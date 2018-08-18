@@ -3,43 +3,57 @@ import Header from 'chip8/components/header.js'; // eslint-disable-line no-unuse
 import Screen from 'chip8/components/screen.js'; // eslint-disable-line no-unused-vars
 import Debugger from 'chip8/components/debugger.js'; // eslint-disable-line no-unused-vars
 
-import Cpu from 'chip8/cpu/cpu.js';
-import Keyboard from 'chip8/cpu/keyboard.js';
-import Display from 'chip8/gfx/display.js';
 import styles from 'chip8/styles/app.scss';
+
+function getCpuState(cpu) {
+    return {
+        pc: cpu.pc,
+        i: cpu.i,
+        delay: cpu.delay,
+        sound: cpu.sound,
+        registers: cpu.registers
+    };
+}
 
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
-
-        this.display = new Display('#fffeb3', '#515038');
-        this.keyboard = new Keyboard();
-        this.keyboard.attachToTarget(document);
-        this.cpu = new Cpu(this.keyboard, this.display);
-        this.handleROMLoaded = this.handleROMLoaded.bind(this);
-        this.runCpu = this.runCpu.bind(this);
+        this.state = {
+            cpu: getCpuState(this.props.cpu),
+            rom: null
+        };
+        this.handleRomLoaded = this.handleRomLoaded.bind(this);
+        this.tick = this.tick.bind(this);
     }
 
-    handleROMLoaded(romData) {
-        this.cpu.load(romData);
-        this.setState({romData});
-        window.requestAnimationFrame(this.runCpu);
+    handleRomLoaded(rom) {
+        if (this.cpuInterval != null) {
+            clearInterval(this.cpuInterval);
+        }
+
+        this.props.cpu.load(rom.data);
+        this.setState({
+            rom: rom,
+            cpu: getCpuState(this.props.cpu)
+        });
+        setInterval(this.tick, 1000/500);
     }
 
-    runCpu() {
-        this.cpu.executeInstruction();
-        window.requestAnimationFrame(this.runCpu);
+    tick() {
+        this.props.cpu.executeInstruction();
+        this.setState({cpu: getCpuState(this.props.cpu)});
     }
 
     render() {
         return (
             <React.Fragment>
-                <Header onROMLoaded={this.handleROMLoaded}/>
+                <Header onRomLoaded={this.handleRomLoaded}/>
                 <div className={styles.container}>
-                    <Debugger cpu={this.cpu}/>
+                    <Debugger
+                        rom={this.state.rom}
+                        cpu={this.state.cpu}/>
                     <Screen 
-                        display={this.display} />
+                        display={this.props.cpu.display} />
                 </div>
             </React.Fragment>
         );

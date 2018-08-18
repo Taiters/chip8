@@ -1,4 +1,4 @@
-import Opcode from 'chip8/cpu/opcode.js';
+import {opcode} from 'chip8/cpu/opcode.js';
 import font from 'chip8/cpu/font.js';
 
 
@@ -6,15 +6,15 @@ class Cpu {
     constructor(keyboard, display) {
         this.keyboard = keyboard;
         this.display = display;
-        this.mem = new Uint8Array(4096);
-        this.registers = new Uint8Array(16);
-        this.gfx = new Array(2048);
     }
 
     reset() {
+        this.mem = new Uint8Array(4096);
         this.mem.fill(0);
         this.mem.set(font);
+        this.registers = new Uint8Array(16);
         this.registers.fill(0);
+        this.gfx = new Array(2048);
         this.gfx.fill(0);
         this.display.clear();
         this.i = 0;
@@ -34,7 +34,7 @@ class Cpu {
         const b = this.mem[this.pc + 1];
         const dec = (a << 8) | b;
 
-        return new Opcode(dec);
+        return opcode(dec);
     }
 
     executeInstruction() {

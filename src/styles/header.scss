@@ -9,31 +9,3 @@
     line-height: 50px;
     display: inline;
 }
-
-:local(.button) {
-    background-color: darken($background, 7%);
-    height: 50px;
-    width: 100px;;
-    border: none;
-    color: $text;
-    text-align: center;
-    text-decoration: none;
-    float: right;
-    cursor: pointer;
-
-    &:hover {
-        background-color: darken($background, 5%);
-    }
-}
-
-:local(.status) {
-    height: 1.5em;
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    display: inline-block;
-    float: right;
-    margin-left: 0.5em;
-}

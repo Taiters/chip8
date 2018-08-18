@@ -1,3 +1,5 @@
+const opcodeCache = [];
+
 class Opcode {
     constructor(opcode) {
         this.opcode = opcode;
@@ -43,4 +45,15 @@ class Opcode {
     }
 }
 
+function opcode(opcodeValue) {
+    let opcodeResult = opcodeCache[opcodeValue];
+    if (typeof(opcodeResult) === 'undefined') {
+        opcodeResult = new Opcode(opcodeValue);
+        opcodeCache[opcodeValue] = opcodeResult;
+    }
+
+    return opcodeResult;
+}
+
 export default Opcode;
+export {Opcode, opcode};
