@@ -37,7 +37,7 @@ class Cpu {
         return opcode(dec);
     }
 
-    executeInstruction() {
+    tick() {
         const opcode = this.getCurrentOpcode();
         if (this.delay > 0)
             this.delay--;
