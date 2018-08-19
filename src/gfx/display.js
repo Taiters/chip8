@@ -14,6 +14,9 @@ class Display {
     }
 
     clear() {
+        if (typeof(this.ctx) === 'undefined')
+            return;
+
         this.ctx.fillStyle = this.bg;
         this.ctx.fillRect(0, 0, this.width, this.height);
     }

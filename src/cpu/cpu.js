@@ -6,10 +6,13 @@ class Cpu {
     constructor(keyboard, display) {
         this.keyboard = keyboard;
         this.display = display;
+
+        this.keyboard.onKeyDown(this.onKeyDown.bind(this));
     }
 
     reset() {
         this.isWaitingForKey = false;
+        this.waitingForRegister = null;
         this.mem = new Uint8Array(4096);
         this.mem.fill(0);
         this.mem.set(font);
@@ -38,10 +41,20 @@ class Cpu {
         return opcode(dec);
     }
 
-    tick() {
-        if (this.isWaitingForKey) {
+    onKeyDown(key) {
+        if (!this.isWaitingForKey)
             return;
-        }
+
+        this.registers[this.waitingForRegister] = key;
+        this.pc += 2;
+        this.waitingForRegister = null;
+        this.isWaitingForKey = false;
+    }
+
+    tick() {
+        if (this.isWaitingForKey)
+            return;
+
         const opcode = this.getCurrentOpcode();
         switch(opcode.get(0)) {
             case 0x0: {
@@ -261,12 +274,8 @@ class Cpu {
                     }
                     case 0x0A: {
                         // Fx0A: LD Vx, K
+                        this.waitingForRegister = opcode.vx;
                         this.isWaitingForKey = true;
-                        this.keyboard.waitKey((key) => {
-                            this.registers[opcode.vx] = key;
-                            this.pc += 2;
-                            this.isWaitingForKey = false;
-                        });
                         break;
                     }
                     case 0x15: {

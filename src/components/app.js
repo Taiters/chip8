@@ -1,9 +1,8 @@
 import React from 'react'; // eslint-disable-line no-unused-vars
-import Header from 'chip8/components/header.js'; // eslint-disable-line no-unused-vars
 import Screen from 'chip8/components/screen.js'; // eslint-disable-line no-unused-vars
-import Debugger from 'chip8/components/debugger.js'; // eslint-disable-line no-unused-vars
-
-import styles from 'chip8/styles/app.scss';
+import Controls from 'chip8/components/controls.js'; // eslint-disable-line no-unused-vars
+import {CpuInfo} from 'chip8/components/cpuInfo.js'; // eslint-disable-line no-unused-vars
+import {VerticalGroup, HorizontalGroup, Item} from 'chip8/components/layout.js'; // eslint-disable-line no-unused-vars
 
 function getCpuState(cpu) {
     return {
@@ -20,23 +19,34 @@ class App extends React.Component {
         super(props);
         this.state = {
             cpu: getCpuState(this.props.cpu),
+            keys: this.props.cpu.keyboard.keys,
             rom: null,
             running: false,
+            romLoaded: false,
         };
-        this.handleRomLoaded = this.handleRomLoaded.bind(this);
+        this.loadRom = this.loadRom.bind(this);
         this.run = this.run.bind(this);
         this.pause = this.pause.bind(this);
         this.stop = this.stop.bind(this);
         this.tick = this.tick.bind(this);
+        this.onKeyboardStateChange = this.onKeyboardStateChange.bind(this);
+
+        this.props.cpu.keyboard.onKeyDown(this.onKeyboardStateChange);
+        this.props.cpu.keyboard.onKeyUp(this.onKeyboardStateChange);
     }
 
-    handleRomLoaded(rom) {
+    onKeyboardStateChange() {
+        this.setState({keys: this.props.cpu.keyboard.keys});
+    }
+
+    loadRom(rom) {
         this.stopInterval();
         this.props.cpu.load(rom.data);
         this.setState({
             running: false,
             rom: rom,
             cpu: getCpuState(this.props.cpu),
+            romLoaded: true,
         });
     }
 
@@ -73,21 +83,36 @@ class App extends React.Component {
 
     render() {
         return (
-            <React.Fragment>
-                <Header onRomLoaded={this.handleRomLoaded}/>
-                <div className={styles.container}>
-                    <Debugger
-                        rom={this.state.rom}
-                        cpu={this.state.cpu}
-                        running={this.state.running}
-                        onRun={this.run}
-                        onPause={this.pause}
-                        onStop={this.stop}
-                        onStep={this.tick}/>
-                    <Screen 
-                        display={this.props.cpu.display} />
-                </div>
-            </React.Fragment>
+            <VerticalGroup>
+                <HorizontalGroup>
+                    <Item>
+                        <VerticalGroup>
+                            <Item>
+                                <Controls
+                                    running={this.state.running}
+                                    romLoaded={this.state.romLoaded}
+                                    onRun={this.run}
+                                    onStep={this.tick}
+                                    onPause={this.pause}
+                                    onStop={this.stop}
+                                    onLoad={this.loadRom} />
+                            </Item>
+                        </VerticalGroup>
+                    </Item>
+                    <Item size={2}>
+                        <VerticalGroup>
+                            <Item>
+                                <Screen display={this.props.cpu.display} />
+                            </Item>
+                            <Item>
+                                <CpuInfo 
+                                    cpu={this.state.cpu} 
+                                    keys={this.state.keys} />
+                            </Item>
+                        </VerticalGroup>
+                    </Item>
+                </HorizontalGroup>
+            </VerticalGroup>
         );
     }
 }

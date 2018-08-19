@@ -1,0 +1,15 @@
+:local(.verticalContainer) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+}
+
+:local(.horizontalContainer) {
+    display: flex;
+    flex-direction: row;
+
+    > :local(.item) {
+        width: 0;
+    }
+}

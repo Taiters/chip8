@@ -12,6 +12,7 @@ const display = new Display('#fffeb3', '#515038');
 const keyboard = new Keyboard();
 const cpu = new Cpu(keyboard, display);
 
+cpu.reset();
 keyboard.attachToTarget(document);
 
 //timer(60, () => console.log('once a second')).start(); //eslint-disable-line no-console

@@ -19,38 +19,51 @@ const keyMap = [
 
 class Keyboard {
     constructor() {
-        this.keys = {};
+        this.keyDownListeners = [];
+        this.keyUpListeners = [];
+        this.keys = [];
         for (let i = 0; i < keyMap.length; i++) {
-            this.keys[keyMap[i]] = false;
+            this.keys[i] = false;
         }
     }
 
     attachToTarget(target) {
         this.target = target;
         target.addEventListener('keydown', (e) => {
-            e.preventDefault();
             const key = e.key.toLowerCase();
-            this.keys[keyMap[key]] = true;
+            const index = keyMap.indexOf(key);
+            if (index == -1)
+                return;
+
+            e.preventDefault();
+            this.keys[index] = true;
+            this.callListeners(this.keyDownListeners);
         });
 
         target.addEventListener('keyup', (e) => {
-            e.preventDefault(); const key = e.key.toLowerCase();
-            this.keys[keyMap[key]] = true;
+            const key = e.key.toLowerCase();
+            const index = keyMap.indexOf(key);
+            if (index == -1)
+                return;
+
+            e.preventDefault();
+            this.keys[index] = false;
+            this.callListeners(this.keyUpListeners);
         });
     }
 
-    waitKey(callback) {
-        for (let i = 0; i < this.keys.length; i++) {
-            if (this.keys[i]) {
-                callback(i);
-            }
+    callListeners(listeners) {
+        for(let listener of listeners) {
+            listener(this.keys);
         }
+    }
 
-        this.target.addEventListener('keydown', (e) => {
-            e.preventDefault();
-            const key = e.key.toLowerCase();
-            callback(keyMap[key]);
-        }, {once: true});
+    onKeyDown(listener) {
+        this.keyDownListeners.push(listener);
+    }
+
+    onKeyUp(listener) {
+        this.keyUpListeners.push(listener);
     }
 
     isPressed(keyIndex) {

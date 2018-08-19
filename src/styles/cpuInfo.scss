@@ -1,0 +1,33 @@
+@import 'chip8/styles/colors.scss';
+
+:local(.valueContainer) {
+    text-align: center;
+    background-color: darken($background, 7%);
+    padding: 2px;
+}
+
+:local(.valueName) {
+    font-size: 0.75em;
+    height: 20px;
+    line-height: 20px;
+}
+
+:local(.valueValue) {
+    color: darken($background, 7%);
+    background-color: $text;
+    height: 20px;
+    line-height: 20px;
+}
+
+:local(.key) {
+    text-align: center;
+    background-color: darken($background, 7%);
+    color: $background;
+    padding: 2px;
+    height: 30px;
+    line-height: 30px;
+}
+
+:local(.keyPressed) {
+    color: $text;
+}
