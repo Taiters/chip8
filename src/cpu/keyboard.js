@@ -1,20 +1,20 @@
 const keyMap = [
-    '0',
     '1',
     '2',
     '3',
     '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    'a',
-    'b',
-    'c',
-    'd',
+    'q',
+    'w',
     'e',
+    'r',
+    'a',
+    's',
+    'd',
     'f',
+    'z',
+    'x',
+    'c',
+    'v',
 ];
 
 function callListeners(listeners, key) {
@@ -67,8 +67,7 @@ class Keyboard {
     }
 
     isPressed(keyIndex) {
-        const key = keyMap[keyIndex];
-        const value = this.keys[key];
+        const value = this.keys[keyIndex];
         if (value === 'undefined') {
             throw 'Invalid key';
         }

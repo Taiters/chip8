@@ -85,6 +85,9 @@ const CpuInfo = (props) => {
                 <Item>
                     <ValueDisplay name='ST' value={props.cpu.delay}/>
                 </Item>
+                <Item>
+                    <ValueDisplay name='Instr' value={'0x'+props.cpu.opcode.toString()}/>
+                </Item>
             </HorizontalGroup>
             <Item>
                 <Registers registers={props.cpu.registers} />

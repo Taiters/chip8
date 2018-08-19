@@ -6,11 +6,12 @@ import {VerticalGroup, HorizontalGroup, Item} from 'chip8/components/layout.js';
 
 function getCpuState(cpu) {
     return {
+        opcode: cpu.getCurrentOpcode(),
         pc: cpu.pc,
         i: cpu.i,
         delay: cpu.delay,
         sound: cpu.sound,
-        registers: cpu.registers
+        registers: cpu.registers,
     };
 }
 

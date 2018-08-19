@@ -8,6 +8,9 @@ class Cpu {
         this.display = display;
 
         this.keyboard.onKeyDown(this.onKeyDown.bind(this));
+        this.decrementTimers = this.decrementTimers.bind(this);
+
+        setInterval(this.decrementTimers, 1000/60);
     }
 
     reset() {
@@ -26,6 +29,14 @@ class Cpu {
         this.sound = 0;
         this.pc = 0x200;
         this.stack = [];
+    }
+
+    decrementTimers() {
+        if (this.delay > 0)
+            this.delay--;
+
+        if (this.sound > 0)
+            this.sound--;
     }
 
     load(romData) {
@@ -65,7 +76,7 @@ class Cpu {
                     this.pc += 2;
                 } else if (opcode.equals(0x00EE)) {
                     // 00EE: RET
-                    this.pc = this.stack.pop();
+                    this.pc = this.stack.pop() + 2;
                 } else {
                     throw opcode + ' not handled';
                 }
@@ -221,29 +232,40 @@ class Cpu {
             }
             case 0xD: {
                 // Dxyn: Vx, Vy, n
-                const x1 = this.registers[opcode.vx];
-                const y1 = this.registers[opcode.vy];
-                const n = opcode.n;
-                let flipped = false;
-                for (let y2 = 0; y2 < n && y1 + y2 < 32; y2++) {
-                    const line = this.mem[this.i + y2];
-                    const bits = line.toString(2).padStart('0', 8);
-                    for (let x2 = 0; x2 < 8 && x1 + x2 < 64; x2++) {
-                        const bit = parseInt(bits[x2]);
-                        const index = ((y1 + y2) * 64) + x1 + x2;
-                        const result = this.gfx[index] ^ bit;
-                        if (this.gfx[index] == 1 && result == 0)
-                            flipped = true;
+                const x = this.registers[opcode.vx];
+                const y = this.registers[opcode.vy];
+                const bytes = opcode.n;
+                let flip = false;
 
-                        this.gfx[index] = result;
-                        if(result == 1) {
-                            this.display.fillCell(x1 + x2, y1 + y2);
-                        } else {
-                            this.display.clearCell(x1 + x2, y1 + y2);
-                        }
+                for (let i = 0; i < bytes; i++) {
+                    const yPos = y + i;
+                    if (yPos >= 32) 
+                        break;
+
+                    const line = this.mem[this.i + i];
+                    const bits = line.toString(2)
+                        .padStart(8, '0')
+                        .split('')
+                        .map((v) => parseInt(v));
+
+                    for (let j = 0; j < bits.length; j++) {
+                        const xPos = x + j;
+                        if (xPos >= 64)
+                            break;
+
+                        const index = (yPos * 64) + xPos;
+                        const newValue = this.gfx[index] ^ bits[j];
+                        if (this.gfx[index] == 1 && newValue == 0)
+                            flip = true;
+
+                        this.gfx[index] = newValue;
+                        if(newValue == 1)
+                            this.display.fillCell(xPos, yPos);
+                        else
+                            this.display.clearCell(xPos, yPos);
                     }
                 }
-                this.registers[0x0F] = flipped ? 1 : 0;
+                this.registers[0xF] = flip ? 1 : 0;
                 this.pc += 2;
                 break;
             }
