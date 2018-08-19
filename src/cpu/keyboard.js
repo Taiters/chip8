@@ -26,13 +26,31 @@ class Keyboard {
     }
 
     attachToTarget(target) {
+        this.target = target;
         target.addEventListener('keydown', (e) => {
-            this.keys[keyMap[e.key]] = true;
+            e.preventDefault();
+            const key = e.key.toLowerCase();
+            this.keys[keyMap[key]] = true;
         });
 
         target.addEventListener('keyup', (e) => {
-            this.keys[keyMap[e.key]] = true;
+            e.preventDefault(); const key = e.key.toLowerCase();
+            this.keys[keyMap[key]] = true;
         });
+    }
+
+    waitKey(callback) {
+        for (let i = 0; i < this.keys.length; i++) {
+            if (this.keys[i]) {
+                callback(i);
+            }
+        }
+
+        this.target.addEventListener('keydown', (e) => {
+            e.preventDefault();
+            const key = e.key.toLowerCase();
+            callback(keyMap[key]);
+        }, {once: true});
     }
 
     isPressed(keyIndex) {

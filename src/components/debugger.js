@@ -44,7 +44,7 @@ class Debugger extends React.Component {
             (this.props.running ? styles.disabled : '');
 
         const stopButtonClass = styles.button + ' ' + 
-            (this.props.running ? '' : styles.disabled);
+            (cpu.pc == 0x200 ? styles.disabled : '');
 
         return (
             <div className={styles.container}>

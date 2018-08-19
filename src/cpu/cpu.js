@@ -9,6 +9,7 @@ class Cpu {
     }
 
     reset() {
+        this.isWaitingForKey = false;
         this.mem = new Uint8Array(4096);
         this.mem.fill(0);
         this.mem.set(font);
@@ -38,11 +39,10 @@ class Cpu {
     }
 
     tick() {
+        if (this.isWaitingForKey) {
+            return;
+        }
         const opcode = this.getCurrentOpcode();
-        if (this.delay > 0)
-            this.delay--;
-        if (this.sound > 0)
-            this.sound--;
         switch(opcode.get(0)) {
             case 0x0: {
                 if (opcode.equals(0x00E0)) {
@@ -261,8 +261,12 @@ class Cpu {
                     }
                     case 0x0A: {
                         // Fx0A: LD Vx, K
-                        this.registers[opcode.vx] = this.keyboard.waitKey();
-                        this.pc += 2;
+                        this.isWaitingForKey = true;
+                        this.keyboard.waitKey((key) => {
+                            this.registers[opcode.vx] = key;
+                            this.pc += 2;
+                            this.isWaitingForKey = false;
+                        });
                         break;
                     }
                     case 0x15: {
