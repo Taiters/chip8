@@ -17,6 +17,12 @@ const keyMap = [
     'f',
 ];
 
+function callListeners(listeners, key) {
+    for(let listener of listeners) {
+        listener(key);
+    }
+}
+
 class Keyboard {
     constructor() {
         this.keyDownListeners = [];
@@ -37,7 +43,7 @@ class Keyboard {
 
             e.preventDefault();
             this.keys[index] = true;
-            this.callListeners(this.keyDownListeners);
+            callListeners(this.keyDownListeners, index);
         });
 
         target.addEventListener('keyup', (e) => {
@@ -48,14 +54,8 @@ class Keyboard {
 
             e.preventDefault();
             this.keys[index] = false;
-            this.callListeners(this.keyUpListeners);
+            callListeners(this.keyUpListeners, index);
         });
-    }
-
-    callListeners(listeners) {
-        for(let listener of listeners) {
-            listener(this.keys);
-        }
     }
 
     onKeyDown(listener) {

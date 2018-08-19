@@ -229,16 +229,16 @@ class Cpu {
                     const line = this.mem[this.i + y2];
                     const bits = line.toString(2).padStart('0', 8);
                     for (let x2 = 0; x2 < 8 && x1 + x2 < 64; x2++) {
-                        const bit = bits[x2];
+                        const bit = parseInt(bits[x2]);
                         const index = ((y1 + y2) * 64) + x1 + x2;
-                        if (bit === '1') {
-                            this.gfx[index] = 1;
+                        const result = this.gfx[index] ^ bit;
+                        if (this.gfx[index] == 1 && result == 0)
+                            flipped = true;
+
+                        this.gfx[index] = result;
+                        if(result == 1) {
                             this.display.fillCell(x1 + x2, y1 + y2);
                         } else {
-                            if (this.gfx[index]) {
-                                flipped = true;
-                            }
-                            this.gfx[index] = 0;
                             this.display.clearCell(x1 + x2, y1 + y2);
                         }
                     }
