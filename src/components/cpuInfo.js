@@ -1,5 +1,5 @@
 import React from 'react'; // eslint-disable-line no-unused-vars
-import {HorizontalGroup, VerticalGroup, Item} from 'chip8/components/layout.js'; // eslint-disable-line no-unused-vars
+import {Row, Column} from 'chip8/components/layout.js'; // eslint-disable-line no-unused-vars
 import {classNames} from 'chip8/utils/component.js';
 import styles from 'chip8/styles/cpuInfo.scss';
 
@@ -21,20 +21,18 @@ const Registers = (props) => {
     for (let i = 0; i < 16; i++) {
         const name = 'V'+i.toString(16).toUpperCase();
         registers.push(
-            <Item key={i}>
-                <ValueDisplay name={name} value={props.registers[i]} />
-            </Item>
+            <ValueDisplay key={i} name={name} value={props.registers[i]} />
         );
     }
     return (
-        <VerticalGroup>
-            <HorizontalGroup>
+        <Column>
+            <Row>
                 {registers.slice(0, 8)}
-            </HorizontalGroup>
-            <HorizontalGroup>
+            </Row>
+            <Row>
                 {registers.slice(8, 16)}
-            </HorizontalGroup>
-        </VerticalGroup>
+            </Row>
+        </Column>
     );
 };
 
@@ -55,47 +53,31 @@ const Keyboard = (props) => {
     for (let i = 0; i < 16; i++) {
         const name = i.toString(16).toUpperCase();
         keys.push(
-            <Item key={i}>
-                <Key name={name} pressed={props.keys[i]} />
-            </Item>
+            <Key key={i} name={name} pressed={props.keys[i]} />
         );
     }
     return (
-        <VerticalGroup>
-            <HorizontalGroup>
+        <Column>
+            <Row>
                 {keys}
-            </HorizontalGroup>
-        </VerticalGroup>
+            </Row>
+        </Column>
     );
 };
 
 const CpuInfo = (props) => {
     return (
-        <VerticalGroup>
-            <HorizontalGroup>
-                <Item>
-                    <ValueDisplay name='PC' value={props.cpu.pc}/>
-                </Item>
-                <Item>
-                    <ValueDisplay name='I' value={props.cpu.i}/>
-                </Item>
-                <Item>
-                    <ValueDisplay name='DT' value={props.cpu.delay}/>
-                </Item>
-                <Item>
-                    <ValueDisplay name='ST' value={props.cpu.delay}/>
-                </Item>
-                <Item>
-                    <ValueDisplay name='Instr' value={'0x'+props.cpu.opcode.toString()}/>
-                </Item>
-            </HorizontalGroup>
-            <Item>
-                <Registers registers={props.cpu.registers} />
-            </Item>
-            <Item>
-                <Keyboard keys={props.keys} />
-            </Item>
-        </VerticalGroup>
+        <Column>
+            <Row>
+                <ValueDisplay name='PC' value={props.cpu.pc}/>
+                <ValueDisplay name='I' value={props.cpu.i}/>
+                <ValueDisplay name='DT' value={props.cpu.delay}/>
+                <ValueDisplay name='ST' value={props.cpu.delay}/>
+                <ValueDisplay name='Instr' value={'0x'+props.cpu.opcode.toString()}/>
+            </Row>
+            <Registers registers={props.cpu.registers} />
+            <Keyboard keys={props.keys} />
+        </Column>
     );
 };
 

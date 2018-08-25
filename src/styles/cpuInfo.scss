@@ -4,6 +4,7 @@
     text-align: center;
     background-color: darken($background, 7%);
     padding: 2px;
+    width: 100%;
 }
 
 :local(.valueName) {
@@ -26,6 +27,7 @@
     padding: 2px;
     height: 30px;
     line-height: 30px;
+    width: 100%;
 }
 
 :local(.keyPressed) {

@@ -1,50 +1,49 @@
 import React from 'react'; // eslint-disable-line no-unused-vars
 import styles from 'chip8/styles/layout.scss';
 
-class Group extends React.Component {
+class Container extends React.Component {
     constructor(props) {
         super(props);
         this.containerStyle = null;
     }
 
+    getStyles() {
+        const styles = {};
+
+        if (typeof(this.props.width) !== 'undefined') {
+            styles.width = this.props.width;
+        }
+
+        if (typeof(this.props.grow) !== 'undefined') {
+            styles.flexGrow = this.props.grow;
+        }
+
+        return styles;
+    }
+
     render() {
         return (
-            <div className={this.containerStyle}>
+            <div 
+                style={this.getStyles()}
+                className={this.containerStyle} >
                 {this.props.children}
             </div>
         );
     }
 }
 
-class VerticalGroup extends Group {
+class Column extends Container {
     constructor(props) {
         super(props);
         this.containerStyle = styles.verticalContainer;
     }
 }
 
-class HorizontalGroup extends Group {
+class Row extends Container {
     constructor(props) {
         super(props);
         this.containerStyle = styles.horizontalContainer;
     }
 }
 
-const Item = (props) => {
-    const grow = typeof(props.size) !== 'undefined' 
-        ? props.size 
-        : 1;
-    const style = {flexGrow: grow};
-
-    return (
-        <div className={styles.item} style={style}>
-            {props.children}
-        </div>
-    );
-};
-
-export {
-    VerticalGroup,
-    HorizontalGroup,
-    Item,
-};
+export {Container, Column, Row};

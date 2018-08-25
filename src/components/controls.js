@@ -1,5 +1,5 @@
 import React from 'react'; // eslint-disable-line no-unused-vars
-import {HorizontalGroup, Item} from 'chip8/components/layout.js'; // eslint-disable-line no-unused-vars
+import {Row} from 'chip8/components/layout.js'; // eslint-disable-line no-unused-vars
 import Button from 'chip8/components/button.js'; // eslint-disable-line no-unused-vars
 import Loader from 'chip8/components/loader.js'; // eslint-disable-line no-unused-vars
 
@@ -18,26 +18,18 @@ const Controls = (props) => {
             icon='play' />;
 
     return (
-        <HorizontalGroup>
-            <Item>
-                {playPauseButton}
-            </Item>
-            <Item>
-                <Button 
-                    onClick={props.onStep}
-                    disabled={stepDisabled} 
-                    icon='step-forward' />
-            </Item>
-            <Item>
-                <Button 
-                    onClick={props.onStop}
-                    disabled={stopDisabled}
-                    icon='stop' />
-            </Item>
-            <Item>
-                <Loader onLoad={props.onLoad}/>
-            </Item>
-        </HorizontalGroup>   
+        <Row>
+            {playPauseButton}
+            <Button 
+                onClick={props.onStep}
+                disabled={stepDisabled} 
+                icon='step-forward' />
+            <Button 
+                onClick={props.onStop}
+                disabled={stopDisabled}
+                icon='stop' />
+            <Loader onLoad={props.onLoad}/>
+        </Row>   
     );
 };
 

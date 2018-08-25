@@ -2,7 +2,7 @@ import React from 'react'; // eslint-disable-line no-unused-vars
 import Screen from 'chip8/components/screen.js'; // eslint-disable-line no-unused-vars
 import Controls from 'chip8/components/controls.js'; // eslint-disable-line no-unused-vars
 import {CpuInfo} from 'chip8/components/cpuInfo.js'; // eslint-disable-line no-unused-vars
-import {VerticalGroup, HorizontalGroup, Item} from 'chip8/components/layout.js'; // eslint-disable-line no-unused-vars
+import {Row, Column} from 'chip8/components/layout.js'; // eslint-disable-line no-unused-vars
 
 function getCpuState(cpu) {
     return {
@@ -84,36 +84,24 @@ class App extends React.Component {
 
     render() {
         return (
-            <VerticalGroup>
-                <HorizontalGroup>
-                    <Item>
-                        <VerticalGroup>
-                            <Item>
-                                <Controls
-                                    running={this.state.running}
-                                    romLoaded={this.state.romLoaded}
-                                    onRun={this.run}
-                                    onStep={this.tick}
-                                    onPause={this.pause}
-                                    onStop={this.stop}
-                                    onLoad={this.loadRom} />
-                            </Item>
-                        </VerticalGroup>
-                    </Item>
-                    <Item size={2}>
-                        <VerticalGroup>
-                            <Item>
-                                <Screen display={this.props.cpu.display} />
-                            </Item>
-                            <Item>
-                                <CpuInfo 
-                                    cpu={this.state.cpu} 
-                                    keys={this.state.keys} />
-                            </Item>
-                        </VerticalGroup>
-                    </Item>
-                </HorizontalGroup>
-            </VerticalGroup>
+            <Row>
+                <Column width="33%">
+                    <Controls
+                        running={this.state.running}
+                        romLoaded={this.state.romLoaded}
+                        onRun={this.run}
+                        onStep={this.tick}
+                        onPause={this.pause}
+                        onStop={this.stop}
+                        onLoad={this.loadRom} />
+                </Column>
+                <Column width="67%">
+                    <Screen display={this.props.cpu.display} />
+                    <CpuInfo 
+                        cpu={this.state.cpu} 
+                        keys={this.state.keys} />
+                </Column>
+            </Row> 
         );
     }
 }
