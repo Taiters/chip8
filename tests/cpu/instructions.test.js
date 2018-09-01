@@ -9,11 +9,11 @@ test('Unexpected opcode throws', () => {
 
 describe('execute', () => {
     describe('0x00E0: cls', () => {
-        test('clears the gfx, sets draw flag and increments pc', () => {
+        test('clears the gfx, sets clear flag and increments pc', () => {
             const expectedGfx = new Array(64 * 32);
             const state = {
                 gfx: new Array(64 * 32),
-                drawFlag: false,
+                clearFlag: false,
                 pc: 0x200,
             };
 
@@ -23,7 +23,7 @@ describe('execute', () => {
             const result = execute(state, opcode(0x00E0));
 
             expect(result.gfx).toEqual(expectedGfx);
-            expect(result.drawFlag).toBe(true);
+            expect(result.clearFlag).toBe(true);
             expect(result.pc).toEqual(0x202);
         });
     });

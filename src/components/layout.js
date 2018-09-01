@@ -14,6 +14,10 @@ class Container extends React.Component {
             styles.width = this.props.width;
         }
 
+        if (typeof(this.props.height) !== 'undefined') {
+            styles.height = this.props.height;
+        }
+
         if (typeof(this.props.grow) !== 'undefined') {
             styles.flexGrow = this.props.grow;
         }

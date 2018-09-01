@@ -17,7 +17,7 @@ const instruction = (value, mask, operation, strTemplate) => {
         check: (opcode) => opcode.equals(value, mask),
         toString: (opcode) => instructionToString(opcode, template),
         execute: operation,
-    }
+    };
 };
 
 const instructions = [
@@ -102,4 +102,4 @@ const getInstruction = (opcode) => {
 const execute = (state, opcode) => getInstruction(opcode).execute(state, opcode);
 const toString = (opcode) => getInstruction(opcode).toString(opcode);
 
-export {execute, toString};
+export {getInstruction, execute, toString};

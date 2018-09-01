@@ -8,7 +8,8 @@ module.exports = {
     mode: 'development',
     resolve: {
         alias: {
-            chip8: path.resolve(__dirname, 'src')
+            chip8: path.resolve(__dirname, 'src'),
+            handlebars: 'handlebars/dist/handlebars.min.js',
         }
     },
     module: {

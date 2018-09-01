@@ -1,12 +1,12 @@
 export default {
     cls: (state) => {
         state.gfx.fill(0);
-        state.drawFlag = true;
+        state.clearFlag = true;
         state.pc += 2;
         return state;
     },
 
-    ret: (state, opcode) => {
+    ret: (state) => {
         if (state.stack.length == 0)
             throw 'Stack is empty';
 
@@ -169,7 +169,7 @@ export default {
         for (let i = 0; i < bytes; i++) {
             const yPos = y + i;
             if (yPos >= 32) 
-                return state;
+                break;
 
             const line = state.mem[state.i + i];
             const bits = line.toString(2)
@@ -180,7 +180,7 @@ export default {
             for (let j = 0; j < bits.length; j++) {
                 const xPos = x + j;
                 if (xPos >= 64)
-                    return state;
+                    break;
 
                 const index = (yPos * 64) + xPos;
                 const newValue = state.gfx[index] ^ bits[j];
@@ -188,25 +188,24 @@ export default {
                     flip = true;
 
                 state.gfx[index] = newValue;
-                if(newValue == 1)
-                    state.drawFlag = true;
             }
         }
         state.registers[0xF] = flip ? 1 : 0;
+        state.drawFlag = true;
         state.pc += 2;
         return state;
     },
 
     skipIfKeyPressed: (state, opcode) => {
         const vx = state.registers[opcode.vx];
-        const isPressed = state.keyboard.isPressed(vx);
+        const isPressed = state.keyboard[vx];
         state.pc += isPressed ? 4 : 2;
         return state;
     },
 
     skipIfKeyNotPressed: (state, opcode) => {
         const vx = state.registers[opcode.vx];
-        const isPressed = state.keyboard.isPressed(vx);
+        const isPressed = state.keyboard[vx];
         state.pc += isPressed ? 2 : 4;
         return state;
     },
@@ -218,8 +217,8 @@ export default {
     },
 
     loadKeyIntoVx: (state, opcode) => {
-        state.waitingForRegister = opcode.vx;
-        state.isWaitingForKey = true;
+        state.waitKeyRegister = opcode.vx;
+        state.waitKeyFlag = true;
         return state;
     },
 
