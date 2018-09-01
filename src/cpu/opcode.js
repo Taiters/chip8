@@ -12,8 +12,11 @@ class Opcode {
         return (this.opcode & mask) >> shift;
     }
 
-    equals(opcode) {
-        return this.opcode == opcode;
+    equals(opcode, mask = null) {
+        if (mask == null)
+            return this.opcode == opcode;
+
+        return (this.opcode & mask) == opcode;
     }
 
     get i () {
@@ -45,7 +48,14 @@ class Opcode {
     }
 }
 
-function opcode(opcodeValue) {
+function opcode(byte1, byte2 = null) {
+    let opcodeValue = null;
+    if (byte2 == null) {
+        opcodeValue = byte1; 
+    } else {
+        opcodeValue = (byte1 << 8) | byte2;
+    }
+
     let opcodeResult = opcodeCache[opcodeValue];
     if (typeof(opcodeResult) === 'undefined') {
         opcodeResult = new Opcode(opcodeValue);

@@ -1,7 +1,6 @@
 import {opcode} from 'chip8/cpu/opcode.js';
 import font from 'chip8/cpu/font.js';
 
-
 class Cpu {
     constructor(keyboard, display) {
         this.keyboard = keyboard;
