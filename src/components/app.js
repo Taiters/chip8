@@ -2,7 +2,9 @@ import React from 'react'; // eslint-disable-line no-unused-vars
 import Screen from 'chip8/components/screen.js'; // eslint-disable-line no-unused-vars
 import Controls from 'chip8/components/controls.js'; // eslint-disable-line no-unused-vars
 import {CpuInfo} from 'chip8/components/cpuInfo.js'; // eslint-disable-line no-unused-vars
+import Disassembler from 'chip8/components/disassembler.js'; // eslint-disable-line no-unused-vars
 import {Row, Column} from 'chip8/components/layout.js'; // eslint-disable-line no-unused-vars
+import disassemble from 'chip8/disassembler.js';
 
 const mapCpuState = (cpu) => ({
     opcode: cpu.getCurrentOpcode(),
@@ -37,6 +39,7 @@ class App extends React.Component {
             rom: rom,
             cpu: mapCpuState(this.props.cpu),
             romLoaded: true,
+            disassembledRom: disassemble(rom.data),
         });
     }
 
@@ -83,6 +86,9 @@ class App extends React.Component {
                         onPause={this.pause}
                         onStop={this.stop}
                         onLoad={this.loadRom} />
+                    <Disassembler 
+                        disassembledRom={this.state.disassembledRom}
+                        currentAddress={this.state.cpu.pc} />
                 </Column>
                 <Column width="67%" height="100%">
                     <Screen display={this.props.cpu.display} />

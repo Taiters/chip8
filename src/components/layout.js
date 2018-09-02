@@ -22,6 +22,10 @@ class Container extends React.Component {
             styles.flexGrow = this.props.grow;
         }
 
+        if (this.props.scroll) {
+            styles.overflowY = 'auto';
+        }
+
         return styles;
     }
 

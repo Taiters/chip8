@@ -1,9 +1,11 @@
 :local(.verticalContainer) {
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 
 :local(.horizontalContainer) {
+    overflow: hidden;
     display: flex;
     flex-direction: row;
 }
