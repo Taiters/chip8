@@ -2,25 +2,24 @@ import React from 'react'; // eslint-disable-line no-unused-vars
 import Screen from 'chip8/components/screen.js'; // eslint-disable-line no-unused-vars
 import Controls from 'chip8/components/controls.js'; // eslint-disable-line no-unused-vars
 import {CpuInfo} from 'chip8/components/cpuInfo.js'; // eslint-disable-line no-unused-vars
+import Disassembler from 'chip8/components/disassembler.js'; // eslint-disable-line no-unused-vars
 import {Row, Column} from 'chip8/components/layout.js'; // eslint-disable-line no-unused-vars
+import disassemble from 'chip8/disassembler.js';
 
-function getCpuState(cpu) {
-    return {
-        opcode: cpu.getCurrentOpcode(),
-        pc: cpu.pc,
-        i: cpu.i,
-        delay: cpu.delay,
-        sound: cpu.sound,
-        registers: cpu.registers,
-    };
-}
+const mapCpuState = (cpu) => ({
+    opcode: cpu.getCurrentOpcode(),
+    pc: cpu.state.pc,
+    i: cpu.state.i,
+    delay: cpu.state.delay,
+    sound: cpu.state.sound,
+    registers: cpu.state.registers,
+});
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            cpu: getCpuState(this.props.cpu),
-            keys: this.props.cpu.keyboard.keys,
+            cpu: mapCpuState(this.props.cpu),
             rom: null,
             running: false,
             romLoaded: false,
@@ -30,14 +29,6 @@ class App extends React.Component {
         this.pause = this.pause.bind(this);
         this.stop = this.stop.bind(this);
         this.tick = this.tick.bind(this);
-        this.onKeyboardStateChange = this.onKeyboardStateChange.bind(this);
-
-        this.props.cpu.keyboard.onKeyDown(this.onKeyboardStateChange);
-        this.props.cpu.keyboard.onKeyUp(this.onKeyboardStateChange);
-    }
-
-    onKeyboardStateChange() {
-        this.setState({keys: this.props.cpu.keyboard.keys});
     }
 
     loadRom(rom) {
@@ -46,8 +37,9 @@ class App extends React.Component {
         this.setState({
             running: false,
             rom: rom,
-            cpu: getCpuState(this.props.cpu),
+            cpu: mapCpuState(this.props.cpu),
             romLoaded: true,
+            disassembledRom: disassemble(rom.data),
         });
     }
 
@@ -66,7 +58,7 @@ class App extends React.Component {
         this.stopInterval();
         this.props.cpu.load(this.state.rom.data);
         this.setState({
-            cpu: getCpuState(this.props.cpu),
+            cpu: mapCpuState(this.props.cpu),
             running: false,
         });
     }
@@ -79,13 +71,13 @@ class App extends React.Component {
 
     tick() {
         this.props.cpu.tick();
-        this.setState({cpu: getCpuState(this.props.cpu)});
+        this.setState({cpu: mapCpuState(this.props.cpu)});
     }
 
     render() {
         return (
-            <Row>
-                <Column width="33%">
+            <Row height="100%">
+                <Column width="33%" height="100%">
                     <Controls
                         running={this.state.running}
                         romLoaded={this.state.romLoaded}
@@ -94,12 +86,14 @@ class App extends React.Component {
                         onPause={this.pause}
                         onStop={this.stop}
                         onLoad={this.loadRom} />
+                    <Disassembler 
+                        disassembledRom={this.state.disassembledRom}
+                        currentAddress={this.state.cpu.pc} />
                 </Column>
-                <Column width="67%">
+                <Column width="67%" height="100%">
                     <Screen display={this.props.cpu.display} />
                     <CpuInfo 
-                        cpu={this.state.cpu} 
-                        keys={this.state.keys} />
+                        cpu={this.state.cpu} />
                 </Column>
             </Row> 
         );
