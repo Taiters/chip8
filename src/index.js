@@ -12,6 +12,4 @@ const cpu = new Cpu(display);
 
 cpu.reset();
 
-//timer(60, () => console.log('once a second')).start(); //eslint-disable-line no-console
-
 ReactDOM.render(<App cpu={cpu}/>, document.getElementById('app'));

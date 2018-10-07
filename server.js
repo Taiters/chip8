@@ -1,3 +1,4 @@
+// This is the express server used to deploy this app to heroku
 const express = require('express');
 const app = express();
 const port = !!process.env.PORT ? process.env.PORT : 3000;
