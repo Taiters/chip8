@@ -58,6 +58,10 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 * **Daniel Tait** - *Initial work* - [Taiters](https://github.com/Taiters)
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
 ## Acknowledgements
 
 * [dmatlack/chip8](https://github.com/dmatlack/chip8/tree/master/roms) - *Chip8 ROMS*
