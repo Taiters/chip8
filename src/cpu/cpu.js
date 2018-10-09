@@ -2,7 +2,7 @@ import {opcode} from 'chip8/cpu/opcode.js';
 import {execute} from 'chip8/cpu/instructions';
 import keyboard from 'chip8/cpu/keyboard.js';
 import font from 'chip8/cpu/font.js';
-
+import beep from 'chip8/sound/beep.js';
 class Cpu {
     constructor(display) {
         this.display = display;
@@ -42,10 +42,12 @@ class Cpu {
         if (this.state.delay > 0)
             this.state.delay--;
 
-        if (this.state.sound > 0)
+        if (this.state.sound > 0) {          
+            beep.play();
             this.state.sound--;
+        }
     }
-
+    
     load(romData) {
         this.reset();
         this.state.mem.set(romData, this.state.pc);
