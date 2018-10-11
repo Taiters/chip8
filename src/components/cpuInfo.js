@@ -44,7 +44,7 @@ const CpuInfo = (props) => {
                 <ValueDisplay name='PC' value={props.cpu.pc}/>
                 <ValueDisplay name='I' value={props.cpu.i}/>
                 <ValueDisplay name='DT' value={props.cpu.delay}/>
-                <ValueDisplay name='ST' value={props.cpu.delay}/>
+                <ValueDisplay name='ST' value={props.cpu.sound}/>
                 <ValueDisplay name='Instr' value={instr}/>
             </Row>
             <Registers registers={props.cpu.registers} />
