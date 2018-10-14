@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  app:
+    image: chip8-web
+    build: .
+    environment:
+      NODEENV: /usr/src/app
+    ports:
+      - "9000:9000"
+    volumes:
+      - ".:/usr/src/app"
+      - "/usr/src/app/node_modules"
+    command:
+      - npm
+      - run
+      - start:dev
