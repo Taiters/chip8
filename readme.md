@@ -2,20 +2,40 @@
 
 # Chip8 Web
 
-A Chip8 emulator which runs in the browser along with tools to view the registers and instructions etc. The live version can be viewed on Heroku [here](http://chip8-web.herokuapp.com).
+A Chip8 emulator which runs in the browser along with tools to view the
+registers and instructions etc. The live version can be viewed on Heroku
+[here](http://chip8-web.herokuapp.com).
 
 ![Screenshot](docs/screenshot.png)
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on
+either your local machine or docker for development and testing
+purposes. See deployment for notes on how to deploy the project on a
+live system.
 
-### Prerequisites
+### Docker
 
-To avoid any versioning issues, we recommend using [nvm](https://github.com/creationix/nvm) to manage the version of node and npm used in the project.
+The project use has a `docker-compose.yml` at the root which can get you
+up and running quickly. The following will start the `webpack-dev-server`
+on port 9000. This will mount your current working directory so changes
+are reloaded.
+
+```
+docker-compose up
+```
+
+### Local Machine
+
+#### Prerequisites
+
+To avoid any versioning issues, we recommend using
+[nvm](https://github.com/creationix/nvm) to manage the version of node
+and npm used in the project.
 
 
-### Installing
+#### Installing
 
 Install the dependencies
 
@@ -29,11 +49,19 @@ Run the dev server
 npm run start:dev
 ```
 
-Once the project has finished building, you should be able to view it here: [http://localhost:9000](http://localhost:9000)
+Once the project has finished building, you should be able to view it
+here: [http://localhost:9000](http://localhost:9000)
 
 ## Running the tests
 
-This project uses [jest](https://jestjs.io/) for tests. They can be run with
+This project uses [jest](https://jestjs.io/) for tests. They can be run
+with:
+
+```
+docker-compose run --rm app npm test
+```
+
+or for local machine:
 
 ```
 npm test
@@ -41,7 +69,9 @@ npm test
 
 ## Deployment
 
-This project is deployed to Heroky via TravisCI. Any commits to master will be deployed automatically to [http://chip8-web.herokuapp.com](http://chip8-web.herokuapp.com/)
+This project is deployed to Heroky via TravisCI. Any commits to master
+will be deployed automatically to
+[http://chip8-web.herokuapp.com](http://chip8-web.herokuapp.com/)
 
 ## Built With
 
@@ -51,7 +81,8 @@ This project is deployed to Heroky via TravisCI. Any commits to master will be d
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code
+of conduct, and the process for submitting pull requests to us.
 
 
 ## Authors
@@ -60,7 +91,8 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the
+[LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgements
 
