@@ -11,7 +11,9 @@ const Disassembler = (props) => {
     const lines = props.disassembledRom.map((line, i) => {
         return (
             <p key={i}>
-                0x{line.address.toString(16)}: {line.instruction}
+                <span class={styles.address}>
+                    0x{line.address.toString(16)}:
+                </span> {line.instruction}
             </p>
         );
     });
