@@ -1,0 +1,187 @@
+{
+    "sections": [
+        {
+            "type": "section",
+            "label": "main",
+            "instructions": [
+                {
+                    "type": "instruction",
+                    "operation": "call",
+                    "args": [
+                        {
+                            "type": "label",
+                            "value": "waitForKey"
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "jp",
+                    "args": [
+                        {
+                            "type": "label",
+                            "value": "main"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "section",
+            "label": "waitForKey",
+            "instructions": [
+                {
+                    "type": "instruction",
+                    "operation": "ld",
+                    "args": [
+                        {
+                            "type": "register",
+                            "value": 0
+                        },
+                        {
+                            "type": "number",
+                            "value": 5
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "skp",
+                    "args": [
+                        {
+                            "type": "register",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "jp",
+                    "args": [
+                        {
+                            "type": "label",
+                            "value": "waitForKey"
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "ret",
+                    "args": []
+                }
+            ]
+        },
+        {
+            "type": "section",
+            "label": "play",
+            "instructions": [
+                {
+                    "type": "instruction",
+                    "operation": "ld",
+                    "args": [
+                        {
+                            "type": "register",
+                            "value": 1
+                        },
+                        {
+                            "type": "number",
+                            "value": 255
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "ld",
+                    "args": [
+                        {
+                            "type": "identifier",
+                            "value": "dt"
+                        },
+                        {
+                            "type": "register",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "ld",
+                    "args": [
+                        {
+                            "type": "identifier",
+                            "value": "st"
+                        },
+                        {
+                            "type": "register",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "call",
+                    "args": [
+                        {
+                            "type": "label",
+                            "value": "wait"
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "ret",
+                    "args": []
+                }
+            ]
+        },
+        {
+            "type": "section",
+            "label": "wait",
+            "instructions": [
+                {
+                    "type": "instruction",
+                    "operation": "ld",
+                    "args": [
+                        {
+                            "type": "register",
+                            "value": 1
+                        },
+                        {
+                            "type": "identifier",
+                            "value": "dt"
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "se",
+                    "args": [
+                        {
+                            "type": "register",
+                            "value": 1
+                        },
+                        {
+                            "type": "number",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "jp",
+                    "args": [
+                        {
+                            "type": "label",
+                            "value": "wait"
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "ret",
+                    "args": []
+                }
+            ]
+        }
+    ]
+}

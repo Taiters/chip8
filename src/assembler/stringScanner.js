@@ -21,6 +21,10 @@ class StringScanner {
         };
     }
 
+    eol() {
+        return this.next('\n') || this.eof();
+    }
+
     eof() {
         return this.str.length == 0;
     }

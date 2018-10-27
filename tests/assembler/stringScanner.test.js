@@ -56,6 +56,38 @@ describe('getCoords', () => {
     });
 });
 
+describe('eol', () => {
+    test('returns true at end of line', () => {
+        const str = "Hello world\n" +
+                    "some:more";
+
+        const scanner = new StringScanner(str);
+        scanner.scan('Hello world');
+
+        expect(scanner.eol()).toBe(true);
+    });
+
+    test('returns false if not at end of line', () => {
+        const str = "Hello world\n" +
+                    "some:more";
+
+        const scanner = new StringScanner(str);
+        scanner.scan('Hello world\nsome');
+
+        expect(scanner.eol()).toBe(false);
+    });
+
+    test('returns true if at end of string', () => {
+        const str = "Hello world\n" +
+                    "some:more";
+
+        const scanner = new StringScanner(str);
+        scanner.scan(/.*/s);
+
+        expect(scanner.eol()).toBe(true);
+    });
+});
+
 describe('eof', () => {
     test('returns true at end of string', () => {
         const str = "Hello world\n" +
