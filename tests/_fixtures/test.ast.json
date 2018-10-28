@@ -16,6 +16,16 @@
                 },
                 {
                     "type": "instruction",
+                    "operation": "call",
+                    "args": [
+                        {
+                            "type": "label",
+                            "value": "play"
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
                     "operation": "jp",
                     "args": [
                         {

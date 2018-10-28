@@ -2,6 +2,7 @@
 
 :main
     call waitForKey
+    call play
     jp main
 
 :waitForKey
