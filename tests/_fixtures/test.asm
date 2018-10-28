@@ -7,7 +7,7 @@
 
 :waitForKey
     // Wait for key 5 to be pressed
-    ld v0, 0x05
+    ld v0, 5
     skp v0
     jp waitForKey
     ret

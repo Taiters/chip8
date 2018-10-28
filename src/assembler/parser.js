@@ -37,6 +37,14 @@ const parseArg = (scanner) => {
         };
     }
 
+    const number = scanner.scan(/\d+/);
+    if (number) {
+        return {
+            type: 'number',
+            value: parseInt(number)
+        };
+    }
+
     const identifier = scanner.scan(IDENTIFIER);
     if (identifier) {
         return {
