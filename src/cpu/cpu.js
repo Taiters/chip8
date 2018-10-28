@@ -45,6 +45,8 @@ class Cpu {
         if (this.state.sound > 0) {          
             beep.play();
             this.state.sound--;
+        } else {
+            beep.stop();
         }
     }
     

@@ -1,18 +1,33 @@
 class BeepSound {
     constructor() {
         this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        this.oscillator = null;
     }
 
-    play() {
-        var oscillator = this.audioCtx.createOscillator();
+    createOscillator() {
+        const oscillator = this.audioCtx.createOscillator();
 
         oscillator.type = 'square';
         oscillator.frequency.setValueAtTime(440, this.audioCtx.currentTime);
         oscillator.connect(this.audioCtx.destination);
 
-        oscillator.start();
-        oscillator.stop(this.audioCtx.currentTime + 0.0166667);
-        // the sound will play for 16.6667 milliseconds (the duration of a frame)
+        return oscillator;
+    }
+
+    play() {
+        if (this.oscillator != null)
+            return;
+
+        this.oscillator = this.createOscillator();
+        this.oscillator.start();
+    }
+
+    stop() {
+        if (this.oscillator == null)
+            return;
+
+        this.oscillator.stop(this.audioCtx.currentTime);
+        this.oscillator = null;
     }
 
 }
