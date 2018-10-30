@@ -46,7 +46,7 @@ const parseArg = (scanner) => {
     }
 
     const identifier = scanner.scan(IDENTIFIER);
-    if (identifier) {
+    if (identifier && !scanner.next(/\w/)) {
         return {
             type: 'identifier',
             value: identifier 
@@ -57,7 +57,7 @@ const parseArg = (scanner) => {
     if (label) {
         return {
             type: 'label',
-            value: label
+            value: identifier ? identifier + label : label
         };
     }
 
@@ -97,7 +97,18 @@ const parseInstructions = (scanner) => {
     }
 
     return instructions;
-}
+};
+
+const parseData = (scanner) => {
+    const data = [];
+    while (scanner.scan('0b')) {
+        const value = scanner.scan(/\d+/);
+        data.push(parseInt(value, 2));
+        scanner.skipToNextChar();
+    }
+
+    return data;
+};
 
 const parseLabel = (scanner) => {
     scanner.scan(':');
@@ -111,11 +122,21 @@ const parseSection = (scanner) => {
         scanner.skipToNextChar();
     }
 
-    return {
-        type: 'section',
-        label: label,
-        instructions: parseInstructions(scanner)
-    };
+    if (scanner.next(OPERATION)) {
+        return {
+            type: 'instructions',
+            label: label,
+            instructions: parseInstructions(scanner)
+        };
+    } else if (scanner.next('0b') && label != null) {
+        return {
+            type: 'data',
+            label: label,
+            data: parseData(scanner)
+        };
+    }
+
+    throw 'Unexpected section contents ' + scanner.str;
 };
 
 const parseProgram = (scanner) => {

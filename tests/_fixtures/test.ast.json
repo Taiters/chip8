@@ -1,7 +1,43 @@
 {
     "sections": [
         {
-            "type": "section",
+            "type": "instructions",
+            "label": null,
+            "instructions": [
+                {
+                    "type": "instruction",
+                    "operation": "call",
+                    "args": [
+                        {
+                            "type": "label",
+                            "value": "drawFace"
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "jp",
+                    "args": [
+                        {
+                            "type": "label",
+                            "value": "main"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "data",
+            "label": "face",
+            "data": [
+                68,
+                16,
+                130,
+                124
+            ]
+        },
+        {
+            "type": "instructions",
             "label": "main",
             "instructions": [
                 {
@@ -37,7 +73,73 @@
             ]
         },
         {
-            "type": "section",
+            "type": "instructions",
+            "label": "drawFace",
+            "instructions": [
+                {
+                    "type": "instruction",
+                    "operation": "ld",
+                    "args": [
+                        {
+                            "type": "register",
+                            "value": 2
+                        },
+                        {
+                            "type": "number",
+                            "value": 28
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "ld",
+                    "args": [
+                        {
+                            "type": "register",
+                            "value": 3
+                        },
+                        {
+                            "type": "number",
+                            "value": 14
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "ld",
+                    "args": [
+                        {
+                            "type": "identifier",
+                            "value": "i"
+                        },
+                        {
+                            "type": "label",
+                            "value": "face"
+                        }
+                    ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "draw",
+                    "args": [
+                        {
+                            "type": "register",
+                            "value": 2
+                        },
+                        {
+                            "type": "register",
+                            "value": 3
+                        },
+                        {
+                            "type": "number",
+                            "value": 4
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "instructions",
             "label": "waitForKey",
             "instructions": [
                 {
@@ -82,7 +184,7 @@
             ]
         },
         {
-            "type": "section",
+            "type": "instructions",
             "label": "play",
             "instructions": [
                 {
@@ -95,7 +197,7 @@
                         },
                         {
                             "type": "number",
-                            "value": 255
+                            "value": 30
                         }
                     ]
                 },
@@ -145,7 +247,7 @@
             ]
         },
         {
-            "type": "section",
+            "type": "instructions",
             "label": "wait",
             "instructions": [
                 {

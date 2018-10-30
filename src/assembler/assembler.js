@@ -1,10 +1,13 @@
 import getOpcode from 'chip8/assembler/instructions.js';
 
 
-const buildAddressMap = (ast) => {
+const getSectionsByType = (ast, type) => ast.sections.filter(section => section.type == type);
+
+const buildAddressMap = (instructions, data) => {
     const addrMap = {};
     var currentAddr = 0x200;
-    for (var section of ast.sections) {
+
+    for (var section of instructions) {
         if (section.label != null) {
             addrMap[section.label] = currentAddr;
         }
@@ -12,10 +15,15 @@ const buildAddressMap = (ast) => {
         currentAddr += section.instructions.length * 2;
     }
 
+    for (var section of data) {
+        addrMap[section.label] = currentAddr;
+        currentAddr += section.data.length;
+    }
+
     return addrMap;
 };
 
-const mapInstructionLabels = (instruction, addrMap) => {
+const mapInstructionLabelsToAddress = (instruction, addrMap) => {
     const args = [];
     for (var arg of instruction.args) {
         if (arg.type == 'label') {
@@ -34,21 +42,20 @@ const mapInstructionLabels = (instruction, addrMap) => {
     }
 };
 
-const normalizeAst = (ast) => {
-    const addrMap = buildAddressMap(ast);
-    const instructions = [];
+const normalizeInstructions = (instructions, addrMap) => {
+    const normalizedInstructions = [];
 
-    for (var section of ast.sections) {
+    for (var section of instructions) {
         for (var instruction of section.instructions) {
-            instructions.push(mapInstructionLabels(instruction, addrMap));
+            normalizedInstructions.push(mapInstructionLabelsToAddress(instruction, addrMap));
         }
     }
 
-    return instructions;
+    return normalizedInstructions;
 }
 
-const buildUint8Array = (opcodes) => {
-    const length = opcodes.length * 2;
+const buildUint8Array = (opcodes, data) => {
+    const length = (opcodes.length * 2) + data.length;
     const arr = new Uint8Array(length);
     var offset = 0;
     for (var opcode of opcodes) {
@@ -60,18 +67,31 @@ const buildUint8Array = (opcodes) => {
         offset += 2;
     }
 
+    for (var value of data) {
+        arr[offset] = value & 0xFF;
+        offset += 1;
+    }
+
     return arr;
 };
 
 const assemble = (ast) => {
-    const normalizedInstructions = normalizeAst(ast);
-    const opcodes = normalizedInstructions.map(getOpcode);
+    const instructions = getSectionsByType(ast, 'instructions');
+    const data = getSectionsByType(ast, 'data');
+    const addrMap = buildAddressMap(instructions, data);
+    const normalizedInstructions = normalizeInstructions(instructions, addrMap);
+    const instructionOpcodes = normalizedInstructions.map(getOpcode);
+    const flattenedData = [];
 
-    return buildUint8Array(opcodes);
+    for (var section of data) {
+        flattenedData.push(...section.data);
+    }
+
+    return buildUint8Array(instructionOpcodes, flattenedData);
 };
 
 export default {
     buildAddressMap,
-    mapInstructionLabels,
+    mapInstructionLabelsToAddress,
     assemble
 };

@@ -132,6 +132,19 @@ const assembleSkp = (args) => {
     return 0xE09E | ((args[0].value & 0xF) << 8);
 };
 
+const assembleDraw = (args) => {
+    if (args.length != 3)
+        throw 'Unexpected arg count for DRAW';
+
+    if (args[0].type != 'register' || args[1].type != 'register' || args[2].type != 'number')
+        throw 'Unexpected arg types for DRAW';
+
+    return 0xD000 |
+        ((args[0].value & 0xF) << 8) |
+        ((args[1].value & 0xF) << 4) |
+        (args[2].value & 0xF);
+}
+
 const register = (operation, func) => {
     return {
         operation: operation,
@@ -146,6 +159,7 @@ const instructions = [
     register('ld', assembleLoad),
     register('se', assembleSe),
     register('skp', assembleSkp),
+    register('draw', assembleDraw),
 ];
 
 const getOpcode = (instruction) => {

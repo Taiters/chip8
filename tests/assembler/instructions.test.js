@@ -254,3 +254,27 @@ describe('skp', () => {
         expect(result).toEqual(0xEC9E);
     });
 });
+
+describe('draw', () => {
+    test('draw vx, vy, n', () => {
+        const result = getOpcode({
+            operation: 'draw',
+            args: [
+                {
+                    type: 'register',
+                    value: 12
+                },
+                {
+                    type: 'register',
+                    value: 1
+                },
+                {
+                    type: 'number',
+                    value: 4
+                }
+            ]
+        });
+
+        expect(result).toEqual(0xDC14);
+    });
+});
