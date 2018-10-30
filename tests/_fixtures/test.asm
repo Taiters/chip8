@@ -19,6 +19,7 @@ jp main
     ld v3, 14
     ld i, face
     draw v2, v3, 4
+    ret
 
 :waitForKey
     // Wait for key 5 to be pressed

@@ -135,6 +135,11 @@
                             "value": 4
                         }
                     ]
+                },
+                {
+                    "type": "instruction",
+                    "operation": "ret",
+                    "args": []
                 }
             ]
         },
