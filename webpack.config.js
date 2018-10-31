@@ -1,5 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const version = process.env.TRAVIS_BUILD_NUMBER || 'local';
+
 
 module.exports = {
     entry: [
@@ -60,7 +62,10 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, 'src/index.html')
+            template: path.resolve(__dirname, 'src/index.html'),
+            templateParameters: {
+                version: version
+            }
         })
     ]
 };
