@@ -24,7 +24,7 @@
         "babel-loader": "^7.1.5",
         "babel-preset-env": "^1.7.0",
         "babel-preset-react": "^6.24.1",
-        "css-loader": "^1.0.0",
+        "css-loader": "^2.0.2",
         "eslint": "^5.8.0",
         "eslint-loader": "^2.1.0",
         "eslint-plugin-react": "^7.10.0",
