@@ -49,6 +49,7 @@
         "normalize.css": "^8.0.0",
         "react": "^16.4.2",
         "react-dom": "^16.4.2",
+        "redux": "^4.0.1",
         "regenerator-runtime": "^0.13.1",
         "sass-loader": "^7.1.0",
         "style-loader": "^0.23.1",

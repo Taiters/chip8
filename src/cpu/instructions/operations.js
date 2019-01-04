@@ -1,5 +1,6 @@
 export default {
     cls: (state) => {
+        state.gfx = new Array(2048);
         state.gfx.fill(0);
         state.clearFlag = true;
         state.pc += 2;
@@ -10,6 +11,7 @@ export default {
         if (state.stack.length == 0)
             throw 'Stack is empty';
 
+        state.stack = state.stack.slice(0);
         state.pc = state.stack.pop() + 2;
         return state;
     },
@@ -20,6 +22,7 @@ export default {
     },
 
     callAddress: (state, opcode) => {
+        state.stack = state.stack.slice(0);
         state.stack.push(state.pc);
         state.pc = opcode.nnn;
         return state;
@@ -45,12 +48,14 @@ export default {
     },
 
     loadByteIntoVx: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         state.registers[opcode.vx] = opcode.nn;
         state.pc += 2;
         return state;
     },
 
     addByteToVx: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         const newValue = state.registers[opcode.vx] + opcode.nn;
         state.registers[opcode.vx] = newValue & 0xFF;
         state.pc += 2;
@@ -58,12 +63,14 @@ export default {
     },
 
     loadVyIntoVx: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         state.registers[opcode.vx] = state.registers[opcode.vy];
         state.pc += 2;
         return state;
     },
 
     or: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         const vx = state.registers[opcode.vx];
         const vy = state.registers[opcode.vy];
         state.registers[opcode.vx] = (vx | vy) & 0xFF;
@@ -72,6 +79,7 @@ export default {
     },
 
     and: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         const vx = state.registers[opcode.vx];
         const vy = state.registers[opcode.vy];
         state.registers[opcode.vx] = (vx & vy) & 0xFF;
@@ -80,6 +88,7 @@ export default {
     },
 
     xor: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         const vx = state.registers[opcode.vx];
         const vy = state.registers[opcode.vy];
         state.registers[opcode.vx] = (vx ^ vy) & 0xFF;
@@ -88,6 +97,7 @@ export default {
     },
 
     addVyToVx: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         const vx = state.registers[opcode.vx];
         const vy = state.registers[opcode.vy];
         const newValue = vx + vy;
@@ -98,6 +108,7 @@ export default {
     },
 
     subVyFromVx: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         const vx = state.registers[opcode.vx];
         const vy = state.registers[opcode.vy];
         const newValue = vx - vy;
@@ -108,6 +119,7 @@ export default {
     },
 
     shr: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         const vy = state.registers[opcode.vy];
         const leastSignificantBit = vy & 0x01;
         state.registers[0x0F] = leastSignificantBit;
@@ -117,6 +129,7 @@ export default {
     },
 
     subVxFromVy: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         const vx = state.registers[opcode.vx];
         const vy = state.registers[opcode.vy];
         const newValue = vy - vx;
@@ -127,6 +140,7 @@ export default {
     },
 
     shl: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         const vy = state.registers[opcode.vy];
         const mostSignificantBit = (vy & 0x8000) >> 15;
         state.registers[0x0F] = mostSignificantBit;
@@ -155,12 +169,14 @@ export default {
     },
 
     rnd: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         state.registers[opcode.vx] = Math.floor(Math.random() * (0x100)) & opcode.nn;
         state.pc += 2;
         return state;
     },
 
     draw: (state, opcode) => {
+        state.gfx = state.gfx.slice(0);
         const x = state.registers[opcode.vx];
         const y = state.registers[opcode.vy];
         const bytes = opcode.n;
@@ -190,6 +206,7 @@ export default {
                 state.gfx[index] = newValue;
             }
         }
+        state.registers = state.registers.slice(0);
         state.registers[0xF] = flip ? 1 : 0;
         state.drawFlag = true;
         state.pc += 2;
@@ -211,6 +228,7 @@ export default {
     },
 
     loadDtIntoVx: (state, opcode) => {
+        state.registers = state.registers.slice(0);
         state.registers[opcode.vx] = state.delay & 0xFF;
         state.pc += 2;
         return state;
@@ -251,6 +269,7 @@ export default {
         const hundreds = Math.floor(vx / 100);
         const tens = Math.floor(vx / 10) % 10;
         const ones = vx % 10;
+        state.mem = state.mem.slice(0);
         state.mem[state.i] = hundreds;
         state.mem[state.i + 1] = tens;
         state.mem[state.i + 2] = ones;
@@ -260,6 +279,7 @@ export default {
 
     loadV0VxIntoI: (state, opcode) => {
         const vx = opcode.vx;
+        state.mem = state.mem.slice(0);
         for (let i = 0; i <= vx; i++) {
             const register = state.registers[i];
             state.mem[state.i + i] = register;
@@ -270,6 +290,7 @@ export default {
 
     loadIIntoV0Vx: (state, opcode) => {
         const vx = opcode.vx;
+        state.registers = state.registers.slice(0);
         for (let i = 0; i <= vx; i++) {
             const value = state.mem[state.i + i];
             state.registers[i] = value;
