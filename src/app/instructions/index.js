@@ -1,6 +1,7 @@
 import Handlebars from 'handlebars';
 import ops from './operations.js';
 
+
 const instructionToString = (opcode, template) => {
     return template({
         vx: 'V'+opcode.vx.toString(16).toUpperCase(),
