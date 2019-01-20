@@ -51,7 +51,7 @@ export default (state = {}, action) => {
         case TICK:
             return tick(state);
         case DECREMENT_COUNTERS:
-            if (state.sound == 0 && state.sound == 0)
+            if (state.delay == 0 && state.sound == 0)
                 return state;
 
             return Object.assign({}, state, {

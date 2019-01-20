@@ -22,15 +22,19 @@ const styles = () => ({
             left: 8,
         },
         height: 60,
-        backgroundColor: 'red',
+        color: 'white',
+        fontFamily: 'mono',
+        backgroundColor: '#303952',
         flexGrow: 1,
         textAlign: 'center',
+        fontWeight: 'bold',
         lineHeight: '60px',
         fontSize: '1.5em',
         cursor: 'pointer',
+        userSelect: 'none'
     },
     keyPressed: {
-        backgroundColor: 'pink'
+        backgroundColor: '#596275',
     }
 });
 
@@ -51,8 +55,10 @@ const getKeyClass = (isDown, classes) => {
 const Key = ({classes, value, isDown, onPress, onRelease}) => (
     <div className={getKeyClass(isDown, classes)}
         onMouseDown={() => onPress(value)}
+        onTouchStart={() => onPress(value)}
         onMouseUp={() => onRelease(value)}
-        onMouseLeave={() => onRelease(value)}>
+        onMouseLeave={() => onRelease(value)}
+        onTouchEnd={() => onRelease(value)}>
         {value.toString(16).toUpperCase()} 
     </div>
 );

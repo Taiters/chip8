@@ -215,14 +215,14 @@ export default {
 
     skipIfKeyPressed: (state, opcode) => {
         const vx = state.registers[opcode.vx];
-        const isPressed = state.keyboard[vx];
+        const isPressed = state.keys[vx];
         state.pc += isPressed ? 4 : 2;
         return state;
     },
 
     skipIfKeyNotPressed: (state, opcode) => {
         const vx = state.registers[opcode.vx];
-        const isPressed = state.keyboard[vx];
+        const isPressed = state.keys[vx];
         state.pc += isPressed ? 2 : 4;
         return state;
     },

@@ -11,7 +11,7 @@ const getDefaultCpuState = () => ({
     delay: 0,
     sound: 0,
     keys: Array(16).fill(0),
-    gfx: new Array(2048),
+    gfx: new Array(2048).fill(0),
     mem: new Uint8Array(4096),
     registers: new Uint8Array(16),
     stack: [],

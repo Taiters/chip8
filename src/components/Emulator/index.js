@@ -5,9 +5,10 @@ import Screen from 'chip8/components/Screen';
 import Keyboard from 'chip8/components/Keyboard';
 
 
-const styles = (theme) => ({
+const styles = () => ({
     container: {
-        backgroundColor: theme.primary,
+        backgroundColor: '#808796',
+        border: '2px solid #303952',
         width: 576,
         margin: {
             top: 32,
@@ -16,6 +17,7 @@ const styles = (theme) => ({
         },
         padding: 8,
         '@media (max-width: 576px)': {
+            border: 0,
             width: '100%',
             padding: 0,
             margin: {
