@@ -1,24 +1,44 @@
-import React from 'react'; // eslint-disable-line no-unused-vars
+import React from 'react';
 import ReactDOM from 'react-dom';
-import Cpu from 'chip8/cpu/cpu.js';
-import Display from 'chip8/gfx/display.js';
+import { Provider } from 'react-redux';
+import jss from 'jss';
+import preset from 'jss-preset-default';
+import App from 'chip8/components/App';
+import store from 'chip8/app/store.js';
+import {onKeyDown, onKeyUp} from 'chip8/app/listeners/keys.js';
+import {initialize, tick, decrementCounters} from 'chip8/app/actions/cpu.js';
+import '../pong.rom';
+import palette from 'chip8/config/palette.js';
 
-const display = new Display('#fffeb3', '#515038');
-const cpu = new Cpu(display);
+jss.setup(preset());
+jss.createStyleSheet({
+    '@global': {
+        'body, html': {
+            backgroundColor: palette.primary.darkest,
+            padding: 0,
+            margin: 0,
+            '@media (max-width: 576px)': {
+                backgroundColor: palette.primary.base,
+            }
+        },
+    }
+}).attach();
 
-cpu.reset();
+window.addEventListener('keydown', onKeyDown);
+window.addEventListener('keyup', onKeyUp);
+setInterval(() => store.dispatch(decrementCounters()), 1000/60);
 
-const urlParams = new URLSearchParams(window.location.search);
-const useMaterial = (/^true$/i).test(urlParams.get('material'));
-
-if (useMaterial) {
-    import('chip8/components/App').then(({default: App}) => { // eslint-disable-line no-unused-vars
-        ReactDOM.render(<App cpu={cpu}/>, document.getElementById('app'));
+fetch('/roms/pong.rom').then((response) => response.arrayBuffer())
+    .then((arrayBuffer) => {
+        const vi = new Uint8Array(arrayBuffer);
+        store.dispatch(initialize({
+            data: vi
+        }));
+        setInterval(() => store.dispatch(tick()), 1000/500);
     });
-} else {
-    import('normalize.css');
-    import('chip8/styles/main.scss');
-    import('chip8/components/app.js').then(({default: App}) => { // eslint-disable-line no-unused-vars
-        ReactDOM.render(<App cpu={cpu}/>, document.getElementById('app'));
-    });
-}
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('app'));

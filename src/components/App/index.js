@@ -1,17 +1,13 @@
-import React from 'react'; // eslint-disable-line no-unused-vars
-import CssBaseline from '@material-ui/core/CssBaseline'; // eslint-disable-line no-unused-vars
-import SideMenu from 'chip8/components/SideMenu'; // eslint-disable-line no-unused-vars
-
-import store from 'chip8/app';
-
-window.store = store;
+import React from 'react';
+import {ThemeProvider} from 'react-jss';
+import Emulator from 'chip8/components/Emulator';
+import theme from './theme.js';
 
 
 const App = () => (
-    <React.Fragment>
-        <CssBaseline />
-        <SideMenu />
-    </React.Fragment>
+    <ThemeProvider theme={theme}>
+        <Emulator />
+    </ThemeProvider>
 );
 
 export default App;

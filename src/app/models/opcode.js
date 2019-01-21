@@ -65,5 +65,5 @@ function opcode(byte1, byte2 = null) {
     return opcodeResult;
 }
 
-export default Opcode;
+export default opcode;
 export {Opcode, opcode};

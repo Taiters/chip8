@@ -17,6 +17,17 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /.(rom|ch8)$/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]',
+                        outputPath: 'roms/',
+                        publicPath: 'roms'
+                    }
+                }]
+            },
+            {
                 test: /.(ttf|otf|eot|svg|woff2?)(\?[a-z0-9]+)?$/,
                 use: [{
                     loader: 'file-loader',

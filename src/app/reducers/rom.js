@@ -1,4 +1,4 @@
-import {LOAD_ROM} from './actions.js';
+import {LOAD_ROM} from 'chip8/app/actions/rom.js';
 
 
 export default (state = {}, action) => {

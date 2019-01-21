@@ -1,4 +1,4 @@
-import Opcode from 'chip8/cpu/opcode.js'
+import Opcode from 'chip8/app/models/opcode.js'
 
 test('get i returns expected values', () => {
     // Hex: FABC
