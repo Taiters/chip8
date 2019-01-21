@@ -1,4 +1,4 @@
-import {opcode} from 'chip8/cpu/opcode.js';
+import {opcode} from 'chip8/app/models/opcode.js';
 import {toString} from 'chip8/cpu/instructions';
 
 const disassemble = (romData) => {

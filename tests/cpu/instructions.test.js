@@ -1,5 +1,5 @@
-import {opcode} from 'chip8/cpu/opcode.js';
-import {execute, toString} from 'chip8/cpu/instructions';
+import {opcode} from 'chip8/app/models/opcode.js';
+import {execute, toString} from 'chip8/app/instructions';
 
 test('Unexpected opcode throws', () => {
     expect(() => execute({
