@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import { pressKey, releaseKey } from 'chip8/app/actions/cpu.js';
 
-const styles = () => ({
+const styles = (theme) => ({
     keyboard: {
         width: '100%',
     },
@@ -16,6 +16,12 @@ const styles = () => ({
         },
         display: 'flex',
         flexDirection: 'row',
+        '@media (max-width: 576px)': {
+            margin: {
+                left: '-8px',
+                top: '0px'
+            }
+        }
     },
     key: {
         margin: {
@@ -24,17 +30,34 @@ const styles = () => ({
         height: 60,
         color: 'white',
         fontFamily: 'mono',
-        backgroundColor: '#303952',
+        backgroundColor: theme.palette.secondary.base,
         flexGrow: 1,
         textAlign: 'center',
         fontWeight: 'bold',
         lineHeight: '60px',
         fontSize: '1.5em',
         cursor: 'pointer',
-        userSelect: 'none'
+        userSelect: 'none',
+        borderLeft: '6px solid ' + theme.palette.secondary.lighter,
+        borderTop: '6px solid ' + theme.palette.secondary.lighter,
+        borderRight: '6px solid ' + theme.palette.secondary.darker,
+        borderBottom: '6px solid ' + theme.palette.secondary.darker,
+        boxShadow: '2px 2px 1px 1px' + theme.palette.primary.darker,
+        '@media (max-width: 576px)': {
+            borderWidth: '2px',
+            margin: 0,
+        }
     },
     keyPressed: {
-        backgroundColor: '#596275',
+        backgroundColor: theme.palette.secondary.darker,
+        borderLeft: '6px solid ' + theme.palette.secondary.darkest,
+        borderTop: '6px solid ' + theme.palette.secondary.darkest,
+        borderRight: '6px solid ' + theme.palette.secondary.base,
+        borderBottom: '6px solid ' + theme.palette.secondary.base,
+        boxShadow: 'none',
+        '@media (max-width: 576px)': {
+            borderWidth: '2px'
+        }
     }
 });
 

@@ -17,6 +17,12 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /.xml$/,
+                use: [
+                    'xml-loader'
+                ]
+            },
+            {
                 test: /.(rom|ch8)$/,
                 use: [{
                     loader: 'file-loader',

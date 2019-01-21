@@ -2,11 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import injectSheet from 'react-jss';
+import palette from 'chip8/config/palette.js';
 
-const styles = () => ({
+const styles = (theme) => ({
     screen: {
         width: '100%',
-        backgroundColor: 'black'
+        backgroundColor: theme.palette.third.base,
+        borderLeft: '4px solid ' + theme.palette.primary.darker,
+        borderTop: '4px solid ' + theme.palette.primary.darker,
+        borderRight: '4px solid ' + theme.palette.primary.lighter,
+        borderBottom: '4px solid ' + theme.palette.primary.lighter,
+        boxSizing: 'border-box',
+        '@media (max-width: 576px)': {
+            border: 'none'
+        }
     }
 });
 
@@ -25,9 +34,9 @@ class Screen extends React.Component {
     renderScreen() {
         const gfx = this.props.gfx;
 
-        this.ctx.fillStyle = '#e66767';
+        this.ctx.fillStyle = palette.secondary.lightest;
         this.ctx.fillRect(0, 0, 640, 320);
-        this.ctx.fillStyle = '#fff';
+        this.ctx.fillStyle = palette.secondary.darkest;
 
         for (let y = 0; y < 32; y++) {
             for (let x = 0; x < 64; x++) {

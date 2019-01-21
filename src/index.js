@@ -8,15 +8,19 @@ import store from 'chip8/app/store.js';
 import {onKeyDown, onKeyUp} from 'chip8/app/listeners/keys.js';
 import {initialize, tick, decrementCounters} from 'chip8/app/actions/cpu.js';
 import '../pong.rom';
+import palette from 'chip8/config/palette.js';
 
 jss.setup(preset());
 jss.createStyleSheet({
     '@global': {
-        body: {
-            backgroundColor: '#596275',
+        'body, html': {
+            backgroundColor: palette.primary.darkest,
             padding: 0,
-            margin: 0
-        }
+            margin: 0,
+            '@media (max-width: 576px)': {
+                backgroundColor: palette.primary.base,
+            }
+        },
     }
 }).attach();
 

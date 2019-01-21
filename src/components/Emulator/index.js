@@ -5,10 +5,13 @@ import Screen from 'chip8/components/Screen';
 import Keyboard from 'chip8/components/Keyboard';
 
 
-const styles = () => ({
+const styles = (theme) => ({
     container: {
-        backgroundColor: '#808796',
-        border: '2px solid #303952',
+        backgroundColor: theme.palette.primary.base,
+        borderLeft: '10px solid ' + theme.palette.primary.lighter,
+        borderTop: '10px solid ' + theme.palette.primary.lighter,
+        borderRight: '10px solid ' + theme.palette.primary.darker,
+        borderBottom: '10px solid ' + theme.palette.primary.darker,
         width: 576,
         margin: {
             top: 32,
