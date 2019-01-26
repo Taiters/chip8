@@ -6,7 +6,7 @@ A Chip8 emulator which runs in the browser along with tools to view the
 registers and instructions etc. The live version can be viewed on Heroku
 [here](http://chip8-web.herokuapp.com).
 
-![Screenshot](docs/screenshot.png)
+![Screenshot](docs/screenshot-2019-01-26.png)
 
 ## Getting Started
 
