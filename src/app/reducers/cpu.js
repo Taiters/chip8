@@ -49,9 +49,12 @@ export default (state = {}, action) => {
 
     switch (action.type) {
         case TICK:
-            return tick(state);
+            if (state.running) {
+                return tick(state);
+            }
+            return state;
         case DECREMENT_COUNTERS:
-            if (state.delay == 0 && state.sound == 0)
+            if (!state.running || (state.delay == 0 && state.sound == 0))
                 return state;
 
             return Object.assign({}, state, {
@@ -71,7 +74,7 @@ export default (state = {}, action) => {
                 running: false
             });
         case INITIALIZE:
-            return initialize(action.rom.data);
+            return initialize(action.data);
     }
 
     return state;

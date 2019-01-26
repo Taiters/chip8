@@ -45,5 +45,6 @@ const onKeyUp = (e) => {
 
 export {
     onKeyDown,
-    onKeyUp
+    onKeyUp,
+    keyMap,
 };

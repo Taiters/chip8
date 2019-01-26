@@ -1,9 +1,3 @@
-const getDefaultRomState = () => ({
-    romLoaded: false,
-    name: null,
-    data: null
-});
-
 const getDefaultCpuState = () => ({
     running: false,
     i: 0,
@@ -21,13 +15,18 @@ const getDefaultCpuState = () => ({
     waitKeyRegister: null,
 });
 
+const getDefaultRomsState = () => ({
+    list: [],
+    current: null,
+});
+
 const getDefaultState = () => ({
-    rom: getDefaultRomState(),
-    cpu: getDefaultCpuState()
+    roms: getDefaultRomsState(),
+    cpu: getDefaultCpuState(),
 });
 
 export {
-    getDefaultRomState,
+    getDefaultRomsState,
     getDefaultCpuState,
     getDefaultState,
 };

@@ -1,18 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import injectSheet from 'react-jss';
+import Selector from 'chip8/components/Selector';
 import Screen from 'chip8/components/Screen';
 import Keyboard from 'chip8/components/Keyboard';
 
 
 const styles = (theme) => ({
     container: {
-        backgroundColor: theme.palette.primary.base,
-        borderLeft: '10px solid ' + theme.palette.primary.lighter,
-        borderTop: '10px solid ' + theme.palette.primary.lighter,
-        borderRight: '10px solid ' + theme.palette.primary.darker,
-        borderBottom: '10px solid ' + theme.palette.primary.darker,
-        width: 576,
+        backgroundColor: theme.palette.secondary.darker,
+        border: '2px solid ' + theme.palette.secondary.darkest,
+        boxShadow: '0px 0px 15px 10px #00000050',
+        width: 384,
         margin: {
             top: 32,
             left: 'auto',
@@ -32,6 +31,7 @@ const styles = (theme) => ({
 
 const Emulator = ({classes}) => (
     <div className={classes.container}>
+        <Selector />
         <Screen />
         <Keyboard />
     </div>

@@ -8,13 +8,11 @@ const styles = (theme) => ({
     screen: {
         width: '100%',
         backgroundColor: theme.palette.third.base,
-        borderLeft: '4px solid ' + theme.palette.primary.darker,
-        borderTop: '4px solid ' + theme.palette.primary.darker,
-        borderRight: '4px solid ' + theme.palette.primary.lighter,
-        borderBottom: '4px solid ' + theme.palette.primary.lighter,
+        border: '2px solid ' + theme.palette.secondary.darkest,
         boxSizing: 'border-box',
+        marginBottom: '-4px',
         '@media (max-width: 576px)': {
-            border: 'none'
+            border: 'none',
         }
     }
 });

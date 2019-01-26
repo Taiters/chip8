@@ -6,7 +6,7 @@
     "scripts": {
         "test": "jest",
         "build": "webpack",
-        "start": "node server.js",
+        "start": "node server/app.js",
         "start:dev": "webpack-dev-server -d --host 0.0.0.0",
         "postinstall": "webpack -p"
     },
@@ -32,6 +32,7 @@
         "babel-eslint": "^10.0.1",
         "babel-jest": "^23.6.0",
         "babel-loader": "^8.0.4",
+        "copy-webpack-plugin": "^4.6.0",
         "css-loader": "^1.0.0",
         "eslint": "^5.8.0",
         "eslint-loader": "^2.1.0",

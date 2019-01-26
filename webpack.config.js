@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const version = process.env.TRAVIS_BUILD_NUMBER || 'local';
 
 
@@ -67,17 +68,24 @@ module.exports = {
         path: path.resolve(__dirname, 'dist')
     },
     devServer: {
-        contentBase: path.join(__dirname, 'dist'),
+        contentBase: path.resolve(__dirname, 'dist'),
         compress: true,
-        port: 9000
+        port: 9000,
+        proxy: {
+            '/api': 'http://localhost:3000'
+        },
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'src/index.html'),
             templateParameters: {
                 version: version
-            }
-        })
+            },
+        }),
+        new CopyWebpackPlugin([{
+            from: path.resolve(__dirname, 'roms'),
+            to: path.resolve(__dirname, 'dist/roms'),
+        }]),
     ]
 };
 

@@ -4,6 +4,7 @@ import injectSheet from 'react-jss';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { pressKey, releaseKey } from 'chip8/app/actions/cpu.js';
+import { keyMap } from 'chip8/app/input.js';
 
 const styles = (theme) => ({
     keyboard: {
@@ -27,36 +28,37 @@ const styles = (theme) => ({
         margin: {
             left: 8,
         },
-        height: 60,
+        position: 'relative',
+        height: 40,
         color: 'white',
-        fontFamily: 'mono',
         backgroundColor: theme.palette.secondary.base,
-        flexGrow: 1,
+        width: '25%',
         textAlign: 'center',
         fontWeight: 'bold',
-        lineHeight: '60px',
+        lineHeight: '40px',
         fontSize: '1.5em',
         cursor: 'pointer',
         userSelect: 'none',
-        borderLeft: '6px solid ' + theme.palette.secondary.lighter,
-        borderTop: '6px solid ' + theme.palette.secondary.lighter,
-        borderRight: '6px solid ' + theme.palette.secondary.darker,
-        borderBottom: '6px solid ' + theme.palette.secondary.darker,
-        boxShadow: '2px 2px 1px 1px' + theme.palette.primary.darker,
+        border: '2px solid ' + theme.palette.secondary.darker,
+        boxShadow: '0px 0px 2px 2px #00000030',
         '@media (max-width: 576px)': {
             borderWidth: '2px',
             margin: 0,
+            boxShadow: 'none',
         }
     },
     keyPressed: {
-        backgroundColor: theme.palette.secondary.darker,
-        borderLeft: '6px solid ' + theme.palette.secondary.darkest,
-        borderTop: '6px solid ' + theme.palette.secondary.darkest,
-        borderRight: '6px solid ' + theme.palette.secondary.base,
-        borderBottom: '6px solid ' + theme.palette.secondary.base,
-        boxShadow: 'none',
+        backgroundColor: theme.palette.secondary.lighter,
+    },
+    letter: {
+        position: 'absolute',
+        lineHeight: 1,
+        fontSize: '0.75em',
+        top: '0px',
+        right: '2px',
+        color: 'rgba(0, 0, 0, 0.2)',
         '@media (max-width: 576px)': {
-            borderWidth: '2px'
+            display: 'none'
         }
     }
 });
@@ -82,7 +84,8 @@ const Key = ({classes, value, isDown, onPress, onRelease}) => (
         onMouseUp={() => onRelease(value)}
         onMouseLeave={() => onRelease(value)}
         onTouchEnd={() => onRelease(value)}>
-        {value.toString(16).toUpperCase()} 
+        {value.toString(16).toUpperCase()}
+        <span className={classes.letter}>{keyMap[value].toUpperCase()}</span>
     </div>
 );
 
