@@ -1,10 +1,11 @@
-import {opcode} from 'chip8/app/models/opcode.js';
-import {execute, toString} from 'chip8/app/instructions';
+import { createOpcode } from 'chip8/app/opcode.js';
+import { execute, toString } from 'chip8/app/instructions';
+
 
 test('Unexpected opcode throws', () => {
     expect(() => execute({
         pc: 0x200
-    }, opcode(0x0123))).toThrow();
+    }, createOpcode(0x0123))).toThrow();
 });
 
 describe('execute', () => {
@@ -20,7 +21,7 @@ describe('execute', () => {
             state.gfx.fill(1);
             expectedGfx.fill(0);
 
-            const result = execute(state, opcode(0x00E0));
+            const result = execute(state, createOpcode(0x00E0));
 
             expect(result.gfx).toEqual(expectedGfx);
             expect(result.clearFlag).toBe(true);
@@ -33,7 +34,7 @@ describe('execute', () => {
             const result = execute({
                 stack: [0x205, 0x123, 0x420],
                 pc: 0x500,
-            }, opcode(0x00EE));
+            }, createOpcode(0x00EE));
 
             expect(result.pc).toEqual(0x422);
         });
@@ -42,7 +43,7 @@ describe('execute', () => {
             expect(() => execute({
                 stack: [],
                 pc: 0x500,
-            }, opcode(0x00EE))).toThrow();
+            }, createOpcode(0x00EE))).toThrow();
         });
     });
 
@@ -50,7 +51,7 @@ describe('execute', () => {
         test('sets pc to expected value', () => {
             const result = execute({
                 pc: 0x200,
-            }, opcode(0x1428));
+            }, createOpcode(0x1428));
 
             expect(result.pc).toEqual(0x428);
         });
@@ -61,7 +62,7 @@ describe('execute', () => {
             const result = execute({
                 stack: [0x420],
                 pc: 0x512,
-            }, opcode(0x2123));
+            }, createOpcode(0x2123));
 
             expect(result.pc).toEqual(0x123);
             expect(result.stack).toEqual([0x420, 0x512]);
@@ -80,7 +81,7 @@ describe('execute', () => {
                     0x12
                 ],
                 pc: 0x200,
-            }, opcode(0x3424));
+            }, createOpcode(0x3424));
 
             expect(result.pc).toEqual(0x204);
         });
@@ -96,7 +97,7 @@ describe('execute', () => {
                     0x12
                 ],
                 pc: 0x200,
-            }, opcode(0x3124));
+            }, createOpcode(0x3124));
 
             expect(result.pc).toEqual(0x202);
         });
@@ -114,7 +115,7 @@ describe('execute', () => {
                     0x12
                 ],
                 pc: 0x200,
-            }, opcode(0x4424));
+            }, createOpcode(0x4424));
 
             expect(result.pc).toEqual(0x202);
         });
@@ -130,7 +131,7 @@ describe('execute', () => {
                     0x12
                 ],
                 pc: 0x200,
-            }, opcode(0x4124));
+            }, createOpcode(0x4124));
 
             expect(result.pc).toEqual(0x204);
         });
@@ -148,7 +149,7 @@ describe('execute', () => {
                     0x12
                 ],
                 pc: 0x200,
-            }, opcode(0x5230));
+            }, createOpcode(0x5230));
 
             expect(result.pc).toEqual(0x204);
         });
@@ -164,7 +165,7 @@ describe('execute', () => {
                     0x12
                 ],
                 pc: 0x200,
-            }, opcode(0x5210));
+            }, createOpcode(0x5210));
 
             expect(result.pc).toEqual(0x202);
         });
@@ -172,7 +173,7 @@ describe('execute', () => {
 });
 
 describe('toString', () => {
-    const expectString = (value) => expect(toString(opcode(value)));
+    const expectString = (value) => expect(toString(createOpcode(value)));
 
     test('0x00E0: cls', () => expectString(0x00E0).toEqual('CLS'));
     test('0x00EE: ret', () => expectString(0x00EE).toEqual('RET'));

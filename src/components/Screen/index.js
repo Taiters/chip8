@@ -1,8 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import injectSheet from 'react-jss';
+import { connect } from 'react-redux';
+
 import palette from 'chip8/config/palette.js';
+
 
 const styles = (theme) => ({
     screen: {

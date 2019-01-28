@@ -1,7 +1,7 @@
-import {execute} from 'chip8/app/instructions';
-import opcode from 'chip8/app/models/opcode.js';
-import {getDefaultCpuState} from 'chip8/app/state.js';
 import getFont from 'chip8/app/font.js';
+import { execute } from 'chip8/app/instructions';
+import { createOpcode } from 'chip8/app/opcode.js';
+import { getDefaultCpuState } from 'chip8/app/state.js';
 import {
     PRESS_KEY,
     RELEASE_KEY,
@@ -16,7 +16,7 @@ import {
 
 const tick = (state) => {
     const copiedState = Object.assign({}, state);
-    const nextOpcode = opcode(state.mem[state.pc], state.mem[state.pc + 1]);
+    const nextOpcode = createOpcode(state.mem[state.pc], state.mem[state.pc + 1]);
     return execute(copiedState, nextOpcode);
 };
 

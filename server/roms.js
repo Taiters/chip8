@@ -28,7 +28,6 @@ function getRoms(directory, callback) {
     });
 }
 
-
 module.exports = {
     getRoms: getRoms,
 };

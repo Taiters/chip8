@@ -1,4 +1,4 @@
-import StringScanner from 'chip8/assembler/stringScanner.js';
+import StringScanner from 'chip8/app/assembler/stringScanner.js';
 
 
 describe('getCoords', () => {

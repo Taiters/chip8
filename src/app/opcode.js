@@ -1,5 +1,3 @@
-const opcodeCache = [];
-
 class Opcode {
     constructor(opcode) {
         this.opcode = opcode;
@@ -48,22 +46,34 @@ class Opcode {
     }
 }
 
-function opcode(byte1, byte2 = null) {
-    let opcodeValue = null;
-    if (byte2 == null) {
-        opcodeValue = byte1; 
-    } else {
-        opcodeValue = (byte1 << 8) | byte2;
+class OpcodeFactory {
+    constructor() {
+        this.cache = [];
     }
 
-    let opcodeResult = opcodeCache[opcodeValue];
-    if (typeof(opcodeResult) === 'undefined') {
-        opcodeResult = new Opcode(opcodeValue);
-        opcodeCache[opcodeValue] = opcodeResult;
-    }
+    create(byte1, byte2 = null) {
+        let opcodeValue = null;
+        if (byte2 == null) {
+            opcodeValue = byte1; 
+        } else {
+            opcodeValue = (byte1 << 8) | byte2;
+        }
 
-    return opcodeResult;
+        let opcodeResult = this.cache[opcodeValue];
+        if (typeof(opcodeResult) === 'undefined') {
+            opcodeResult = new Opcode(opcodeValue);
+            this.cache[opcodeValue] = opcodeResult;
+        }
+
+        return opcodeResult;
+    }
 }
 
-export default opcode;
-export {Opcode, opcode};
+const factoryInstance = new OpcodeFactory();
+const createOpcode = (byte1, byte2 = null) => factoryInstance.create(byte1, byte2);
+
+export {
+    Opcode,
+    OpcodeFactory,
+    createOpcode,
+};

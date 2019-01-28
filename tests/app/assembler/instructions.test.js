@@ -1,4 +1,5 @@
-import getOpcode from 'chip8/assembler/instructions.js';
+import getOpcode from 'chip8/app/assembler/instructions.js';
+
 
 describe('ret', () => {
     test('returns expected opcode', () => {

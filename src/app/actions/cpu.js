@@ -7,7 +7,6 @@ export const TICK = 'TICK';
 export const DECREMENT_COUNTERS = 'DECREMENT_COUNTERS';
 export const INITIALIZE = 'INITIALIZE';
 
-
 export const pressKey = (key) => ({
     type: PRESS_KEY,
     key

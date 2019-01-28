@@ -1,9 +1,8 @@
-import StringScanner from 'chip8/assembler/stringScanner.js';
+import StringScanner from 'chip8/app/assembler/stringScanner.js';
 
 
 const OPERATION = /cls|ret|jp|call|se|sne|ld|add|or|and|xor|sub|shr|subn|shl|rnd|draw|skp|sknp/i;
 const IDENTIFIER = /dt|st|i|f|b|i/i;
-
 
 const parseOperation = (scanner) => {
     const result = scanner.scan(OPERATION);

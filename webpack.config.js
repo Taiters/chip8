@@ -1,8 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const version = process.env.TRAVIS_BUILD_NUMBER || 'local';
 
+
+const version = process.env.TRAVIS_BUILD_NUMBER || 'local';
 
 module.exports = {
     entry: [

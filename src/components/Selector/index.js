@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import injectSheet from 'react-jss';
+import { connect } from 'react-redux';
+
 import { selectRom } from 'chip8/app/actions/roms.js';
 
 

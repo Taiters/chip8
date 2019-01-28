@@ -1,5 +1,5 @@
 import store from 'chip8/app/store.js';
-import {pressKey, releaseKey} from 'chip8/app/actions/cpu.js';
+import { pressKey, releaseKey } from 'chip8/app/actions/cpu.js';
 
 
 const keyMap = [

@@ -1,4 +1,4 @@
-import getOpcode from 'chip8/assembler/instructions.js';
+import getOpcode from 'chip8/app/assembler/instructions.js';
 
 
 const getSectionsByType = (ast, type) => ast.sections.filter(section => section.type == type);

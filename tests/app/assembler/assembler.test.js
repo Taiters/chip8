@@ -1,9 +1,9 @@
-import assembler from 'chip8/assembler/assembler.js';
+import assembler from 'chip8/app/assembler/assembler.js';
 
 
 describe('assemble', () => {
     test('returns expected opcodes', () => {
-        const ast = require('../_fixtures/test.ast.json');
+        const ast = require('../../_fixtures/test.ast.json');
         const result = assembler.assemble(ast);
 
         expect(result).toEqual(Uint8Array.from([

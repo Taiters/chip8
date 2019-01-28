@@ -1,10 +1,12 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import injectSheet from 'react-jss';
 import { connect } from 'react-redux';
-import _ from 'lodash';
+
 import { pressKey, releaseKey } from 'chip8/app/actions/cpu.js';
 import { keyMap } from 'chip8/app/input.js';
+
 
 const styles = (theme) => ({
     keyboard: {

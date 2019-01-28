@@ -171,5 +171,4 @@ const getOpcode = (instruction) => {
     return result.func(instruction.args);
 };
 
-
 export default getOpcode;

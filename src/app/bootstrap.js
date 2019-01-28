@@ -1,10 +1,11 @@
 import jss from 'jss';
 import preset from 'jss-preset-default';
-import { onKeyDown, onKeyUp } from 'chip8/app/input.js';
-import { initialize, tick, play, decrementCounters } from 'chip8/app/actions/cpu.js';
-import { setRoms } from 'chip8/app/actions/roms.js';
+
 import roms from 'chip8/app/clients/roms.js';
 import beep from 'chip8/sound/beep.js';
+import { setRoms } from 'chip8/app/actions/roms.js';
+import { onKeyDown, onKeyUp } from 'chip8/app/input.js';
+import { initialize, tick, play, decrementCounters } from 'chip8/app/actions/cpu.js';
 
 
 const setupStyles = () => {
