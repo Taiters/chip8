@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import injectSheet from 'react-jss';
 import { connect } from 'react-redux';
 
+import keymap from 'chip8/config/keymap.js';
 import { pressKey, releaseKey } from 'chip8/app/actions/cpu.js';
-import { keyMap } from 'chip8/app/input.js';
 
 
 const styles = (theme) => ({
@@ -87,7 +87,7 @@ const Key = ({classes, value, isDown, onPress, onRelease}) => (
         onMouseLeave={() => onRelease(value)}
         onTouchEnd={() => onRelease(value)}>
         {value.toString(16).toUpperCase()}
-        <span className={classes.letter}>{keyMap[value].toUpperCase()}</span>
+        <span className={classes.letter}>{keymap[value].toUpperCase()}</span>
     </div>
 );
 

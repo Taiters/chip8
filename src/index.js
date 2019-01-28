@@ -7,7 +7,7 @@ import store from 'chip8/app/store.js';
 import bootstrap from 'chip8/app/bootstrap.js';
 
 
-bootstrap(store);
+bootstrap(window, store);
 
 ReactDOM.render(
     <Provider store={store}>
