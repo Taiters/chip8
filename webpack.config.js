@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 
 const version = process.env.TRAVIS_BUILD_NUMBER || 'local';
@@ -82,11 +81,7 @@ module.exports = {
             templateParameters: {
                 version: version
             },
-        }),
-        new CopyWebpackPlugin([{
-            from: path.resolve(__dirname, 'roms'),
-            to: path.resolve(__dirname, 'dist/roms'),
-        }]),
+        })
     ]
 };
 
