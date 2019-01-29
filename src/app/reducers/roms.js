@@ -8,7 +8,6 @@ export default (state = {}, action) => {
                 current: action.index,
             });
         case SET_ROMS:
-            console.log(action.roms); //eslint-disable-line no-console
             return Object.assign({}, state, {
                 list: action.roms,
             });

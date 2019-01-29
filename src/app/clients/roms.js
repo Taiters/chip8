@@ -1,30 +1,20 @@
-const withBackoff = (request, retries = 0, maxRetries = 3) => new Promise((resolve, reject) => request()
-    .then(resolve)
-    .catch((err) => {
-        if (retries == maxRetries) {
-            return reject(err);
-        }
+import * as firebase from 'firebase/app';
 
-        const delayMs = Math.pow(2, retries) * 500;
-        setTimeout(() => resolve(withBackoff(request, retries + 1, maxRetries)), delayMs);
-    }));
 
-const handleError = (response) => {
-    if (!response.ok) {
-        throw new Error(response.status + ' ' + response.statusText);
-    }
+const listRoms = () => firebase.firestore()
+    .collection('roms')
+    .get()
+    .then((result) => result.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+    })));
 
-    return response;
-};
-
-const listRoms = () => withBackoff(() => fetch('/api/roms')
-    .then(handleError)
-    .then((response) => response.json()));
-
-const downloadRom = (path) => withBackoff(() => fetch(path)
-    .then(handleError)
+const downloadRom = (path) => firebase.storage()
+    .ref(path)
+    .getDownloadURL()
+    .then(fetch)
     .then((response) => response.arrayBuffer())
-    .then((dataBuffer) => new Uint8Array(dataBuffer)));
+    .then((dataBuffer) => new Uint8Array(dataBuffer));
 
 export default {
     listRoms,
