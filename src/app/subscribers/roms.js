@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 import romsClient from 'chip8/app/clients/roms.js';
 import { initialize, play } from 'chip8/app/actions/cpu.js';
 
@@ -17,7 +19,8 @@ const subscribe = (store) => {
             store.dispatch(initialize(data));
             store.dispatch(play());
         }).catch((err) => {
-            alert(err); 
+            console.error(err); // eslint-disable-line no-console
+            toast.error('Could not download ROM');
         });
     });
 };
