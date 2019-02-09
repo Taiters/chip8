@@ -8,6 +8,9 @@ import Keyboard from 'chip8/components/Keyboard';
 
 
 const styles = (theme) => ({
+    outer: {
+        flexGrow: 1
+    },
     container: {
         backgroundColor: theme.palette.secondary.darker,
         border: '2px solid ' + theme.palette.secondary.darkest,
@@ -31,10 +34,12 @@ const styles = (theme) => ({
 });
 
 const Emulator = ({classes}) => (
-    <div className={classes.container}>
-        <Selector />
-        <Screen />
-        <Keyboard />
+    <div className={classes.outer}>
+        <div className={classes.container}>
+            <Selector />
+            <Screen />
+            <Keyboard />
+        </div>
     </div>
 );
 

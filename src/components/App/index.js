@@ -8,11 +8,12 @@ import { connect } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 import Emulator from 'chip8/components/Emulator';
+import Editor from 'chip8/components/Editor';
 
 import theme from './theme.js';
 
 
-const styles = () => ({
+const spinnerStyles = () => ({
     spinnerContainer: {
         position: 'absolute',
         left: '50%',
@@ -28,7 +29,7 @@ const styles = () => ({
     }
 });
 
-const Spinner = injectSheet(styles)(({ classes }) => (
+const Spinner = injectSheet(spinnerStyles)(({ classes }) => (
     <div className={classes.spinnerContainer}>
         <div className={classes.spinner}>
             <GuardSpinner
@@ -37,11 +38,34 @@ const Spinner = injectSheet(styles)(({ classes }) => (
     </div>
 ));
 
+Spinner.propTypes = {
+    classes: PropTypes.object.isRequired
+};
+
+const mainStyles = () => ({
+    container: {
+        display: 'flex',
+        flexDirection: 'row',
+        height: '100%',
+    }
+});
+
+const MainView = injectSheet(mainStyles)(({classes}) => (
+    <div className={classes.container}>
+        <Editor />
+        <Emulator />
+    </div>
+));
+
+MainView.propTypes = {
+    classes: PropTypes.object.isRequired
+};
+
 const App = ({ romsLoaded }) => {
     let view;
 
     if (romsLoaded) {
-        view = <Emulator />;
+        view = <MainView />;
     } else {
         view = <Spinner />;
     }

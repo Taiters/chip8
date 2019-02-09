@@ -22,7 +22,11 @@ const bootstrap = (target, store) => {
                 padding: 0,
                 margin: 0,
                 fontFamily: ['VT323', 'monospace'],
+                height: '100%',
             },
+            '#app': {
+                height: '100%',
+            }
         }
     }).attach();
 
