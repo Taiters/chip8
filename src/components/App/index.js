@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 
 import Emulator from 'chip8/components/Emulator';
 import Editor from 'chip8/components/Editor';
+import features from 'chip8/config/features.js';
 
 import theme from './theme.js';
 
@@ -50,12 +51,16 @@ const mainStyles = () => ({
     }
 });
 
-const MainView = injectSheet(mainStyles)(({classes}) => (
-    <div className={classes.container}>
-        <Editor />
-        <Emulator />
-    </div>
-));
+const MainView = injectSheet(mainStyles)(({classes}) => {
+    const editor = features.showEditor ? <Editor /> : null;
+
+    return (
+        <div className={classes.container}>
+            { editor }
+            <Emulator />
+        </div>
+    );
+});
 
 MainView.propTypes = {
     classes: PropTypes.object.isRequired
