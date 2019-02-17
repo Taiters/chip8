@@ -1,7 +1,8 @@
 import _ from 'lodash';
 
 const defaultFeatures = {
-    showEditor: false
+    showEditor: false,
+    editorOpenAtStart: false,
 };
 
 const loadFeaturesWithOverrides = () => {

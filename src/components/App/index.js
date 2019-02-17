@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import PropTypes from 'prop-types';
 import injectSheet from 'react-jss';
 import { ThemeProvider } from 'react-jss';
@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 import Emulator from 'chip8/components/Emulator';
-import Editor from 'chip8/components/Editor';
 import features from 'chip8/config/features.js';
 
 import theme from './theme.js';
@@ -51,12 +50,22 @@ const mainStyles = () => ({
     }
 });
 
-const MainView = injectSheet(mainStyles)(({classes}) => {
-    const editor = features.showEditor ? <Editor /> : null;
+const renderEditor = () => {
+    if (!features.showEditor)
+        return null;
 
+    const Editor = React.lazy(() => import('chip8/components/Editor'));
+    return (
+        <Suspense fallback={null}>
+            <Editor /> 
+        </Suspense>
+    );
+};
+
+const MainView = injectSheet(mainStyles)(({classes}) => {
     return (
         <div className={classes.container}>
-            { editor }
+            { renderEditor() }
             <Emulator />
         </div>
     );

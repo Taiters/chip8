@@ -52,6 +52,8 @@
         "node-sass": "^4.9.3",
         "normalize.css": "^8.0.0",
         "react": "^16.4.2",
+        "react-ace": "^6.4.0",
+        "react-codemirror": "^1.0.0",
         "react-dom": "^16.4.2",
         "react-jss": "^8.6.1",
         "react-redux": "^6.0.0",

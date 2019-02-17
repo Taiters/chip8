@@ -1,18 +1,17 @@
 class StringScanner {
     constructor(str) {
-        this.str = str
+        this.str = str;
         this.lines = str.split(/\n/);
-        this.offset = 0
+        this.offset = 0;
     }
 
     getCoords() {
         var line = 0;
-        var col = 0;
         var currentOffset = 0;
 
         while (currentOffset + this.lines[line].length < this.offset) {
             currentOffset += this.lines[line].length + 1;
-            line++
+            line++;
         }
 
         return {
@@ -49,7 +48,7 @@ class StringScanner {
 
     skipToNextChar() {
         this.scan(/\s*/);
-        while (true) {
+        while (true) { // eslint-disable-line no-constant-condition
             if (!this.scan('//'))
                 break;
             this.scan(/.*/);

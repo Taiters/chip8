@@ -143,13 +143,13 @@ const assembleDraw = (args) => {
         ((args[0].value & 0xF) << 8) |
         ((args[1].value & 0xF) << 4) |
         (args[2].value & 0xF);
-}
+};
 
 const register = (operation, func) => {
     return {
         operation: operation,
         func: func
-    }
+    };
 };
 
 const instructions = [

@@ -1,6 +1,19 @@
 import React from 'react';
+import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 import injectSheet from 'react-jss';
+import brace from 'brace'; // eslint-disable-line no-unused-vars
+import 'brace/theme/monokai';
+import { connect } from 'react-redux';
+
+import features from 'chip8/config/features.js';
+import { setFocus } from 'chip8/app/actions/editor.js';
+import parser from 'chip8/app/assembler/parser.js';
+import assembler from 'chip8/app/assembler/assembler.js';
+
+import './editorMode.js';
+import { initialize, play } from 'chip8/app/actions/cpu.js';
+
 
 const styles = (theme) => ({
     '@keyframes open': {
@@ -73,10 +86,7 @@ const styles = (theme) => ({
         padding: '8px',
     },
     editor: {
-        padding: '8px',
         border: '2px solid ' + theme.palette.secondary.base,
-        backgroundColor: theme.palette.secondary.darkest,
-        color: 'white',
         flexGrow: 1,
     }
 });
@@ -85,11 +95,14 @@ class Editor extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false,
+            open: features.editorOpenAtStart,
             toggled: false,
+            src: '',
         };
 
         this.toggleOpen.bind(this);
+        this.handleChange.bind(this);
+        this.handleRun.bind(this);
     }
 
     toggleOpen() {
@@ -98,6 +111,18 @@ class Editor extends React.Component {
             open: !isOpen,
             toggled: true,
         });
+    }
+
+    handleChange(src) {
+        this.setState({src});
+    }
+
+    handleRun() {
+        const ast = parser.parse(this.state.src);
+        const rom = assembler.assemble(ast);
+
+        debugger; // eslint-disable-line no-debugger
+        this.props.onRun(rom);
     }
 
     render() {
@@ -121,13 +146,19 @@ class Editor extends React.Component {
             <div className={containerClass} style={containerStyle}>
                 <div className={this.props.classes.control} onClick={() => this.toggleOpen()}/>
                 <div className={this.props.classes.inner}>
-                    <div className={this.props.classes.editor}>
-                        <p>Working on it...</p>
-                        <p>Any minute now :)</p>
-                        <p>Or day</p>
-                        <br/>
-                        <p>...Next week maybe</p>
-                    </div>
+                    <button onClick={() => this.handleRun()}>Run</button>
+                    <AceEditor 
+                        theme='monokai'
+                        mode='chip8'
+                        width='auto'
+                        height='auto'
+                        fontSize='18px'
+                        value={this.state.src}
+                        className={ this.props.classes.editor }
+                        setOptions={{ printMargin: null }}
+                        onChange={(src) => this.handleChange(src)}
+                        onFocus={() => this.props.onEditorFocus()}
+                        onBlur={() => this.props.onEditorBlur()} />
                 </div>
             </div>
         );
@@ -136,6 +167,21 @@ class Editor extends React.Component {
 
 Editor.propTypes = {
     classes: PropTypes.object.isRequired,
+    onEditorFocus: PropTypes.func.isRequired,
+    onEditorBlur: PropTypes.func.isRequired,
+    onRun: PropTypes.func.isRequired,
 };
 
-export default injectSheet(styles)(Editor);
+const mapDispatchToProps = (dispatch) => ({
+    onEditorFocus: () => dispatch(setFocus(true)),
+    onEditorBlur: () => dispatch(setFocus(false)),
+    onRun: (data) => {
+        dispatch(initialize(data));
+        dispatch(play());
+    },
+});
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(injectSheet(styles)(Editor));

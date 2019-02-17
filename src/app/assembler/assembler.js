@@ -7,7 +7,7 @@ const buildAddressMap = (instructions, data) => {
     const addrMap = {};
     var currentAddr = 0x200;
 
-    for (var section of instructions) {
+    for (let section of instructions) {
         if (section.label != null) {
             addrMap[section.label] = currentAddr;
         }
@@ -15,7 +15,7 @@ const buildAddressMap = (instructions, data) => {
         currentAddr += section.instructions.length * 2;
     }
 
-    for (var section of data) {
+    for (let section of data) {
         addrMap[section.label] = currentAddr;
         currentAddr += section.data.length;
     }
@@ -39,7 +39,7 @@ const mapInstructionLabelsToAddress = (instruction, addrMap) => {
     return {
         operation: instruction.operation,
         args: args
-    }
+    };
 };
 
 const normalizeInstructions = (instructions, addrMap) => {
@@ -52,14 +52,14 @@ const normalizeInstructions = (instructions, addrMap) => {
     }
 
     return normalizedInstructions;
-}
+};
 
 const buildUint8Array = (opcodes, data) => {
     const length = (opcodes.length * 2) + data.length;
     const arr = new Uint8Array(length);
     var offset = 0;
     for (var opcode of opcodes) {
-        const b1 = (opcode & 0xFF00) >> 8
+        const b1 = (opcode & 0xFF00) >> 8;
         const b2 = opcode & 0xFF;
         arr[offset] = b1;
         arr[offset + 1] = b2;

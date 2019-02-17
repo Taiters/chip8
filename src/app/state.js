@@ -20,13 +20,19 @@ const getDefaultRomsState = () => ({
     current: null,
 });
 
+const getDefaultEditorState = () => ({
+    focused: false,
+});
+
 const getDefaultState = () => ({
     roms: getDefaultRomsState(),
     cpu: getDefaultCpuState(),
+    editor: getDefaultEditorState(),
 });
 
 export {
     getDefaultRomsState,
     getDefaultCpuState,
+    getDefaultEditorState,
     getDefaultState,
 };

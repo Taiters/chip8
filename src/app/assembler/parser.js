@@ -65,7 +65,7 @@ const parseArg = (scanner) => {
 
 const parseArgs = (scanner) => {
     const args = [];
-    while (true) {
+    while (true) { // eslint-disable-line no-constant-condition
         args.push(parseArg(scanner));
         if (!scanner.scan(/, */))
             break;
@@ -76,7 +76,7 @@ const parseArgs = (scanner) => {
 
 const parseInstruction = (scanner) => {
     const operation = parseOperation(scanner);
-    scanner.scan(/ +/)
+    scanner.scan(/ +/);
     const args = scanner.next(/\w/) ? parseArgs(scanner) : [];
 
     return {
@@ -88,7 +88,7 @@ const parseInstruction = (scanner) => {
 
 const parseInstructions = (scanner) => {
     const instructions = [];
-    while (true) {
+    while (true) { // eslint-disable-line no-constant-condition
         instructions.push(parseInstruction(scanner)); 
         scanner.skipToNextChar();
         if (!scanner.next(OPERATION))
@@ -112,7 +112,7 @@ const parseData = (scanner) => {
 const parseLabel = (scanner) => {
     scanner.scan(':');
     return scanner.scan(/\w+/);
-}
+};
 
 const parseSection = (scanner) => {
     var label = null;

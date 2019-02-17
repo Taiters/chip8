@@ -8,6 +8,10 @@ const mapKey = (key) => {
 
 const attach = (target, store) => {
     target.addEventListener('keydown', (e) => {
+        const state = store.getState();
+        if (state.editor.focused)
+            return;
+
         const mappedKey = mapKey(e.key.toLowerCase());
         if (mappedKey == -1)
             return;
@@ -17,6 +21,10 @@ const attach = (target, store) => {
     });
 
     target.addEventListener('keyup', (e) => {
+        const state = store.getState();
+        if (state.editor.focused)
+            return;
+
         const mappedKey = mapKey(e.key.toLowerCase());
         if (mappedKey == -1)
             return;
