@@ -22,12 +22,18 @@ const getDefaultRomsState = () => ({
 
 const getDefaultEditorState = () => ({
     focused: false,
+    src: '',
+});
+
+const getDefaultSidePanelState = () => ({
+    view: 'search'
 });
 
 const getDefaultState = () => ({
     roms: getDefaultRomsState(),
     cpu: getDefaultCpuState(),
     editor: getDefaultEditorState(),
+    sidePanel: getDefaultSidePanelState(),
 });
 
 export {

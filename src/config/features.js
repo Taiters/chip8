@@ -1,8 +1,9 @@
 import _ from 'lodash';
 
+
 const defaultFeatures = {
-    showEditor: false,
-    editorOpenAtStart: false,
+    showSidePanel: false,
+    sidePanelOpenAtStart: false,
 };
 
 const loadFeaturesWithOverrides = () => {

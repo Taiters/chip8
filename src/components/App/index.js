@@ -51,13 +51,13 @@ const mainStyles = () => ({
 });
 
 const renderEditor = () => {
-    if (!features.showEditor)
+    if (!features.showSidePanel)
         return null;
 
-    const Editor = React.lazy(() => import('chip8/components/Editor'));
+    const SidePanel = React.lazy(() => import('chip8/components/SidePanel'));
     return (
         <Suspense fallback={null}>
-            <Editor /> 
+            <SidePanel /> 
         </Suspense>
     );
 };

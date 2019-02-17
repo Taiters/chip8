@@ -33,10 +33,6 @@ const styles = (theme) => ({
             textOverflow: '',
             appearance: 'none',
             fontWeight: 'bold',
-
-            '& option': {
-                backgroundColor: 'green'
-            }
         },
 
         '&:before': {

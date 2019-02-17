@@ -2,6 +2,13 @@ import jss from 'jss';
 import preset from 'jss-preset-default';
 import * as firebase from 'firebase/app';
 import { toast } from 'react-toastify';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import {
+    faCaretLeft,
+    faCaretRight,
+    faSearch,
+    faEdit,
+} from '@fortawesome/free-solid-svg-icons';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
@@ -29,6 +36,11 @@ const bootstrap = (target, store) => {
             }
         }
     }).attach();
+
+    library.add(faCaretLeft);
+    library.add(faCaretRight);
+    library.add(faSearch);
+    library.add(faEdit);
 
     firebase.initializeApp(firebaseConfig);
     firebase.auth().signInAnonymously()
