@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 
 import Menu from 'chip8/components/Menu';
 import RomList from 'chip8/components/RomList';
-import Editor from 'chip8/components/Editor';
 import features from 'chip8/config/features.js';
 import { setView } from 'chip8/app/actions/sidePanel.js';
 
@@ -32,18 +31,40 @@ class SidePanel extends React.Component {
         });
     }
 
+    renderToggle() {
+        if (!features.toggleSidePanel) {
+            return null;
+        }
+
+        const icon = this.state.open ? 'caret-left' : 'caret-right';
+        return (
+            <div className={this.props.classes.control} onClick={() => this.toggleOpen()}>
+                <FontAwesomeIcon icon={icon} size='3x' />
+            </div>
+        );
+    }
+
+    renderMenu() {
+        if (!features.showMenu) {
+            return null;
+        }
+
+        return (
+            <Menu 
+                onSelect={(view) => this.props.onSelectView(view)}
+                selected={this.props.view} />
+        );
+    }
+
     renderPanelView() {
         switch (this.props.view) {
-            case 'search':
+            case 'list':
                 return <RomList />;
-            case 'edit':
-                return <Editor />;
         }
     }
 
     render() {
         const containerStyle = {};
-        const icon = this.state.open ? 'caret-left' : 'caret-right';
         let containerClass = this.props.classes.container;
         if (this.state.open) {
             containerClass += ' ' + this.props.classes.open;
@@ -61,12 +82,8 @@ class SidePanel extends React.Component {
 
         return (
             <div className={containerClass} style={containerStyle}>
-                <div className={this.props.classes.control} onClick={() => this.toggleOpen()}>
-                    <FontAwesomeIcon icon={icon} size='3x' />
-                </div>
-                <Menu 
-                    onSelect={(view) => this.props.onSelectView(view)}
-                    selected={this.props.view} />
+                { this.renderToggle() }
+                { this.renderMenu() }
                 <div className={this.props.classes.content}>
                     { this.renderPanelView() }
                 </div>

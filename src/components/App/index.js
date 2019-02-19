@@ -38,10 +38,6 @@ const Spinner = injectSheet(spinnerStyles)(({ classes }) => (
     </div>
 ));
 
-Spinner.propTypes = {
-    classes: PropTypes.object.isRequired
-};
-
 const mainStyles = () => ({
     container: {
         display: 'flex',
@@ -70,10 +66,6 @@ const MainView = injectSheet(mainStyles)(({classes}) => {
         </div>
     );
 });
-
-MainView.propTypes = {
-    classes: PropTypes.object.isRequired
-};
 
 const App = ({ romsLoaded }) => {
     let view;

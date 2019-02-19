@@ -2,13 +2,6 @@ import jss from 'jss';
 import preset from 'jss-preset-default';
 import * as firebase from 'firebase/app';
 import { toast } from 'react-toastify';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import {
-    faCaretLeft,
-    faCaretRight,
-    faSearch,
-    faEdit,
-} from '@fortawesome/free-solid-svg-icons';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
@@ -17,6 +10,7 @@ import romsClient from 'chip8/app/clients/roms.js';
 import attachInput from 'chip8/app/input.js';
 import subscribeCpu from 'chip8/app/subscribers/cpu.js';
 import subscribeRoms from 'chip8/app/subscribers/roms.js';
+import registerIcons from 'chip8/app/icons.js';
 import firebaseConfig from 'chip8/config/firebase.js';
 import { setRoms } from 'chip8/app/actions/roms.js';
 
@@ -37,11 +31,6 @@ const bootstrap = (target, store) => {
         }
     }).attach();
 
-    library.add(faCaretLeft);
-    library.add(faCaretRight);
-    library.add(faSearch);
-    library.add(faEdit);
-
     firebase.initializeApp(firebaseConfig);
     firebase.auth().signInAnonymously()
         .then(() => romsClient.listRoms())
@@ -51,6 +40,7 @@ const bootstrap = (target, store) => {
             toast.error('Could not access ROMs');
         });
 
+    registerIcons();
     attachInput(target, store);
     subscribeCpu(store);
     subscribeRoms(store);

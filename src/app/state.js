@@ -26,7 +26,7 @@ const getDefaultEditorState = () => ({
 });
 
 const getDefaultSidePanelState = () => ({
-    view: 'search'
+    view: 'list'
 });
 
 const getDefaultState = () => ({

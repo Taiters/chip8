@@ -1,7 +1,13 @@
+import features from 'chip8/config/features.js';
+
+
+const sidePanelWidth = features.showMenu ? 600 : 500;
+const sidePanelPx = (additional = 0) => (sidePanelWidth + additional) + 'px';
+
 export default (theme) => ({
     '@keyframes open': {
         from: {
-            marginLeft: '-602px',
+            marginLeft: '-' + sidePanelPx(2),
         },
         to: {
             marginLeft: '0px',
@@ -12,14 +18,14 @@ export default (theme) => ({
             marginLeft: '0px',
         },
         to: {
-            marginLeft: '-602px',
+            marginLeft: '-' + sidePanelPx(2),
         },
     },
     container: {
         backgroundColor: theme.palette.secondary.darker,
         position: 'relative',
         boxShadow: '0px 0px 15px 10px #00000050',
-        width: '600px',
+        width: sidePanelPx(),
         marginRight: '58px',
         height: '100%',
         '@media (max-width: 576px)': {
@@ -27,12 +33,13 @@ export default (theme) => ({
         },
         borderRight: '2px solid ' + theme.palette.secondary.darkest,
         display: 'flex',
+        fontFamily: ['Roboto', 'sans-serif'],
     },
     open: {
         marginLeft: '0px',
     },
     closed: {
-        marginLeft: '-602px',
+        marginLeft: '-' + sidePanelPx(2),
         marginRight: '0px',
         boxShadow: '0px 0px 15px 10px #00000000',
     },

@@ -2,8 +2,10 @@ import _ from 'lodash';
 
 
 const defaultFeatures = {
-    showSidePanel: false,
-    sidePanelOpenAtStart: false,
+    showSidePanel: true,
+    sidePanelOpenAtStart: true,
+    toggleSidePanel: false,
+    showMenu: false,
 };
 
 const loadFeaturesWithOverrides = () => {

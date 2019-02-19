@@ -51,7 +51,7 @@ class Menu extends React.Component {
         const classes = this.props.classes;
         const selectedItem = this.props.selected;
         const handleSelect = this.handleSelect;
-        const menuElements = ['search', 'edit'].map((name) => {
+        const menuElements = ['list', 'bug'].map((name) => {
             let itemClass = classes.item;
 
             if (name == selectedItem) {
