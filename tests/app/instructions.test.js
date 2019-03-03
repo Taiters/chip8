@@ -418,7 +418,7 @@ describe('execute', () => {
     });
 
     describe('0x8xy6: shr vx, vy', () => {
-        test('stores the value of vy shifted right one bit in vx and vf to the least significant bit prior to the shift', () => {
+        test('stores the value of vy shifted right one bit in vx and sets vf to the least significant bit prior to the shift', () => {
 
             let registers = Array(16).fill(0);
 
@@ -477,7 +477,7 @@ describe('execute', () => {
     });
 
     describe('0x8xye: shl vx, vy', () => {
-        test('stores the value of vy shifted left one bit in vx and vf to the most significant bit prior to the shift', () => {
+        test('stores the value of vy shifted left one bit in vx and sets vf to the most significant bit prior to the shift', () => {
 
             let registers = Array(16).fill(0);
 
