@@ -1,0 +1,6 @@
+extends: ../.eslintrc.yml
+env:
+    jest: true
+
+globals:
+   global: true

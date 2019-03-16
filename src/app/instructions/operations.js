@@ -142,7 +142,7 @@ export default {
     shl: (state, opcode) => {
         state.registers = state.registers.slice(0);
         const vy = state.registers[opcode.vy];
-        const mostSignificantBit = (vy & 0x8000) >> 15;
+        const mostSignificantBit = (vy & 0x0080) >> 7;
         state.registers[0x0F] = mostSignificantBit;
         state.registers[opcode.vx] = (vy << 1) & 0xFF;
         state.pc += 2;
@@ -163,8 +163,8 @@ export default {
     },
 
     jumpToAddressV0: (state, opcode) => {
-        state.i = opcode.nnn + state.registers[0x0];
-        state.pc += 2;
+        const jmp = opcode.nnn + state.registers[0x0];
+        state.pc = jmp;
         return state;
     },
 
@@ -284,6 +284,7 @@ export default {
             const register = state.registers[i];
             state.mem[state.i + i] = register;
         }
+        state.i = state.i + vx + 1;
         state.pc += 2;
         return state;
     },
@@ -295,6 +296,7 @@ export default {
             const value = state.mem[state.i + i];
             state.registers[i] = value;
         }
+        state.i = state.i + vx + 1;
         state.pc += 2;
         return state;
     }
