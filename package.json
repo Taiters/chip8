@@ -49,7 +49,7 @@
         "html-webpack-plugin": "^3.2.0",
         "i": "^0.3.6",
         "identity-obj-proxy": "^3.0.0",
-        "jest": "^24.0.0",
+        "jest": "^25.2.0",
         "jss": "^9.8.7",
         "lodash": "^4.17.10",
         "mocha": "^6.0.2",
