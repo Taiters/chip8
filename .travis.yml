@@ -5,6 +5,7 @@ deploy:
     - provider: pages
       github-token: $GITHUB_TOKEN
       repo: chip8-net/chip8-net.github.io
+      target_branch: master
       fqdn: www.chip8.net
       local-dir: dist
       skip-cleanup: true
