@@ -1,21 +1,52 @@
 <!doctype html>
 <html>
     <head>
-        <title>Chip8 Web</title>
+        <title>CHIP-8</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet"> 
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-127105166-1"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'UA-127105166-1');
-            window.version = '<%= version %>';
-        </script>
+        <style>
+            html, body {
+                background-color: #1f1f1f;
+                color: lightgreen;
+                font-family: monospace;
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                height: 100%;
+                width: 100%;
+                position: absolute;
+            }
+
+            .terminal {
+                background-color: black;
+                height: 600px;
+                width: 800px;
+                margin: 0 auto;
+                overflow-wrap: break-word;
+            }
+
+            .terminal-input-field {
+                outline: none;
+                border: none;
+                opacity: 0;
+                font-size: 0.1em;
+                position: absolute;
+            }
+
+            .terminal-caret {
+                background-color: lightgreen;
+            }
+
+
+        </style>
     </head>
     <body>
-        <div id="app"></div>
+        <div class="container">
+            <div id="app"></div>
+        </div>
     </body>
 </html>
-
