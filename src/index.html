@@ -10,6 +10,7 @@
                 font-family: monospace;
                 margin: 0;
                 padding: 0;
+                overflow: hidden;
             }
 
             .container {
@@ -27,6 +28,7 @@
                 width: 800px;
                 margin: 0 auto;
                 overflow-wrap: break-word;
+                overflow-y: auto;
             }
 
             .terminal-input-field {
@@ -34,11 +36,16 @@
                 border: none;
                 opacity: 0;
                 font-size: 0.1em;
-                position: absolute;
+                top: 0;
+                left: 0;
             }
 
             .terminal-caret {
                 background-color: lightgreen;
+            }
+
+            .terminal-output {
+                margin: 0;
             }
 
 

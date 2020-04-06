@@ -5,33 +5,43 @@ import PropTypes from 'prop-types';
 class Caret extends React.Component {
     constructor(props) {
         super(props);
-        this.caret = React.createRef();
-        this.interval = null;
+        this.blinkInterval = null;
+        this.state = {
+            visble: true,
+        };
     }
 
-    componentDidMount() {
-        const caret = this.caret.current;
-        this.interval = setInterval(() => {
-            const currentDisplay = caret.style.display;
-            if (currentDisplay === 'none') {
-                caret.style.display = '';
-            } else {
-                caret.style.display = 'none';
-            }
+    reset() {
+        clearInterval(this.blinkInterval);
+        this.blinkInterval = null;
+
+        const _this = this;
+        this.setState({visible: true});
+        this.blinkInterval = window.setInterval(() => {
+            _this.setState({
+                visible: !_this.state.visible,
+            });
         }, 1000);
     }
 
-    componentWillUnmount() {
-        if (this.interval === null)
-            return;
+    getStyle() {
+        return {
+            display: this.state.visible ? '' : 'none',
+        };
+    }
 
-        clearInterval(this.interval);
-        this.interval = null;
+    componentDidMount() {
+        this.reset();
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.blinkInterval);
+        this.blinkInterval = null;
     }
 
     render() {
         return (
-            <span className="terminal-caret" ref={this.caret}>&nbsp;</span>
+            <span className="terminal-caret" style={this.getStyle()}>&nbsp;</span>
         );
     }
 }
@@ -41,11 +51,10 @@ class Input extends React.Component {
     constructor(props) {
         super(props);
         this.inputField = React.createRef();
+        this.caret = React.createRef();
         this.state = {
             focused: false,
             value: '',
-            history: [],
-            historyIndex: null,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -54,39 +63,10 @@ class Input extends React.Component {
         this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
-    nextHistory() {
-        const history = this.state.history;
-        const currentIndex = this.state.historyIndex;
-
-        if (history.length === 0)
-            return;
-
-        let newIndex;
-        if (currentIndex === null) {
-            newIndex = history.length - 1;
-        } else {
-            newIndex = currentIndex - 1;
-            if (newIndex < 0) {
-                newIndex = history.length - 1;
-            }
-        }
-
-        this.setState({
-            historyIndex: newIndex,
-            value: this.state.history[newIndex],
-        });
-    }
-
     submit() {
         const value = this.state.value;
-        let history = [...this.state.history];
-        if (!this.state.history.includes(value))
-            history.push(value);
-
         this.setState({
-            history,
             value: '',
-            historyIndex: null,
         });
 
         this.props.onInput(value);
@@ -101,6 +81,10 @@ class Input extends React.Component {
         this.setState({
             value: e.target.value,
         });
+
+        const caret = this.caret.current;
+        if (caret)
+            caret.reset();
     }
 
     handleFocus() {
@@ -121,10 +105,6 @@ class Input extends React.Component {
                 e.preventDefault();
                 this.submit();
                 break;
-            case 'ArrowUp':
-                e.preventDefault();
-                this.nextHistory();
-                break;
         }
     }
 
@@ -133,7 +113,7 @@ class Input extends React.Component {
             return null;
 
         return (
-            <Caret />
+            <Caret ref={this.caret} />
         );
     }
 
@@ -160,45 +140,113 @@ class Input extends React.Component {
 
 Input.propTypes = {
     onInput: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+};
+
+
+const ContentItem = (props) => <pre className="terminal-output">{props.value}</pre>;
+
+ContentItem.propTypes = {
+    value: PropTypes.string.isRequired,
+};
+
+const Content = (props) => props.content.map((item, index) => <ContentItem key={index} value={item} />);
+
+Content.propTypes = {
+    content: PropTypes.array.isRequired,
 };
 
 
 class Terminal extends React.Component {
     constructor(props) {
         super(props);
+        this.container = React.createRef();
         this.input = React.createRef();
         this.state = {
             focused: true,
-            messages: [],
+            content: props.message ? [props.message] : [],
+            acceptingInput: true,
         };
 
         this.handleClick = this.handleClick.bind(this);
+        this.handleInput = this.handleInput.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    handleClick(e) {
-        e.preventDefault();
+    scrollToBottom() {
+        const _this = this;
+        setTimeout(() => {
+            _this.container.current.scrollTop = _this.container.current.scrollHeight;
+        }, 1);
+    }
 
-        if (window.getSelection().type !== 'Range')
+    isAtBottom() {
+        return this.container.current.scrollTop === this.container.current.scrollHeight;
+    }
+
+    handleClick() {
+        if (this.input.current !== null)
             this.input.current.focus();
     }
 
-    renderMessages() {
-        return this.props.messages.map((message, index) => <div key={index}>{message}</div>);
+    output(value) {
+        this.setState((state) => ({
+            content: [...state.content, value]
+        }));
+    }
+
+    done(err) { 
+        if (err)
+            this.output(`Error: ${err}`);
+        else
+            this.output('\n');
+        
+        this.setState({
+            acceptingInput: true
+        });
+    }
+
+    handleInput(value) {
+        const trimmedInput = value.trim();
+        this.setState({
+            acceptingInput: false,
+            content: [...this.state.content, `> ${trimmedInput}`]
+        });
+
+        if (trimmedInput === '') {
+            this.setState({
+                acceptingInput: true
+            });
+
+            return;
+        }
+
+        const splitInput = trimmedInput.trim().split(/\s+/);
+        const command = splitInput[0];
+        const args = splitInput.slice(1);
+        this.props.onCommand(command, args, this.output.bind(this), this.done.bind(this));
+
+        this.scrollToBottom();
+    }
+
+    handleInputChange() {
+        if (!this.isAtBottom())
+            this.scrollToBottom();
     }
 
     render() {
         return (
-            <div tabIndex="-1" className="terminal" onFocus={this.handleClick}>
-                {this.renderMessages()}
-                <Input ref={this.input} onInput={this.props.onInput} />
+            <div className="terminal" onClick={this.handleClick} ref={this.container}>
+                <Content content={this.state.content} />
+                {this.state.acceptingInput && <Input ref={this.input} onInput={this.handleInput} onChange={this.handleInputChange} />}
             </div>
         );
     }
 }
 
 Terminal.propTypes = {
-    messages: PropTypes.array.isRequired,
-    onInput: PropTypes.func.isRequired,
+    onCommand: PropTypes.func.isRequired,
+    message: PropTypes.string,
 };
 
 export default Terminal;
