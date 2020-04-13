@@ -11,3 +11,5 @@ deploy:
       skip-cleanup: true
       on:
           branch: master
+after_deploy:
+    - bash ci/purge_cache.sh
