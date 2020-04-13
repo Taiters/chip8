@@ -5,55 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
             html, body {
-                background-color: #1f1f1f;
+                background-color: black;
                 color: lightgreen;
                 font-family: monospace;
                 margin: 0;
                 padding: 0;
-                overflow: hidden;
             }
-
-            .container {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                height: 100%;
-                width: 100%;
-                position: absolute;
-            }
-
-            .terminal {
-                background-color: black;
-                height: 600px;
-                width: 800px;
-                margin: 0 auto;
-                overflow-wrap: break-word;
-                overflow-y: auto;
-            }
-
-            .terminal-input-field {
-                outline: none;
-                border: none;
-                opacity: 0;
-                font-size: 0.1em;
-                top: 0;
-                left: 0;
-            }
-
-            .terminal-caret {
-                background-color: lightgreen;
-            }
-
-            .terminal-output {
-                margin: 0;
-            }
-
-
         </style>
     </head>
     <body>
-        <div class="container">
-            <div id="app"></div>
-        </div>
+        <div id="app"></div>
     </body>
 </html>
