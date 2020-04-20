@@ -12,6 +12,7 @@ export default createUseStyles({
         flex: '0 0 auto',
         backgroundColor: '#3C3836',
         cursor: 'ew-resize',
+        flexOrder: 1,
     },
     panel: {
         flex: '1 1 auto',

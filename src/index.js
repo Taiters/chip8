@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import jss from 'jss';
 import preset from 'jss-preset-default';
 
-import { Container, Panel } from 'chip8/components/layout';
+import { HorizontalResizer, ResizerPanel } from 'chip8/components/layout';
 import Editor from 'chip8/components/editor';
 import Screen from 'chip8/components/screen';
 
@@ -23,14 +23,18 @@ jss.createStyleSheet({
 
 const App = () => {
     return (
-        <Container>
-            <Panel width="50%" resize>
-                <Editor />
-            </Panel>
-            <Panel width="50%">
-                <Screen />
-            </Panel>
-        </Container>
+        <HorizontalResizer>
+            { (left, right) =>
+                <React.Fragment>
+                    <ResizerPanel {...left}>
+                        <Editor />
+                    </ResizerPanel>
+                    <ResizerPanel {...right}>
+                        <Screen />
+                    </ResizerPanel>
+                </React.Fragment>
+            }
+        </HorizontalResizer>
     );
 };
 
