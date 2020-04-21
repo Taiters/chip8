@@ -25,7 +25,7 @@ const Screen = ({gfx}) => {
                 continue;
 
             const x = (i % 64) * 10;
-            const y = (i / 64) * 10;
+            const y = Math.floor(i / 64) * 10;
 
             ctx.fillRect(x, y, 10, 10);
         }
