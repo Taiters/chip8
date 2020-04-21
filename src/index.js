@@ -1,4 +1,7 @@
-import React from 'react';
+import React, {
+    useState,
+    useEffect
+} from 'react';
 import ReactDOM from 'react-dom';
 import jss from 'jss';
 import preset from 'jss-preset-default';
@@ -22,6 +25,23 @@ jss.createStyleSheet({
 
 
 const App = () => {
+    const [gfx, setGfx] = useState(Array(64 * 32).fill(0));
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const newGfx = [];
+            for (let i = 0; i < 64 * 32; i++) {
+                newGfx.push(Math.round(Math.random()));
+            }
+
+            setGfx(newGfx);
+        }, 250);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, [setGfx]);
+
     return (
         <HorizontalResizer>
             { (left, right) =>
@@ -30,7 +50,7 @@ const App = () => {
                         <Editor />
                     </ResizerPanel>
                     <ResizerPanel {...right}>
-                        <Screen />
+                        <Screen gfx={gfx} />
                     </ResizerPanel>
                 </React.Fragment>
             }
