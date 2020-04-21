@@ -7,8 +7,8 @@ import jss from 'jss';
 import preset from 'jss-preset-default';
 
 import { HorizontalResizer, ResizerPanel } from 'chip8/components/layout';
-import Editor from 'chip8/components/editor';
-import Screen from 'chip8/components/screen';
+import Editor from 'chip8/components/edit';
+import Screen from 'chip8/components/display';
 
 
 jss.setup(preset());

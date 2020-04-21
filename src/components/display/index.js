@@ -16,9 +16,9 @@ const Screen = ({gfx}) => {
     useEffect(() => {
         if (ctx === null)
             return;
-        ctx.fillStyle = 'rgb(0, 0, 0)';
+        ctx.fillStyle = '#3C3836';
         ctx.fillRect(0, 0, 640, 320);
-        ctx.fillStyle = 'rgb(0, 255, 255)';
+        ctx.fillStyle = '#EBDAB4';
 
         for (let i = 0; i < 64 * 32; i++) {
             if (gfx[i] !== 1)
