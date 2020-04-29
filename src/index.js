@@ -26,22 +26,34 @@ jss.createStyleSheet({
 
 
 const App = () => {
+    const [offset, setOffset] = useState(0);
+    const [coords, setCoords] = useState({x: 0, y: 0});
     const [gfx, setGfx] = useState(Array(64 * 32).fill(0));
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            const newGfx = [];
-            for (let i = 0; i < 64 * 32; i++) {
-                newGfx.push(Math.round(Math.random()));
-            }
+        setTimeout(() => {
+            setOffset(offset + 0.05);
+        }, 1);
+    }, [offset]);
 
-            setGfx(newGfx);
-        }, 250);
+    useEffect(() => {
+        setCoords({
+            x: Math.floor(32 + Math.cos(offset) * 20),
+            y: Math.floor(16 + Math.sin(offset) * 10),
+        });
+    }, [offset]);
 
-        return () => {
-            clearInterval(interval);
-        };
-    }, [setGfx]);
+    useEffect(() => {
+        const newGfx = [];
+        const index = coords.y * 64 + coords.x;
+        console.log(index); // eslint-disable-line no-console
+
+        for (let i = 0; i < 64 * 32; i++) {
+            newGfx.push(i == index ? 1 : 0);
+        }
+
+        setGfx(newGfx);
+    }, [coords]);
 
     return (
         <Container direction={Container.Direction.VERTICAL}>
