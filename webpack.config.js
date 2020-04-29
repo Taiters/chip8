@@ -29,14 +29,12 @@ module.exports = {
                 }]
             },
             {
-                test: /.(ttf|otf|eot|svg|woff2?)(\?[a-z0-9]+)?$/,
+                test: /\.(png|jpg)$/,
                 use: [{
                     loader: 'file-loader',
                     options: {
-                        name: '[name].[ext]',
-                        outputPath: 'fonts/',
-                        publicPath: 'fonts'
-                    }
+                        outputPath: 'images/',
+                    },
                 }]
             },
             {
@@ -45,21 +43,6 @@ module.exports = {
                         'babel-loader',
                         'eslint-loader',
                     ]
-            },
-            {
-                test: /\.scss$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'sass-loader',
-                ]
-            },
-            {
-                test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                ]
             },
         ],
     },
@@ -71,9 +54,6 @@ module.exports = {
         contentBase: path.resolve(__dirname, 'dist'),
         compress: true,
         port: 9000,
-        proxy: {
-            '/api': 'http://localhost:3000'
-        },
     },
     plugins: [
         new HtmlWebpackPlugin({

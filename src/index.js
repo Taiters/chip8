@@ -6,9 +6,10 @@ import ReactDOM from 'react-dom';
 import jss from 'jss';
 import preset from 'jss-preset-default';
 
-import { HorizontalResizer, ResizerPanel } from 'chip8/components/layout';
+import Container from 'chip8/components/container';
+import Header from 'chip8/components/header';
 import Editor from 'chip8/components/edit';
-import Screen from 'chip8/components/display';
+import Display from 'chip8/components/display';
 
 
 jss.setup(preset());
@@ -43,18 +44,19 @@ const App = () => {
     }, [setGfx]);
 
     return (
-        <HorizontalResizer>
-            { (left, right) =>
-                <React.Fragment>
-                    <ResizerPanel {...left}>
-                        <Editor />
-                    </ResizerPanel>
-                    <ResizerPanel {...right}>
-                        <Screen gfx={gfx} />
-                    </ResizerPanel>
-                </React.Fragment>
-            }
-        </HorizontalResizer>
+        <Container direction={Container.Direction.VERTICAL}>
+            <Container.Child>
+                <Header />
+            </Container.Child>
+            <Container>
+                <Container.Child width="33%">
+                    <Editor />
+                </Container.Child>
+                <Container.Child width="66%">
+                    <Display gfx={gfx} />
+                </Container.Child>
+            </Container>
+        </Container>
     );
 };
 

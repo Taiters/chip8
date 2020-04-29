@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { 
     useState,
     useEffect,
@@ -5,7 +6,7 @@ import React, {
 } from 'react';
 
 
-const Screen = ({gfx}) => {
+const Display = ({gfx}) => {
     const [ctx, setCtx] = useState(null);
     const captureCtx = useCallback(canvas => {
         if (canvas !== null) {
@@ -16,18 +17,18 @@ const Screen = ({gfx}) => {
     useEffect(() => {
         if (ctx === null)
             return;
+
         ctx.fillStyle = '#3C3836';
         ctx.fillRect(0, 0, 640, 320);
         ctx.fillStyle = '#EBDAB4';
 
-        for (let i = 0; i < 64 * 32; i++) {
-            if (gfx[i] !== 1)
-                continue;
+        for (let y = 0; y < 32; y++) {
+            const yOffset = y * 64;
 
-            const x = (i % 64) * 10;
-            const y = Math.floor(i / 64) * 10;
-
-            ctx.fillRect(x, y, 10, 10);
+            for (let x = 0; x < 64; x++) {
+                if (gfx[yOffset + x] === 1)
+                    ctx.fillRect(x * 10, y * 10, 10, 10);
+            }
         }
     }, [gfx, ctx]);
 
@@ -43,5 +44,9 @@ const Screen = ({gfx}) => {
     );
 };
 
+Display.propTypes = {
+    gfx: PropTypes.array.isRequired,
+};
 
-export default Screen;
+
+export default Display;
