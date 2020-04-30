@@ -7,6 +7,8 @@ import AceEditor from 'react-ace';
 
 import useStyles from './style';
 
+import './mode';
+
 
 function Editor({onChange, code}) {
     const classes = useStyles();
@@ -16,6 +18,7 @@ function Editor({onChange, code}) {
             <AceEditor 
                 width='100%'
                 height='100%'
+                mode='chip8'
                 value={code}
                 onChange={onChange}
                 setOptions={{ printMargin: null }}

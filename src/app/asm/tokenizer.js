@@ -18,6 +18,9 @@ function tokenize(str) {
             if (match === null)
                 continue;
             
+            if (match.index !== 0)
+                continue;
+            
             const result = match[0];
             tokenMatched = true;
             currentStr = currentStr.slice(result.length);

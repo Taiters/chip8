@@ -42,7 +42,7 @@ describe('tokenize', () => {
                 line: 1,
             },
             {
-                type: TokenTypes.HEX_BYTE,
+                type: TokenTypes.HEX,
                 value: 68,
                 raw: '0x44',
                 column: 10,
@@ -90,7 +90,7 @@ describe('tokenize', () => {
                 line: 1,
             },
             {
-                type: TokenTypes.HEX_BYTE,
+                type: TokenTypes.HEX,
                 value: 68,
                 raw: '0x44',
                 column: 10,
@@ -152,7 +152,7 @@ describe('tokenize', () => {
                 line: 1,
             },
             {
-                type: TokenTypes.HEX_BYTE,
+                type: TokenTypes.HEX,
                 value: 68,
                 raw: '0x44',
                 column: 10,
