@@ -70,7 +70,8 @@ const App = () => {
 
     useEffect(() => {
         try {
-            setAst(parse(code));
+            const ast = parse(code);
+            setAst(ast);
         } catch(err) {
             console.error(err); // eslint-disable-line no-console
         }
@@ -83,7 +84,7 @@ const App = () => {
             </Container.Child>
             <Container>
                 <Container.Child width="50%">
-                    <Editor onChange={setCode} code={code} />
+                    <Editor onChange={(code) => setCode(code)} code={code} />
                 </Container.Child>
                 <Container.Child width="50%">
                     <Container direction={Container.Direction.VERTICAL}>
