@@ -6,9 +6,11 @@ import ReactDOM from 'react-dom';
 import jss from 'jss';
 import preset from 'jss-preset-default';
 
+import tokenize from 'chip8/app/asm/tokenizer';
+
 import Container from 'chip8/components/container';
 import Header from 'chip8/components/header';
-import Editor from 'chip8/components/edit';
+import Editor from 'chip8/components/editor';
 import Display from 'chip8/components/display';
 
 
@@ -24,11 +26,22 @@ jss.createStyleSheet({
     },
 }).attach();
 
+const DEFAULT_CODE = `// This gets tokenized!
+// No syntax highlighting, or much else.
+// No error reporting... parsing isn't hooked up
+// Just not a whole lot
+
+call 0x123
+ret
+LD v8, vC
+
+// Token's are being printed to the console`;
 
 const App = () => {
     const [offset, setOffset] = useState(0);
     const [coords, setCoords] = useState({x: 0, y: 0});
     const [gfx, setGfx] = useState(Array(64 * 32).fill(0));
+    const [code, setCode] = useState(DEFAULT_CODE);
 
     useEffect(() => {
         setTimeout(() => {
@@ -46,7 +59,6 @@ const App = () => {
     useEffect(() => {
         const newGfx = [];
         const index = coords.y * 64 + coords.x;
-        console.log(index); // eslint-disable-line no-console
 
         for (let i = 0; i < 64 * 32; i++) {
             newGfx.push(i == index ? 1 : 0);
@@ -55,6 +67,15 @@ const App = () => {
         setGfx(newGfx);
     }, [coords]);
 
+    useEffect(() => {
+        try {
+            console.log(code); // eslint-disable-line no-console
+            console.log(tokenize(code)); // eslint-disable-line no-console
+        } catch(err) {
+            console.error(err); // eslint-disable-line no-console
+        }
+    }, [code]);
+
     return (
         <Container direction={Container.Direction.VERTICAL}>
             <Container.Child>
@@ -62,7 +83,7 @@ const App = () => {
             </Container.Child>
             <Container>
                 <Container.Child width="33%">
-                    <Editor />
+                    <Editor onChange={setCode} code={code} />
                 </Container.Child>
                 <Container.Child width="66%">
                     <Display gfx={gfx} />

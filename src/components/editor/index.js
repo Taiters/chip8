@@ -1,30 +1,32 @@
 import brace from 'brace'; // eslint-disable-line no-unused-vars
 import 'brace/theme/gruvbox';
 
-import React, {
-    useState
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 
 import useStyles from './style';
 
 
-function Editor() {
+function Editor({onChange, code}) {
     const classes = useStyles();
-    const [value, setValue] = useState('Playing about with UI\nBout it');
 
     return (
         <div className={classes.container}>
             <AceEditor 
                 width='100%'
                 height='100%'
-                value={value}
-                onChange={setValue}
+                value={code}
+                onChange={onChange}
                 setOptions={{ printMargin: null }}
                 theme='gruvbox' />
         </div>
     );
 }
+
+Editor.propTypes = {
+    onChange: PropTypes.func.isRequired
+};
 
 
 export default Editor;

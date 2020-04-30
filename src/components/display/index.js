@@ -6,6 +6,12 @@ import React, {
 } from 'react';
 
 
+const WIDTH = 64;
+const HEIGHT = 32;
+const SCALE = 10;
+const SCREEN_WIDTH = WIDTH * SCALE;
+const SCREEN_HEIGHT = HEIGHT * SCALE;
+
 const Display = ({gfx}) => {
     const [ctx, setCtx] = useState(null);
     const captureCtx = useCallback(canvas => {
@@ -19,15 +25,15 @@ const Display = ({gfx}) => {
             return;
 
         ctx.fillStyle = '#3C3836';
-        ctx.fillRect(0, 0, 640, 320);
+        ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         ctx.fillStyle = '#EBDAB4';
 
-        for (let y = 0; y < 32; y++) {
-            const yOffset = y * 64;
+        for (let y = 0; y < HEIGHT; y++) {
+            const yOffset = y * WIDTH;
 
-            for (let x = 0; x < 64; x++) {
+            for (let x = 0; x < WIDTH; x++) {
                 if (gfx[yOffset + x] === 1)
-                    ctx.fillRect(x * 10, y * 10, 10, 10);
+                    ctx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE);
             }
         }
     }, [gfx, ctx]);
@@ -38,8 +44,8 @@ const Display = ({gfx}) => {
                 width: '100%'
             }}
             ref={captureCtx} 
-            width="640" 
-            height="320" >
+            width={SCREEN_WIDTH}
+            height={SCREEN_HEIGHT} >
         </canvas>
     );
 };
