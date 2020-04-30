@@ -27,7 +27,7 @@ function tokenize(str) {
 
             tokens.push({
                 type: token.type,
-                value: token.value(result),
+                value: 'value' in token ? token.value(result) : result,
                 raw: result,
                 column,
                 line,

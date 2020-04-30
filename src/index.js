@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import jss from 'jss';
 import preset from 'jss-preset-default';
 
-import tokenize from 'chip8/app/asm/tokenizer';
+import parse from 'chip8/app/asm/parser';
 
 import Container from 'chip8/components/container';
 import Header from 'chip8/components/header';
@@ -26,16 +26,15 @@ jss.createStyleSheet({
     },
 }).attach();
 
-const DEFAULT_CODE = `// This gets tokenized!
-// No syntax highlighting, or much else.
-// No error reporting... parsing isn't hooked up
-// Just not a whole lot
+const DEFAULT_CODE = `// This gets parsed kind of
+// No error reporting...
+// Just not a whole lot going on really
 
 call 0x123
 ret
 LD v8, vC
 
-// Token's are being printed to the console`;
+// Parser output prints to the console`;
 
 const App = () => {
     const [offset, setOffset] = useState(0);
@@ -70,7 +69,7 @@ const App = () => {
     useEffect(() => {
         try {
             console.log(code); // eslint-disable-line no-console
-            console.log(tokenize(code)); // eslint-disable-line no-console
+            console.log(parse(code)); // eslint-disable-line no-console
         } catch(err) {
             console.error(err); // eslint-disable-line no-console
         }
@@ -82,10 +81,10 @@ const App = () => {
                 <Header />
             </Container.Child>
             <Container>
-                <Container.Child width="33%">
+                <Container.Child width="50%">
                     <Editor onChange={setCode} code={code} />
                 </Container.Child>
-                <Container.Child width="66%">
+                <Container.Child width="50%">
                     <Display gfx={gfx} />
                 </Container.Child>
             </Container>

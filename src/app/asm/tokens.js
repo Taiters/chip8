@@ -1,5 +1,3 @@
-const identity = (v) => v;
-
 const Instructions = {
     CLS: 'CLS',
     RET: 'RET',
@@ -39,47 +37,55 @@ const Tokens = [
     {
         type: TokenTypes.INSTRUCTION,
         match: new RegExp(`(${Object.values(Instructions).join('|')})`, 'i'),
-        value: identity,
+        value: (match) => match.toUpperCase(),
     },
     {
         type: TokenTypes.REGISTER,
         match: /v[0-9A-F]/i,
-        value: (match) => parseInt(match.slice(1), 16),
+        value: (match) => ({
+            type: 'register',
+            value: parseInt(match.slice(1), 16),
+        })
     },
     {
         type: TokenTypes.HEX,
         match: /0x[0-9A-F]+/i,
-        value: (match) => parseInt(match.slice(2), 16),
+        value: (match) => ({
+            type: 'constant',
+            value: parseInt(match.slice(2), 16),
+        }),
     },
     {
         type: TokenTypes.BIN,
         match: /0b[0-9A-F]+/i,
-        value: (match) => parseInt(match.slice(2), 2),
+        value: (match) => ({
+            type: 'constant',
+            value: parseInt(match.slice(2), 2),
+        }),
     },
     {
         type: TokenTypes.DEC,
         match: /[0-9]+/i,
-        value: parseInt,
+        value: (match) => ({
+            type: 'constant',
+            value: parseInt(match),
+        }),
     },
     {
         type: TokenTypes.I,
         match: /I/i,
-        value: identity,
     },
     {
         type: TokenTypes.COMMA,
         match: /,/,
-        value: identity,
     },
     {
         type: TokenTypes.WS,
         match: /[\t ]+/,
-        value: identity,
     },
     {
         type: TokenTypes.EOL,
         match: /(?:\r?\n)/,
-        value: identity,
     },
     {
         type: TokenTypes.COMMENT,

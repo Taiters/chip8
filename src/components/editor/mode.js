@@ -11,29 +11,32 @@ ace.define('ace/mode/chip8_highlight_rules', ['require', 'exports', 'module', 'a
     const TextHighlightRules = acequire('./text_highlight_rules').TextHighlightRules;
 
     const getRegex = (...types) => types.map((t) => getToken(t).match.source).join('|');
+    const withBoundary = (str) => `\\b(?:${str})\\b`;
+
     const Chip8HighlightRules = function () {
+        console.log(getRegex(TokenTypes.COMMENT)); // eslint-disable-line no-console
         this.$rules = {
             start: [
                 {
                     token: 'support.function',
-                    regex: getRegex(TokenTypes.INSTRUCTION),
+                    regex: withBoundary(getRegex(TokenTypes.INSTRUCTION)),
                     caseInsensitive: true
                 },
                 {
                     token: 'support.variable',
-                    regex: getRegex(
+                    regex: withBoundary(getRegex(
                         TokenTypes.REGISTER,
                         TokenTypes.I,
-                    ),
+                    )),
                     caseInsensitive: true
                 },
                 {
                     token: 'constant.numeric',
-                    regex: getRegex(
+                    regex: withBoundary(getRegex(
                         TokenTypes.HEX,
                         TokenTypes.BIN,
                         TokenTypes.DEC
-                    ),
+                    )),
                     caseInsensitive: true
                 },
                 { 
