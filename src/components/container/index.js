@@ -26,7 +26,7 @@ Container.Direction = {
     VERTICAL: 'column'
 };
 
-Container.Child = function Child({children, width, height}) {
+Container.Child = function Child({children, width, height, grow}) {
     const classes = useContainerChildStyles();
     const style = {
         width,
@@ -34,6 +34,10 @@ Container.Child = function Child({children, width, height}) {
         minWidth: width,
         minHeight: height,
     };
+
+    if (grow) {
+        style['flexGrow'] = 1;
+    }
 
     return (
         <div className={classes.containerChild} style={style}>

@@ -12,6 +12,7 @@ import Container from 'chip8/components/container';
 import Header from 'chip8/components/header';
 import Editor from 'chip8/components/editor';
 import Display from 'chip8/components/display';
+import Debugger from 'chip8/components/debugger';
 
 
 jss.setup(preset());
@@ -34,13 +35,14 @@ call 0x123
 ret
 LD v8, vC
 
-// Parser output prints to the console`;
+// Parser output under the display`;
 
 const App = () => {
     const [offset, setOffset] = useState(0);
     const [coords, setCoords] = useState({x: 0, y: 0});
     const [gfx, setGfx] = useState(Array(64 * 32).fill(0));
     const [code, setCode] = useState(DEFAULT_CODE);
+    const [ast, setAst] = useState({});
 
     useEffect(() => {
         setTimeout(() => {
@@ -68,8 +70,7 @@ const App = () => {
 
     useEffect(() => {
         try {
-            console.log(code); // eslint-disable-line no-console
-            console.log(parse(code)); // eslint-disable-line no-console
+            setAst(parse(code));
         } catch(err) {
             console.error(err); // eslint-disable-line no-console
         }
@@ -85,7 +86,14 @@ const App = () => {
                     <Editor onChange={setCode} code={code} />
                 </Container.Child>
                 <Container.Child width="50%">
-                    <Display gfx={gfx} />
+                    <Container direction={Container.Direction.VERTICAL}>
+                        <Container.Child>
+                            <Display gfx={gfx} />
+                        </Container.Child>
+                        <Container.Child grow>
+                            <Debugger data={ast} />
+                        </Container.Child>
+                    </Container>
                 </Container.Child>
             </Container>
         </Container>
