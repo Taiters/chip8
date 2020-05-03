@@ -8,7 +8,7 @@ class TokenStream {
         while (this.hasNext()) {
             if (!typesToSkip.includes(this.peek().type))
                 break;
-            
+
             this.next();
         }
     }

@@ -27,15 +27,57 @@ jss.createStyleSheet({
     },
 }).attach();
 
-const DEFAULT_CODE = `// This gets parsed kind of
-// No error reporting...
-// Just not a whole lot going on really
+const DEFAULT_CODE = `// This get's parsed (See debug window on right)
+// Not compiled yet though
+JP $main
 
-call 0x123
-ret
-LD v8, vC
+// Indents don't matter. But we're not animals
+:smile
+    0b01000010
+    0b00010000
+    0b10000001
+    0b01000010
+    0b00111100
 
-// Parser output under the display`;
+
+:updatePos
+    LD v2, v0 // Store previous X
+    LD v3, v1 // Store previous Y
+    ADD v0, 1
+    ADD v1, 1
+    
+    // If X is 55, reset to 0
+    SNE v0, 55
+    LD v0, 0
+    
+    // If Y is 23, reset to 0
+    SNE v1, 23
+    LD v1, 0
+    RET
+
+
+:draw
+    DRW v2, v3, 5 // Remove the previous smile
+    DRW v0, v1, 5
+    RET
+
+
+:mainLoop
+    CALL $updatePos
+    CALL $draw
+    LD DT, v4
+    JP $mainLoop
+
+
+:main
+    LD v0, 0 // Current X
+    LD v1, 0 // Current Y
+    LD v4, 10 // Delay between updates
+    LD I, $smile
+    
+    DRW v0, v1, 5
+    
+    CALL $mainLoop`;
 
 const App = () => {
     const [offset, setOffset] = useState(0);
@@ -69,12 +111,16 @@ const App = () => {
     }, [coords]);
 
     useEffect(() => {
-        try {
-            const ast = parse(code);
-            setAst(ast);
-        } catch(err) {
-            console.error(err); // eslint-disable-line no-console
-        }
+        const timeout = setTimeout(() => {
+            try {
+                const ast = parse(code);
+                setAst(ast);
+            } catch(err) {
+                console.error(err); // eslint-disable-line no-console
+            }
+        }, 1000);
+
+        return () => clearTimeout(timeout);
     }, [code]);
 
     return (

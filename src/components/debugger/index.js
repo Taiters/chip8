@@ -19,7 +19,7 @@ function Debugger ({data}) {
 
     return (
         <React.Fragment>
-            <pre style={{color: 'white'}}>AST viewer</pre>
+            <pre style={{color: 'white'}}>Parser Debug View</pre>
             {reactJson}
         </React.Fragment>
     );
