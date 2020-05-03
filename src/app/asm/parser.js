@@ -147,7 +147,6 @@ const parser = new ProgramParser(SectionParser.builder()
 
 function parse(str) {
     const tokens = tokenize(str);
-
     return parser.parse(tokens);
 }
 

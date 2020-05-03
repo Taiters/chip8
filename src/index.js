@@ -85,6 +85,7 @@ const App = () => {
     const [gfx, setGfx] = useState(Array(64 * 32).fill(0));
     const [code, setCode] = useState(DEFAULT_CODE);
     const [ast, setAst] = useState({});
+    const [time, setTime] = useState(0);
 
     useEffect(() => {
         setTimeout(() => {
@@ -111,16 +112,15 @@ const App = () => {
     }, [coords]);
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            try {
-                const ast = parse(code);
-                setAst(ast);
-            } catch(err) {
-                console.error(err); // eslint-disable-line no-console
-            }
-        }, 1000);
-
-        return () => clearTimeout(timeout);
+        try {
+            const start = (new Date()).getMilliseconds();
+            const ast = parse(code);
+            const end = (new Date()).getMilliseconds();
+            setAst(ast);
+            setTime(end - start);
+        } catch(err) {
+            console.error(err); // eslint-disable-line no-console
+        }
     }, [code]);
 
     return (
@@ -138,7 +138,7 @@ const App = () => {
                             <Display gfx={gfx} />
                         </Container.Child>
                         <Container.Child grow>
-                            <Debugger data={ast} />
+                            <Debugger data={ast} time={time}/>
                         </Container.Child>
                     </Container>
                 </Container.Child>
