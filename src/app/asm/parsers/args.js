@@ -1,3 +1,4 @@
+import Arguments from '../arguments';
 import { TokenTypes } from '../tokens';
 import { expectNextToken } from './utils';
 import {
@@ -8,18 +9,21 @@ import {
 
 function register() {
     return {
+        type: Arguments.REGISTER,
         types: [TokenTypes.REGISTER],
     };
 }
 
 function addr() {
     return {
+        type: Arguments.ADDRESS,
         types: [TokenTypes.SECTION_IDENTIFIER],
     };
 }
 
 function byte() {
     return {
+        type: Arguments.BYTE,
         types: [
             TokenTypes.HEX,
             TokenTypes.BIN,
@@ -31,6 +35,7 @@ function byte() {
 
 function nibble() {
     return {
+        type: Arguments.NIBBLE,
         types: [
             TokenTypes.HEX,
             TokenTypes.BIN,
@@ -42,37 +47,43 @@ function nibble() {
 
 function dt() {
     return {
-        types: [TokenTypes.DELAY_TIMER]
+        type: Arguments.DELAY_TIMER,
+        types: [TokenTypes.DELAY_TIMER],
     };
 }
 
 function st() {
     return {
-        types: [TokenTypes.SOUND_TIMER]
+        type: Arguments.SOUND_TIMER,
+        types: [TokenTypes.SOUND_TIMER],
     };
 }
 
 function k() {
     return {
-        types: [TokenTypes.K]
+        type: Arguments.K,
+        types: [TokenTypes.K],
     };
 }
 
 function i() {
     return {
-        types: [TokenTypes.I]
+        type: Arguments.I,
+        types: [TokenTypes.I],
     };
 }
 
 function f() {
     return {
-        types: [TokenTypes.F]
+        type: Arguments.F,
+        types: [TokenTypes.F],
     };
 }
 
 function b() {
     return {
-        types: [TokenTypes.B]
+        type: Arguments.B,
+        types: [TokenTypes.B],
     };
 }
 
@@ -96,7 +107,10 @@ class ArgsParser {
                         throw new ValidationException(err, argToken);
                 }
 
-                args.push(argToken.value);
+                args.push({
+                    type: argDefinition.type,
+                    token: argToken,
+                });
                 if (argDefinition.nextArgument) {
                     tokens.skip(TokenTypes.WS);
                     expectNextToken(tokens, TokenTypes.COMMA);
@@ -140,9 +154,10 @@ class ArgsParserBuilder {
         this.argDefinitions = [];
     }
 
-    addArgTypes(argTypes, nextArgument) {
+    addArgTypes(argType, tokenTypes, nextArgument) {
         this.argDefinitions.push({
-            types: argTypes,
+            type: argType,
+            types: tokenTypes,
             nextArgument: nextArgument
         });
         return this;
@@ -150,6 +165,7 @@ class ArgsParserBuilder {
 
     addArg(argDefinition, nextArgument) {
         this.argDefinitions.push({
+            type: argDefinition.type,
             types: argDefinition.types,
             validator: argDefinition.validator,
             nextArgument
@@ -157,9 +173,10 @@ class ArgsParserBuilder {
         return this;
     }
 
-    addValidatedArgTypes(argTypes, validator, nextArgument) {
+    addValidatedArgTypes(argType, tokenTypes, validator, nextArgument) {
         this.argDefinitions.push({
-            types: argTypes,
+            type: argType,
+            types: tokenTypes,
             validator: validator,
             nextArgument: nextArgument
         });

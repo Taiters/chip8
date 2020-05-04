@@ -16,6 +16,7 @@ class InstructionParser {
             tokens.skip(TokenTypes.WS);
             return {
                 instruction,
+                token: instructionToken,
                 args: this.instructionDefinitions[instruction].parse(tokens)
             };
         }

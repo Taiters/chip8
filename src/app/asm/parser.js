@@ -1,5 +1,6 @@
 import tokenize from './tokenizer';
 import Instructions from './instructions';
+import Arguments from './arguments';
 import { TokenTypes } from './tokens';
 import {
     ProgramParser,
@@ -14,8 +15,11 @@ import {
     byte,
     nibble,
     dt,
+    st,
     k,
-    i
+    i,
+    f,
+    b,
 } from './parsers/args';
 
 
@@ -32,6 +36,7 @@ const parser = new ProgramParser(SectionParser.builder()
         .addInstruction(Instructions.JP, ArgsParser.builder()
             .addArg(addr())
             .addArgTypes(
+                Arguments.REGISTER,
                 [TokenTypes.REGISTER],
                 [(v) => v === 0, 'Only v0 is valid here (JP v0, addr)'],
                 ArgsParser.arg(addr()))
@@ -69,12 +74,10 @@ const parser = new ProgramParser(SectionParser.builder()
                 .addArg(addr())
                 .addArg(register())
                 .build())
-            .addArgTypes([
-                TokenTypes.DELAY_TIMER,
-                TokenTypes.SOUND_TIMER,
-                TokenTypes.F,
-                TokenTypes.B
-            ], ArgsParser.arg(register()))
+            .addArg(dt(), ArgsParser.arg(register()))
+            .addArg(st(), ArgsParser.arg(register()))
+            .addArg(f(), ArgsParser.arg(register()))
+            .addArg(b(), ArgsParser.arg(register()))
             .build())
         
         // ADD - 7xkk, 8xy4, Fx1E

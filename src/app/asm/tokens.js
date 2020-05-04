@@ -1,4 +1,4 @@
-import instructions from './instructions'; 
+import Instructions from './instructions'; 
 
 
 const TokenTypes = {
@@ -25,8 +25,8 @@ const TokenTypes = {
 const Tokens = [
     {
         type: TokenTypes.INSTRUCTION,
-        match: new RegExp(`(${Object.values(instructions).join('|')})`, 'i'),
-        value: (match) => instructions[match.toUpperCase()],
+        match: new RegExp(`(${Object.values(Instructions).join('|')})`, 'i'),
+        value: (match) => Instructions[match.toUpperCase()],
     },
     {
         type: TokenTypes.SECTION_DEFINITION,

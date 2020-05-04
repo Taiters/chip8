@@ -7,6 +7,7 @@ import jss from 'jss';
 import preset from 'jss-preset-default';
 
 import parse from 'chip8/app/asm/parser';
+import assemble from 'chip8/app/asm/assembler';
 
 import Container from 'chip8/components/container';
 import Header from 'chip8/components/header';
@@ -116,6 +117,7 @@ const App = () => {
             const start = (new Date()).getMilliseconds();
             const ast = parse(code);
             const end = (new Date()).getMilliseconds();
+            assemble(ast);
             setAst(ast);
             setTime(end - start);
         } catch(err) {
