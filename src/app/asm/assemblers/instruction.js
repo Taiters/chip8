@@ -1,4 +1,4 @@
-import Arguments from '../arguments';
+import { Arguments } from '../constants';
 import {
     UnknownInstructionException,
     SectionNotFoundException

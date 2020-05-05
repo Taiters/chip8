@@ -1,4 +1,4 @@
-import { TokenTypes } from '../tokens';
+import { TokenTypes } from '../constants';
 
 
 class ProgramParser {

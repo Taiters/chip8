@@ -1,26 +1,8 @@
-import Instructions from './instructions'; 
+import {
+    TokenTypes,
+    Instructions
+} from './constants';
 
-
-const TokenTypes = {
-    INSTRUCTION: 'INSTRUCTION',
-    SECTION_DEFINITION: 'SECTION_DEFINITION',
-    SECTION_IDENTIFIER: 'SECTION_IDENTIFIER',
-    REGISTER: 'REGISTER',
-    HEX: 'HEX',
-    BIN: 'BIN',
-    DEC: 'DEC',
-    DELAY_TIMER: 'DELAY_TIMER',
-    SOUND_TIMER: 'SOUND_TIMER',
-    K: 'K',
-    I: 'I',
-    F: 'F',
-    B: 'B',
-    COMMA: 'COMMA',
-    WS: 'WS',
-    EOL: 'EOL',
-    EOF: 'EOF',
-    COMMENT: 'COMMENT',
-};
 
 const Tokens = [
     {
@@ -108,9 +90,47 @@ const tokenLookup = Tokens.reduce((t, current) => {
 
 const getToken = (type) => tokenLookup[type];
 
+class TokenStream {
+    constructor(tokens) {
+        this.offset = 0;
+        this.tokens = tokens;
+    }
+
+    skip(...typesToSkip) {
+        while (this.hasNext()) {
+            if (!typesToSkip.includes(this.peek().type))
+                break;
+
+            this.next();
+        }
+    }
+
+    next() {
+        const nextToken = this.tokens[this.offset];
+        this.offset++;
+
+        return nextToken;
+    }
+
+    peek() {
+        return this.tokens[this.offset];
+    }
+
+    hasNext() {
+        return this.offset < this.tokens.length;
+    }
+
+    context() {
+        return this.tokens
+            .slice(Math.max(0, this.offset - 2), this.offset + 2)
+            .map((t) => t.raw)
+            .join('');
+    }
+}
+
 
 export {
-    TokenTypes,
     Tokens,
+    TokenStream,
     getToken,
 };

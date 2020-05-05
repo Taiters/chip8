@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import jss from 'jss';
 import preset from 'jss-preset-default';
 
-import parse from 'chip8/app/asm/parser';
+import parse from 'chip8/app/asm';
 import assemble from 'chip8/app/asm/assembler';
 
 import Container from 'chip8/components/container';

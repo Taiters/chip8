@@ -1,5 +1,8 @@
-import Instructions from './instructions';
-import Arguments from './arguments';
+import {
+    Instructions,
+    Arguments,
+    Sections,
+} from './constants';
 import InstructionAssembler, {
     addrAssembler,
     registerAssembler,
@@ -8,10 +11,10 @@ import InstructionAssembler, {
     xy,
 } from './assemblers/instruction';
 
-const BYTES_PER_LINE = {
-    'instructions': 2,
-    'data': 1
-};
+
+const BYTES_PER_LINE = {};
+BYTES_PER_LINE[Sections.INSTRUCTIONS] = 2;
+BYTES_PER_LINE[Sections.DATA] = 1;
 
 const instructionAssembler = InstructionAssembler.builder()
     .add(i => i.withInstruction(Instructions.CLS)
@@ -115,10 +118,9 @@ function debugLine(address, value, section) {
 function assemble(program) {
     const addressLookup = generateAddressLookup(program);
     let address = 0x200;
-    console.log('[address:byte]'); // eslint-disable-line no-console
     for (const section of program.sections) {
         let newSection = true;
-        if (section.type == 'instructions') {
+        if (section.type === Sections.INSTRUCTIONS) {
             for (const instruction of section.lines) {
                 const opcode = instructionAssembler.assemble(instruction, addressLookup);
                 console.log(debugLine(address, opcode >> 8, newSection ? section.name : null)); // eslint-disable-line no-console

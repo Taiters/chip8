@@ -1,9 +1,7 @@
 import * as ace from 'brace';
 
-import {
-    TokenTypes,
-    getToken
-} from 'chip8/app/asm/tokens';
+import { TokenTypes } from 'chip8/app/asm/constants';
+import { getToken } from 'chip8/app/asm/tokens';
 
 
 ace.define('ace/mode/chip8_highlight_rules', ['require', 'exports', 'module', 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function (acequire, exports) {

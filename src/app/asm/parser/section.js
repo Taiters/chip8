@@ -1,4 +1,4 @@
-import { TokenTypes } from '../tokens';
+import { TokenTypes } from '../constants';
 import { UnexpectedTokenException } from './exceptions';
 
 
@@ -21,11 +21,11 @@ class SectionParser {
     parseLines(tokens, sectionDefinition) {
         const lines = [];
         const lineParser = sectionDefinition.lineParser;
-        const startToken = sectionDefinition.startToken;
+        const startTokens = sectionDefinition.startTokens;
 
         do {
-            if (tokens.peek().type !== startToken)
-                throw new UnexpectedTokenException(tokens.next(), tokens.context(), [startToken]);
+            if (!startTokens.includes(tokens.peek().type))
+                throw new UnexpectedTokenException(tokens.next(), tokens.context(), startTokens);
 
             lines.push(lineParser.parse(tokens));
             tokens.skip(TokenTypes.WS, TokenTypes.COMMENT, TokenTypes.EOL);
@@ -40,7 +40,7 @@ class SectionParser {
 
         const nextToken = tokens.peek();
         for (const sectionDefinition of this.sectionDefinitions) {
-            if (nextToken.type === sectionDefinition.startToken) {
+            if (sectionDefinition.startTokens.includes(nextToken.type)) {
                 return({
                     name,
                     type: sectionDefinition.type,
@@ -49,7 +49,7 @@ class SectionParser {
             }
         }
 
-        const expectedStartTokens = this.sectionDefinitions.map((d) => d.startToken);
+        const expectedStartTokens = this.sectionDefinitions.reduce((expected, definition) => [...expected, ...definition.startTokens], []);
         throw new UnexpectedTokenException(nextToken, tokens.context(), expectedStartTokens);
     }
 
@@ -63,10 +63,10 @@ class SectionParserBuilder {
         this.sectionDefinitions = [];
     }
 
-    addSection(type, startToken, lineParser) {
+    addSection(type, startTokens, lineParser) {
         this.sectionDefinitions.push({
             type,
-            startToken,
+            startTokens,
             lineParser
         });
         return this;

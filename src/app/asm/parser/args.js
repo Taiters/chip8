@@ -1,28 +1,24 @@
-import Arguments from '../arguments';
-import { TokenTypes } from '../tokens';
 import { expectNextToken } from './utils';
+import {
+    Arguments,
+    TokenTypes
+} from '../constants';
 import {
     UnexpectedTokenException,
     ValidationException
 } from './exceptions';
 
 
-function register() {
-    return {
+const ArgDefinitions = {
+    REGISTER: {
         type: Arguments.REGISTER,
-        types: [TokenTypes.REGISTER],
-    };
-}
-
-function addr() {
-    return {
+        types: [TokenTypes.REGISTER]
+    },
+    ADDRESS: {
         type: Arguments.ADDRESS,
-        types: [TokenTypes.SECTION_IDENTIFIER],
-    };
-}
-
-function byte() {
-    return {
+        types: [TokenTypes.SECTION_IDENTIFIER]
+    },
+    BYTE: {
         type: Arguments.BYTE,
         types: [
             TokenTypes.HEX,
@@ -30,62 +26,41 @@ function byte() {
             TokenTypes.DEC,
         ],
         validator: (value) => [0 <= value && value <= 0xFF, 'Invalid byte value'],
-    };
-}
-
-function nibble() {
-    return {
+    },
+    NIBBLE: {
         type: Arguments.NIBBLE,
         types: [
             TokenTypes.HEX,
             TokenTypes.BIN,
             TokenTypes.DEC,
         ],
-        validator: (value) => [0 <= value && value <= 0xF, 'Invalid 4-bit value'],
-    };
-}
-
-function dt() {
-    return {
+        validator: (value) => [0 <= value && value <= 0xF, 'Invalid 4 bit value'],
+    },
+    DELAY_TIMER: {
         type: Arguments.DELAY_TIMER,
         types: [TokenTypes.DELAY_TIMER],
-    };
-}
-
-function st() {
-    return {
+    },
+    SOUND_TIMER: {
         type: Arguments.SOUND_TIMER,
         types: [TokenTypes.SOUND_TIMER],
-    };
-}
-
-function k() {
-    return {
+    },
+    KEY: {
         type: Arguments.K,
         types: [TokenTypes.K],
-    };
-}
-
-function i() {
-    return {
-        type: Arguments.I,
-        types: [TokenTypes.I],
-    };
-}
-
-function f() {
-    return {
+    },
+    FONT: {
         type: Arguments.F,
         types: [TokenTypes.F],
-    };
-}
-
-function b() {
-    return {
+    },
+    I: {
+        type: Arguments.I,
+        types: [TokenTypes.I],
+    },
+    B: {
         type: Arguments.B,
         types: [TokenTypes.B],
-    };
-}
+    }
+};
 
 class ArgsParser {
     constructor(argDefinitions) {
@@ -154,31 +129,12 @@ class ArgsParserBuilder {
         this.argDefinitions = [];
     }
 
-    addArgTypes(argType, tokenTypes, nextArgument) {
-        this.argDefinitions.push({
-            type: argType,
-            types: tokenTypes,
-            nextArgument: nextArgument
-        });
-        return this;
-    }
-
     addArg(argDefinition, nextArgument) {
         this.argDefinitions.push({
             type: argDefinition.type,
             types: argDefinition.types,
             validator: argDefinition.validator,
             nextArgument
-        });
-        return this;
-    }
-
-    addValidatedArgTypes(argType, tokenTypes, validator, nextArgument) {
-        this.argDefinitions.push({
-            type: argType,
-            types: tokenTypes,
-            validator: validator,
-            nextArgument: nextArgument
         });
         return this;
     }
@@ -191,14 +147,5 @@ class ArgsParserBuilder {
 
 export default ArgsParser;
 export {
-    register,
-    addr,
-    byte,
-    nibble,
-    dt,
-    st,
-    k,
-    i,
-    f,
-    b,
+    ArgDefinitions
 };
