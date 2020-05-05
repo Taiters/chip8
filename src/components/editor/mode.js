@@ -12,7 +12,6 @@ ace.define('ace/mode/chip8_highlight_rules', ['require', 'exports', 'module', 'a
     const withBoundary = (str) => `\\b(?:${str})\\b`;
 
     const Chip8HighlightRules = function () {
-        console.log(getRegex(TokenTypes.COMMENT)); // eslint-disable-line no-console
         this.$rules = {
             start: [
                 {
@@ -25,6 +24,10 @@ ace.define('ace/mode/chip8_highlight_rules', ['require', 'exports', 'module', 'a
                     regex: withBoundary(getRegex(
                         TokenTypes.REGISTER,
                         TokenTypes.I,
+                        TokenTypes.K,
+                        TokenTypes.F,
+                        TokenTypes.DELAY_TIMER,
+                        TokenTypes.SOUND_TIMER,
                     )),
                     caseInsensitive: true
                 },
@@ -36,6 +39,14 @@ ace.define('ace/mode/chip8_highlight_rules', ['require', 'exports', 'module', 'a
                         TokenTypes.DEC
                     )),
                     caseInsensitive: true
+                },
+                {
+                    token: 'variable.parameter',
+                    regex: getRegex(
+                        TokenTypes.SECTION_IDENTIFIER, 
+                        TokenTypes.SECTION_DEFINITION
+                    ),
+                    caseInsensitive: true,
                 },
                 { 
                     token: 'comment.line.double-slash', 
