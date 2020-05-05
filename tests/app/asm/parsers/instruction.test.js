@@ -8,7 +8,7 @@ import { token } from './utils';
 
 
 describe('InstructionParser', () => {
-    test('parse call expected arg parser', () => {
+    test('parse calls expected arg parser', () => {
         const callArgsParser = jest.fn(() => 'call');
         const retArgsParser = jest.fn(() => 'ret');
         const parser = InstructionParser.builder()
@@ -20,9 +20,8 @@ describe('InstructionParser', () => {
             })
             .build();
 
-        const tokens = new TokenStream([
-            token(TokenTypes.INSTRUCTION, Instructions.RET)
-        ]);
+        const instructionToken = token(TokenTypes.INSTRUCTION, Instructions.RET);
+        const tokens = new TokenStream([instructionToken]);
 
         const result = parser.parse(tokens);
 
@@ -30,7 +29,8 @@ describe('InstructionParser', () => {
         expect(retArgsParser.mock.calls.length).toBe(1);
         expect(result).toEqual({
             instruction: Instructions.RET,
-            args: 'ret'
+            args: 'ret',
+            token: instructionToken,
         });
     });
 });
