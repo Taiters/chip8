@@ -1,5 +1,6 @@
 import { TokenTypes } from '../constants';
 import { UnexpectedTokenException } from './exceptions';
+import { expectNextToken } from './utils';
 
 
 const TERMINATORS = [
@@ -25,9 +26,14 @@ class SectionParser {
 
         do {
             if (!startTokens.includes(tokens.peek().type))
-                throw new UnexpectedTokenException(tokens.next(), tokens.context(), startTokens);
+                throw new UnexpectedTokenException(tokens.next(), startTokens);
 
             lines.push(lineParser.parse(tokens));
+            tokens.skip(TokenTypes.WS, TokenTypes.COMMENT);
+            if (tokens.peek().type !== TokenTypes.EOF) {
+                expectNextToken(tokens, TokenTypes.EOL);
+            }
+
             tokens.skip(TokenTypes.WS, TokenTypes.COMMENT, TokenTypes.EOL);
         } while (!TERMINATORS.includes(tokens.peek().type));
 

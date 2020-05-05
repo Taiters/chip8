@@ -1,3 +1,4 @@
+import { AsmException } from './exceptions';
 import { TokenTypes } from './constants';
 import {
     Tokens,
@@ -5,9 +6,15 @@ import {
 } from './tokens';
 
 
+class TokenizerException extends AsmException {
+    constructor(column, line, character) {
+        super({column, line}, `Unexpected token: ${character}`);
+    }
+}
+
 function tokenize(str) {
+    const tokens = [];
     let currentStr = str;
-    let tokens = [];
     let column = 1;
     let line = 1;
 
@@ -44,13 +51,8 @@ function tokenize(str) {
             break;
         }
 
-        if (tokenMatched === false) {
-            throw {
-                context: currentStr.slice(0, 10),
-                column,
-                line,
-            };
-        }
+        if (tokenMatched === false)
+            throw new TokenizerException(column, line, currentStr.charAt(0));
     }
 
     tokens.push({

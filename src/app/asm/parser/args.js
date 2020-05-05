@@ -79,7 +79,7 @@ class ArgsParser {
                 if (argDefinition.validator) {
                     const [result, err] = argDefinition.validator(value);
                     if (!result)
-                        throw new ValidationException(err, argToken);
+                        throw new ValidationException(argToken, err);
                 }
 
                 args.push({
@@ -106,7 +106,7 @@ class ArgsParser {
             return types;
         }, new Set());
 
-        throw new UnexpectedTokenException(argToken, tokens.context(), allArgTypes);
+        throw new UnexpectedTokenException(argToken, allArgTypes);
     }
 
     static arg(argDefinition) {

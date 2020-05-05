@@ -1,21 +1,22 @@
-class UnexpectedTokenException {
-    constructor(token, context, expectedTypes) {
-        this.token = token;
-        this.context = context;
-        this.expected = expectedTypes;
+import { AsmException } from '../exceptions';
+
+
+class UnexpectedTokenException extends AsmException{
+    constructor(token, expectedTypes) {
+        const types = [...expectedTypes].join(',');
+        super(token, `Unexpected token ${token.type}. Expected one of: ${types}`);
     }
 }
 
-class UnknownInstructionException {
+class UnknownInstructionException extends AsmException {
     constructor(token) {
-        this.token = token;
+        super(token, `Unknown instruction: ${token.value}`);
     }
 }
 
-class ValidationException {
-    constructor(err, token) {
-        this.err = err;
-        this.token = token;
+class ValidationException extends AsmException {
+    constructor(token, err) {
+        super(token, err);
     }
 }
 

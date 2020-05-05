@@ -1,15 +1,15 @@
-class UnknownInstructionException {
-    constructor(instruction) {
-        this.type = 'UnknownInstruction';
-        this.instruction = instruction;
+import { AsmException } from '../exceptions';
+
+
+class UnknownInstructionException extends AsmException {
+    constructor(token) {
+        super(token, `Unknown instruction: ${token.value}`);
     }
 }
 
-class SectionNotFoundException {
-    constructor(name, instruction) {
-        this.type = 'SectionNotFound';
-        this.name = name;
-        this.instruction = instruction;
+class SectionNotFoundException extends AsmException {
+    constructor(token) {
+        super(token, `Section not found: ${token.value}`);
     }
 }
 

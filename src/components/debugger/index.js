@@ -10,7 +10,7 @@ function DebuggerButton({hidden, onClick}) {
 }
 
 // Temp debugger
-function Debugger ({data, time}) {
+function Debugger ({data}) {
     const [hidden, setHidden] = useState(true);
     const reactJson = useMemo(() => {
         if (hidden)
@@ -31,7 +31,6 @@ function Debugger ({data, time}) {
     return (
         <React.Fragment>
             <pre style={{color: 'white'}}>Parser debug view (Slow)</pre>
-            <pre style={{color: 'white'}}>Last parse: {time}ms</pre>
             <DebuggerButton
                 hidden={hidden}
                 onClick={() => setHidden(!hidden)} />

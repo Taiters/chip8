@@ -12,7 +12,7 @@ import {
 
 
 const parser = new ProgramParser(SectionParser.builder()
-    .addSection(Sections.INSTRUCTIONS, TokenTypes.INSTRUCTION, InstructionParser.builder()
+    .addSection(Sections.INSTRUCTIONS, [TokenTypes.INSTRUCTION], InstructionParser.builder()
 
         // CLS - 00E0
         .addInstruction(Instructions.CLS, ArgsParser.noArgs())

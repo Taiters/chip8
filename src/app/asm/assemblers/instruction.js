@@ -16,7 +16,7 @@ const addrAssembler = (mask, argIndex) => (instruction, lookup) => {
     const address = lookup[arg.token.value];
 
     if (!address)
-        throw new SectionNotFoundException(arg.token.value, instruction);
+        throw new SectionNotFoundException(arg.token);
 
     return mask | address;
 };
@@ -58,7 +58,7 @@ class InstructionAssembler {
     assemble(instruction, lookup) {
         const assembler = this.getAssembler(instruction);
         if (!assembler)
-            throw new UnknownInstructionException(instruction);
+            throw new UnknownInstructionException(instruction.token);
         
         return assembler(instruction, lookup);
     }

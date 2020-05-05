@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import jss from 'jss';
 import preset from 'jss-preset-default';
 
+import { AsmException } from 'chip8/app/asm/exceptions';
 import parse from 'chip8/app/asm';
 import assemble from 'chip8/app/asm/assembler';
 
@@ -85,7 +86,8 @@ const App = () => {
     const [coords, setCoords] = useState({x: 0, y: 0});
     const [gfx, setGfx] = useState(Array(64 * 32).fill(0));
     const [code, setCode] = useState(DEFAULT_CODE);
-    const [ast, setAst] = useState({});
+    const [program, setProgram] = useState({});
+    const [error, setError] = useState(null);
     const [time, setTime] = useState(0);
 
     useEffect(() => {
@@ -113,16 +115,21 @@ const App = () => {
     }, [coords]);
 
     useEffect(() => {
+        let errorTimeout = null;
+        setError(null);
         try {
             const start = (new Date()).getMilliseconds();
-            const ast = parse(code);
+            const program = parse(code);
             const end = (new Date()).getMilliseconds();
-            assemble(ast);
-            setAst(ast);
+            assemble(program);
+            setProgram(program);
             setTime(end - start);
         } catch(err) {
-            console.error(err); // eslint-disable-line no-console
+            if (err instanceof AsmException)
+                errorTimeout = setTimeout(() => setError(err), 1000);
         }
+
+        return () => clearTimeout(errorTimeout);
     }, [code]);
 
     return (
@@ -132,7 +139,7 @@ const App = () => {
             </Container.Child>
             <Container>
                 <Container.Child width="50%">
-                    <Editor onChange={(code) => setCode(code)} code={code} />
+                    <Editor onChange={(code) => setCode(code)} error={error} code={code} time={time} />
                 </Container.Child>
                 <Container.Child width="50%">
                     <Container direction={Container.Direction.VERTICAL}>
@@ -140,7 +147,7 @@ const App = () => {
                             <Display gfx={gfx} />
                         </Container.Child>
                         <Container.Child grow>
-                            <Debugger data={ast} time={time}/>
+                            <Debugger data={program}/>
                         </Container.Child>
                     </Container>
                 </Container.Child>

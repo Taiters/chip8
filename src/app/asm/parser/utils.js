@@ -5,8 +5,9 @@ import {
 
 function expectNextToken(tokens, ...validTokens) {
     const nextToken = tokens.next();
-    if (!validTokens.includes(nextToken.type))
-        throw new UnexpectedTokenException(nextToken, tokens.context(), validTokens);
+    if (!validTokens.includes(nextToken.type)) {
+        throw new UnexpectedTokenException(nextToken, validTokens);
+    }
 
     return nextToken;
 }
