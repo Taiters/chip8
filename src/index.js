@@ -7,8 +7,7 @@ import jss from 'jss';
 import preset from 'jss-preset-default';
 
 import { AsmException } from 'chip8/app/asm/exceptions';
-import parse from 'chip8/app/asm';
-import assemble from 'chip8/app/asm/assembler';
+import { parse, assemble } from 'chip8/app/asm';
 
 import Container from 'chip8/components/container';
 import Header from 'chip8/components/header';
@@ -30,7 +29,7 @@ jss.createStyleSheet({
 }).attach();
 
 const DEFAULT_CODE = `// This get's parsed (See debug window on right)
-// Not compiled yet though
+// Nothing else happens yet though...
 JP $main
 
 // Indents don't matter. But we're not animals
@@ -120,13 +119,15 @@ const App = () => {
         try {
             const start = (new Date()).getMilliseconds();
             const program = parse(code);
-            const end = (new Date()).getMilliseconds();
             assemble(program);
+            const end = (new Date()).getMilliseconds();
             setProgram(program);
             setTime(end - start);
         } catch(err) {
             if (err instanceof AsmException)
                 errorTimeout = setTimeout(() => setError(err), 1000);
+            else
+                console.error(err); //eslint-disable-line no-console
         }
 
         return () => clearTimeout(errorTimeout);

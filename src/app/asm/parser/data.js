@@ -12,7 +12,7 @@ const DATA_TOKENS = [
 class DataParser {
     parse(tokens) {
         const token = expectNextToken(tokens, ...DATA_TOKENS);
-        if (0 <= token.value && token.value <= 255) {
+        if (0 <= token.value && token.value <= 0xFF) {
             return token;
         }
 

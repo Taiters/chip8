@@ -26,7 +26,7 @@ function errorAnnotation(error) {
 const errorMessage = (error) =>
     `${error.message} (${error.line}:${error.column})`;
 
-const timeMessage = (time) => `Parsed in ${time}ms`;
+const timeMessage = (time) => `Built in ${time}ms`;
 
 function EditorStatus ({error, time}) {
     const classes = useStyles();
