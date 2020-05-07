@@ -36,15 +36,22 @@ function EditorStatus ({error}) {
     );
 }
 
-function Editor({onChange, code, error}) {
+function Editor({code, error, onChange, onFocus, onBlur}) {
     const classes = useStyles();
     const ace = useRef();
 
     useEffect(() => {
-        if (ace.current && error) {
-            ace.current.editor.getSession().setAnnotations([errorAnnotation(error)]);
+        if (ace.current) {
+            const session = ace.current.editor.getSession();
+            const annotations = [];
+
+            if (error)
+                annotations.push(errorAnnotation(error));
+            
+            session.setAnnotations(annotations);
+
         }
-    }, [error]);
+    }, [error, ace]);
 
     return (
         <Container direction={Container.Direction.VERTICAL}>
@@ -57,6 +64,8 @@ function Editor({onChange, code, error}) {
                         mode='chip8'
                         value={code}
                         onChange={onChange}
+                        onFocus={onFocus}
+                        onBlur={onBlur}
                         setOptions={{ printMargin: null }}
                         theme='gruvbox' />
                 </div>

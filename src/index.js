@@ -10,6 +10,7 @@ import preset from 'jss-preset-default';
 import { AsmException } from 'chip8/app/asm/exceptions';
 import { parse, assemble } from 'chip8/app/asm';
 import cpu from 'chip8/app/cpu';
+import { Keymap } from './config';
 
 import Container from 'chip8/components/container';
 import Header from 'chip8/components/header';
@@ -30,20 +31,19 @@ jss.createStyleSheet({
     },
 }).attach();
 
-function App() {
-    const [code, setCode] = useState(example);
-    const [error, setError] = useState(null);
-    const [gfx, setGfx] = useState(new Array(64 * 32));
+
+function useCpu() {
+    const [gfx, setGfx] = useState(cpu.gfx.slice());
     const animationRequest = useRef();
 
-    const render = () => {
+    const update60hz = () => {
         setGfx(cpu.gfx.slice());
         cpu.updateTimers();
-        animationRequest.current = requestAnimationFrame(render);
+        animationRequest.current = requestAnimationFrame(update60hz);
     };
 
     useEffect(() => {
-        animationRequest.current = requestAnimationFrame(render);
+        animationRequest.current = requestAnimationFrame(update60hz);
         return () => cancelAnimationFrame(animationRequest.current);
     }, [animationRequest]);
 
@@ -55,13 +55,18 @@ function App() {
         return () => clearInterval(interval);
     }, []);
 
+    return gfx;
+}
+
+function useAssembler(code) {
+    const [error, setError] = useState(null);
+
     useEffect(() => {
         setError(null);
         const timeout = setTimeout(() => {
             try {
                 const program = parse(code);
                 const rom = assemble(program);
-
                 cpu.load(rom);
             } catch(err) {
                 if (err instanceof AsmException)
@@ -74,6 +79,50 @@ function App() {
         return () => clearTimeout(timeout);
     }, [code]);
 
+    return error;
+}
+
+function useInput(active) {
+    useEffect(() => {
+        if (!active)
+            return;
+
+        const onKeyDown = (e) => {
+            const key = e.key.toUpperCase();
+            if (key in Keymap)
+                cpu.keyDown(Keymap[key]);
+        };
+
+        const onKeyUp = (e) => {
+            const key = e.key.toUpperCase();
+            if (key in Keymap)
+                cpu.keyUp(Keymap[key]);
+        };
+
+        window.addEventListener('keydown', onKeyDown);
+        window.addEventListener('keyup', onKeyUp);
+
+        return () => {
+            for (let i = 0; i < 16; i++) {
+                cpu.keyUp(i);
+            }
+
+            if (active) {
+                window.removeEventListener('keydown', onKeyDown);
+                window.removeEventListener('keyup', onKeyUp);
+            }
+        };
+    }, [active]);
+}
+
+function App() {
+    const [code, setCode] = useState(example);
+    const [focus, setFocus] = useState(false);
+    const gfx = useCpu();
+    const error = useAssembler(code);
+
+    useInput(!focus);
+
     return (
         <Container direction={Container.Direction.VERTICAL}>
             <Container.Child>
@@ -81,7 +130,13 @@ function App() {
             </Container.Child>
             <Container>
                 <Container.Child width="50%">
-                    <Editor onChange={(code) => setCode(code)} error={error} code={code} />
+                    <Editor
+                        focus={focus}
+                        error={error} 
+                        code={code}
+                        onFocus={() => setFocus(true)}
+                        onBlur={() => setFocus(false)}
+                        onChange={(code) => setCode(code)} />
                 </Container.Child>
                 <Container.Child width="50%">
                     <Container direction={Container.Direction.VERTICAL}>
