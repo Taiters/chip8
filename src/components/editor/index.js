@@ -26,19 +26,17 @@ function errorAnnotation(error) {
 const errorMessage = (error) =>
     `${error.message} (${error.line}:${error.column})`;
 
-const timeMessage = (time) => `Built in ${time}ms`;
-
-function EditorStatus ({error, time}) {
+function EditorStatus ({error}) {
     const classes = useStyles();
 
     return (
         <div className={classes.status}>
-            {error ? errorMessage(error) : timeMessage(time)}
+            {error ? errorMessage(error) : null}
         </div>
     );
 }
 
-function Editor({onChange, code, error, time}) {
+function Editor({onChange, code, error}) {
     const classes = useStyles();
     const ace = useRef();
 
@@ -64,7 +62,7 @@ function Editor({onChange, code, error, time}) {
                 </div>
             </Container.Child>
             <Container.Child>
-                <EditorStatus error={error} time={time} />
+                <EditorStatus error={error} />
             </Container.Child>
         </Container>
     );

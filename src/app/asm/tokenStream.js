@@ -41,7 +41,7 @@ class TokenStream {
             } else {
                 this.currentColumn += result.length;
             }
-            console.log(nextToken); // eslint-disable-line no-console
+
             return nextToken;
         }
 
