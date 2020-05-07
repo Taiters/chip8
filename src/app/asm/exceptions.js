@@ -6,7 +6,6 @@ class AsmException {
     }
 }
 
-
 export {
     AsmException,
 };

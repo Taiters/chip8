@@ -81,6 +81,14 @@ const Tokens = [
         match: /\/\/.*/,
         value: (match) => match.slice(2).trim(),
     },
+    {
+        type: TokenTypes.EOF,
+        match: /^$/,
+    },
+    {
+        type: TokenTypes.INVALID_TOKEN,
+        match: /\S+/,
+    },
 ];
 
 const tokenLookup = Tokens.reduce((t, current) => {
@@ -90,47 +98,8 @@ const tokenLookup = Tokens.reduce((t, current) => {
 
 const getToken = (type) => tokenLookup[type];
 
-class TokenStream {
-    constructor(tokens) {
-        this.offset = 0;
-        this.tokens = tokens;
-    }
-
-    skip(...typesToSkip) {
-        while (this.hasNext()) {
-            if (!typesToSkip.includes(this.peek().type))
-                break;
-
-            this.next();
-        }
-    }
-
-    next() {
-        const nextToken = this.tokens[this.offset];
-        this.offset++;
-
-        return nextToken;
-    }
-
-    peek() {
-        return this.tokens[this.offset];
-    }
-
-    hasNext() {
-        return this.offset < this.tokens.length;
-    }
-
-    context() {
-        return this.tokens
-            .slice(Math.max(0, this.offset - 2), this.offset + 2)
-            .map((t) => t.raw)
-            .join('');
-    }
-}
-
 
 export {
     Tokens,
-    TokenStream,
     getToken,
 };

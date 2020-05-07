@@ -32,31 +32,24 @@ class ProgramAssembler {
         const lookup = this.generateAddressLookup(program);
         let totalLength = 0;
 
-        const assembledLines = program.sections.flatMap(section => {
+        const assembledSections = program.sections.map(section => {
             const assembled = this.sectionAssembler.assemble(section, lookup);
             totalLength += assembled.length * BYTES_PER_LINE[section.type];
 
-            return assembled;
+            return {
+                type: section.type,
+                assembled,
+            };
         });
 
         const assembledProgram = new Uint8Array(totalLength);
         let offset = 0;
-        for (let line of assembledLines) {
-            if (line <= 0xFF) {
-                assembledProgram[offset] = line;
-                offset++;
-                continue;
-            }
-
-            let parts = [];
-            while (line !== 0) {
-                parts.push(line & 0xFF);
-                line = line >> 8;
-            }
-
-            for (let p = parts.length - 1; p >= 0; p--) {
-                assembledProgram[offset] = parts[p];
-                offset++;
+        for (const section of assembledSections) {
+            const bytes = BYTES_PER_LINE[section.type];
+            for (const line of section.assembled) {
+                for (let i = bytes-1; i >= 0; i--) {
+                    assembledProgram[offset++] = (line >> (8*i)) & 0xff;
+                }
             }
         }
 

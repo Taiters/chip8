@@ -57,6 +57,7 @@ const TokenTypes = {
     EOL: 'EOL',
     EOF: 'EOF',
     COMMENT: 'COMMENT',
+    INVALID_TOKEN: 'INVALID_TOKEN',
 };
 
 export {

@@ -17,11 +17,12 @@ class InstructionAssembler {
         const mode = this.instructionModes[key];
 
         if (!mode) {
-            debugger; // eslint-disable-line no-debugger
             throw new UnknownInstructionException(instruction.token);
         }
 
-        return mode.assemble(instruction, lookup);
+        const assembled = mode.assemble(instruction, lookup);
+
+        return assembled;
     }
 
     static builder() {

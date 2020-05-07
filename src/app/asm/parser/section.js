@@ -56,7 +56,7 @@ class SectionParser {
         }
 
         const expectedStartTokens = this.sectionDefinitions.reduce((expected, definition) => [...expected, ...definition.startTokens], []);
-        throw new UnexpectedTokenException(nextToken, tokens.context(), expectedStartTokens);
+        throw new UnexpectedTokenException(nextToken, expectedStartTokens);
     }
 
     static builder() {
