@@ -60,11 +60,19 @@ JP $main
     SNE v0, 56
     LD v2, 0
     RET
-
+    
+:checkToggle
+    LD v6, DT // Load the delay timer value into v6
+    SE v6, 0 // If it is not 0, return
+    RET
+    SKP v8 // If our toggle key is pressed, flip the flag, otherwise return
+    RET
+    XOR v7, vE
+    LD DT, v5 // Reset the delay timer
+    RET
 
 :update
-    SKNP v8 // If our toggle key is pressed, flip the flag
-    XOR v7, vE
+    CALL $checkToggle
     SE v7, 1 // If not moving automatically, jump to "manualMove"
     JP $moveManual
     CALL $moveVertical
@@ -89,20 +97,10 @@ JP $main
     RET
 
 
-:wait
-    LD DT, v5 // Load our delay time into the delay timer
-    :waitLoop
-        LD v6, DT // Load it back out into a register so we can do things
-        SNE v6, 0 // If it is 0, return, otherwise loop
-        RET
-        JP $waitLoop
-
-
 :mainLoop
-    // Infinite loop. Update -> Draw -> Wait -> Forever -> And -> Ever
+    // Infinite loop. Update -> Draw -> Forever -> And -> Ever
     CALL $update
     CALL $draw
-    CALL $wait
     JP $mainLoop
 
 
@@ -120,8 +118,11 @@ JP $main
     
     // Random things
     LD v4, 1 // Set to 1 for SUB operations
-    LD v5, 0 // Delay between updates, increase to slow things down (Timer tick ~ 60hz)
     LD vE, 1 // Always 1
+    
+    // Delay between toggle checks, stops it flipping the flag multiple times in a 
+    // single press
+    LD v5, 30
     
     // Set movement keys
     LD v8, 8 // Toggle auto move (8 maps to the S key)

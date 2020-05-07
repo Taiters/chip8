@@ -50,10 +50,7 @@ function useRenderer(gfx) {
             // If this is clearing the screen, wait a short period
             // encase something actually wants to draw (Avoids the flashing look)
             timeout = setTimeout(() => {
-                clsRequest = requestAnimationFrame(() => {
-                    console.log('Clearing'); // eslint-disable-line no-console
-                    drawGfx(gfx, ctx, true);
-                });
+                clsRequest = requestAnimationFrame(() => drawGfx(gfx, ctx, true));
             }, 20);
         } else {
             drawGfx(gfx, ctx);
