@@ -6,15 +6,14 @@
     "scripts": {
         "test": "jest",
         "build": "webpack",
-        "start": "node server/app.js",
-        "start:dev": "webpack-dev-server -d --host 0.0.0.0",
+        "start": "webpack-dev-server -d --host 0.0.0.0",
         "postinstall": "webpack -p"
     },
     "keywords": [],
-    "author": "",
-    "license": "ISC",
+    "author": "Daniel Tait <dantait91@gmail.com>",
+    "license": "MIT",
     "engines": {
-        "node": "10.8.0"
+        "node": "10.15"
     },
     "jest": {
         "transform": {
@@ -24,10 +23,8 @@
     "devDependencies": {},
     "dependencies": {
         "@babel/core": "^7.2.2",
-        "@babel/plugin-syntax-dynamic-import": "^7.2.0",
         "@babel/preset-env": "^7.2.3",
         "@babel/preset-react": "^7.0.0",
-        "babel-core": "^7.0.0-bridge.0",
         "babel-eslint": "^10.0.1",
         "babel-jest": "^24.5.0",
         "babel-loader": "^8.0.4",
@@ -42,7 +39,6 @@
         "react": "^16.4.2",
         "react-ace": "^6.4.0",
         "react-dom": "^16.4.2",
-        "react-json-view": "^1.19.1",
         "react-jss": "^10.1.1",
         "webpack": "^4.42.1",
         "webpack-cli": "^3.3.11",

@@ -30,8 +30,7 @@ jss.createStyleSheet({
     },
 }).attach();
 
-
-const App = () => {
+function App() {
     const [code, setCode] = useState(example);
     const [error, setError] = useState(null);
     const [gfx, setGfx] = useState(new Array(64 * 32));
@@ -94,7 +93,7 @@ const App = () => {
             </Container>
         </Container>
     );
-};
+}
 
 
 ReactDOM.render(

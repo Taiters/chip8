@@ -8,26 +8,13 @@ module.exports = {
     entry: [
         './src/index.js',
     ],
-    mode: 'development',
     resolve: {
         alias: {
             chip8: path.resolve(__dirname, 'src'),
-            handlebars: 'handlebars/dist/handlebars.min.js',
         }
     },
     module: {
         rules: [
-            {
-                test: /.(rom|ch8)$/,
-                use: [{
-                    loader: 'file-loader',
-                    options: {
-                        name: '[name].[ext]',
-                        outputPath: 'roms/',
-                        publicPath: 'roms'
-                    }
-                }]
-            },
             {
                 test: /\.(png|jpg)$/,
                 use: [{
