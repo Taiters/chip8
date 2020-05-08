@@ -1,13 +1,7 @@
-import { Tokens } from './tokens';
-import { TokenTypes } from './constants';
-import { AsmException } from './exceptions';
+import { Tokens } from '../tokens';
+import { TokenTypes } from '../constants';
+import { NoTokenMatchException } from './exceptions';
 
-
-class NoTokenMatchedException extends AsmException {
-    constructor(line, column, src) {
-        super({line, column}, `No token matched at: ${src}`);
-    }
-}
 
 class TokenStream {
     constructor(src) {
@@ -45,7 +39,7 @@ class TokenStream {
             return nextToken;
         }
 
-        throw new NoTokenMatchedException(
+        throw new NoTokenMatchException(
             this.currentLine,
             this.currentColumn,
             this.remainingSrc.split(/\n/)[0]);

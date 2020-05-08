@@ -40,4 +40,6 @@ const cpu = Cpu.builder()
     .build();
 
 
-export default cpu;
+export {
+    cpu
+};

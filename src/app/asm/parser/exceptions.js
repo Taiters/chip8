@@ -20,9 +20,16 @@ class ValidationException extends AsmException {
     }
 }
 
+class NoTokenMatchException extends AsmException {
+    constructor(line, column, reminaingLine) {
+        super({line, column}, `No token matched at: "${reminaingLine}"`);
+    }
+}
+
 
 export {
     UnexpectedTokenException,
     UnknownInstructionException,
     ValidationException,
+    NoTokenMatchException,
 };

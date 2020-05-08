@@ -1,4 +1,5 @@
 import { TokenTypes } from '../constants';
+import TokenStream from './tokenStream';
 
 
 class ProgramParser {
@@ -6,7 +7,8 @@ class ProgramParser {
         this.sectionParser = sectionParser;
     }
 
-    parse(tokens) {
+    parse(src) {
+        const tokens = new TokenStream(src);
         const sections = [];
 
         tokens.skip(TokenTypes.WS, TokenTypes.EOL, TokenTypes.COMMENT);

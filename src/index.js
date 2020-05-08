@@ -8,8 +8,8 @@ import jss from 'jss';
 import preset from 'jss-preset-default';
 
 import { AsmException } from 'chip8/app/asm/exceptions';
-import { parse, assemble } from 'chip8/app/asm';
-import cpu from 'chip8/app/cpu';
+import { parser, assembler } from 'chip8/app/asm';
+import { cpu } from 'chip8/app/cpu';
 import { Keymap } from './config';
 
 import Container from 'chip8/components/container';
@@ -33,7 +33,7 @@ jss.createStyleSheet({
 
 
 function useCpu() {
-    const [gfx, setGfx] = useState(cpu.gfx.slice());
+    const [gfx, setGfx] = useState([]);
     const animationRequest = useRef();
 
     const update60hz = () => {
@@ -65,8 +65,8 @@ function useAssembler(code) {
         setError(null);
         const timeout = setTimeout(() => {
             try {
-                const program = parse(code);
-                const rom = assemble(program);
+                const program = parser.parse(code);
+                const rom = assembler.assemble(program);
                 cpu.load(rom);
             } catch(err) {
                 if (err instanceof AsmException)
