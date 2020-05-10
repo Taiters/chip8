@@ -1,6 +1,7 @@
 import { TokenTypes } from '../constants';
 import { TokenStream } from './tokenStream';
 import { DuplicateLabelException, UnexpectedTokenException } from './exceptions';
+import { expectNextToken } from './utils';
 
 
 class ProgramParser {
@@ -9,8 +10,10 @@ class ProgramParser {
     }
 
     getLabel(tokens) {
-        if (tokens.peek().type === TokenTypes.LABEL) {
+        if (tokens.peek().type === TokenTypes.IDENTIFIER) {
             const label = tokens.next();
+
+            expectNextToken(tokens, TokenTypes.COLON);
             tokens.skip(TokenTypes.WS, TokenTypes.EOL, TokenTypes.COMMENT);
 
             return label;

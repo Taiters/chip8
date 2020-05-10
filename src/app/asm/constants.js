@@ -35,7 +35,6 @@ const Mnemonics = {
 
 const TokenTypes = {
     MNEMONIC: 'MNEMONIC',
-    LABEL: 'LABEL',
     IDENTIFIER: 'IDENTIFIER',
     REGISTER: 'REGISTER',
     HEX: 'HEX',
@@ -48,6 +47,7 @@ const TokenTypes = {
     F: 'F',
     B: 'B',
     COMMA: 'COMMA',
+    COLON: 'COLON',
     WS: 'WS',
     EOL: 'EOL',
     EOF: 'EOF',

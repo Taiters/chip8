@@ -42,10 +42,7 @@ ace.define('ace/mode/chip8_highlight_rules', ['require', 'exports', 'module', 'a
                 },
                 {
                     token: 'variable.parameter',
-                    regex: getRegex(
-                        TokenTypes.IDENTIFIER, 
-                        TokenTypes.LABEL
-                    ),
+                    regex: getRegex(TokenTypes.IDENTIFIER),
                     caseInsensitive: true,
                 },
                 { 

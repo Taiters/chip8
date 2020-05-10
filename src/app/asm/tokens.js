@@ -59,11 +59,6 @@ const Tokens = [
         match: /,/,
     },
     {
-        type: TokenTypes.LABEL,
-        match: /[A-Z_-]+:/i,
-        value: (match) => match.slice(0, -1),
-    },
-    {
         type: TokenTypes.IDENTIFIER,
         match: /[A-Z_-]+/i,
     },
@@ -79,6 +74,10 @@ const Tokens = [
         type: TokenTypes.COMMENT,
         match: /;.*/,
         value: (match) => match.slice(2).trim(),
+    },
+    {
+        type: TokenTypes.COLON,
+        match: /:/,
     },
     {
         type: TokenTypes.EOF,

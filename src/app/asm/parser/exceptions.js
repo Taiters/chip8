@@ -4,7 +4,7 @@ import { AsmException } from '../exceptions';
 class UnexpectedTokenException extends AsmException{
     constructor(token, expectedTypes) {
         const types = [...expectedTypes].join(',');
-        super(token, `Unexpected token ${token.type}. Expected one of: ${types}`);
+        super(token, `Unexpected token ${token.type} (${token.value}). Expected one of: ${types}`);
     }
 }
 
