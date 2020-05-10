@@ -77,7 +77,7 @@ const Tokens = [
     },
     {
         type: TokenTypes.COMMENT,
-        match: /\/\/.*/,
+        match: /;.*/,
         value: (match) => match.slice(2).trim(),
     },
     {
