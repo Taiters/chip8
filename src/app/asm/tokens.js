@@ -11,16 +11,6 @@ const Tokens = [
         value: (match) => Mnemonics[match.toUpperCase()],
     },
     {
-        type: TokenTypes.SECTION_DEFINITION,
-        match: /:[A-Z]+/i,
-        value: (match) => match.slice(1),
-    },
-    {
-        type: TokenTypes.SECTION_IDENTIFIER,
-        match: /\$[A-Z]+/i,
-        value: (match) => match.slice(1),
-    },
-    {
         type: TokenTypes.REGISTER,
         match: /v[0-9A-F]/i,
         value: (match) => parseInt(match.slice(1), 16),
@@ -67,6 +57,15 @@ const Tokens = [
     {
         type: TokenTypes.COMMA,
         match: /,/,
+    },
+    {
+        type: TokenTypes.LABEL,
+        match: /[A-Z_-]+:/i,
+        value: (match) => match.slice(0, -1),
+    },
+    {
+        type: TokenTypes.IDENTIFIER,
+        match: /[A-Z_-]+/i,
     },
     {
         type: TokenTypes.WS,

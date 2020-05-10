@@ -1,4 +1,4 @@
-import { TokenTypes } from '../constants';
+import { TokenTypes, LineTypes } from '../constants';
 import { expectNextToken } from './utils';
 import { UnknownInstructionException } from './exceptions';
 
@@ -16,6 +16,7 @@ class InstructionParser {
             tokens.skip(TokenTypes.WS);
             return {
                 mnemonic,
+                type: LineTypes.INSTRUCTION,
                 token: mnemonicToken,
                 operands: this.instructionDefinitions[mnemonic].parse(tokens)
             };

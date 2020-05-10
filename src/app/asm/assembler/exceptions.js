@@ -7,7 +7,7 @@ class UnknownInstructionException extends AsmException {
     }
 }
 
-class SectionNotFoundException extends AsmException {
+class LabelNotFoundException extends AsmException {
     constructor(token) {
         super(token, `Section not found: ${token.value}`);
     }
@@ -16,5 +16,5 @@ class SectionNotFoundException extends AsmException {
 
 export {
     UnknownInstructionException,
-    SectionNotFoundException,
+    LabelNotFoundException,
 };

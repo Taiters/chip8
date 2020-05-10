@@ -1,4 +1,4 @@
-import { TokenTypes } from '../constants';
+import { TokenTypes, LineTypes } from '../constants';
 import { expectNextToken } from './utils';
 import { ValidationException } from './exceptions';
 
@@ -14,7 +14,10 @@ class DataParser {
     parse(tokens) {
         const token = expectNextToken(tokens, ...DATA_TOKENS);
         if (0 <= token.value && token.value <= 0xFF) {
-            return token;
+            return {
+                type: LineTypes.DATA,
+                token,
+            };
         }
 
         throw new ValidationException('Invalid byte in data', token);

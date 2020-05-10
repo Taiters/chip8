@@ -26,10 +26,17 @@ class NoTokenMatchException extends AsmException {
     }
 }
 
+class DuplicateLabelException extends AsmException {
+    constructor(token) {
+        super(token, `Duplicate label: ${token.value}`);
+    }
+}
+
 
 export {
     UnexpectedTokenException,
     UnknownInstructionException,
     ValidationException,
     NoTokenMatchException,
+    DuplicateLabelException,
 };

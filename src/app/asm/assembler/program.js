@@ -1,61 +1,71 @@
 import {
-    Sections,
+    LineTypes,
 } from '../constants';
 
 
 const BYTES_PER_LINE = {};
-BYTES_PER_LINE[Sections.INSTRUCTIONS] = 2;
-BYTES_PER_LINE[Sections.DATA] = 1;
+BYTES_PER_LINE[LineTypes.INSTRUCTION] = 2;
+BYTES_PER_LINE[LineTypes.DATA] = 1;
 
 
 class ProgramAssembler {
-    constructor(sectionAssembler) {
-        this.sectionAssembler = sectionAssembler;
+    constructor(assemblers) {
+        this.assemblers = assemblers;
     }
 
-    generateAddressLookup(program) {
+    getProgramMeta(program) {
         let address = 0x200;
-        const lookup = {};
-
-        for (const section of program.sections) {
-            if (section.name) {
-                lookup[section.name] = address;
+        return program.lines.reduce((data, line) => {
+            if (line.label) {
+                data.lookup[line.label.value] = address;
             }
 
-            address += section.lines.length * BYTES_PER_LINE[section.type];
-        }
+            address += BYTES_PER_LINE[line.type];
+            data.length += BYTES_PER_LINE[line.type];
 
-        return lookup;
+            return data;
+        }, {length: 0, lookup: {}});
     }
 
     assemble(program) {
-        const lookup = this.generateAddressLookup(program);
-        let totalLength = 0;
+        const meta = this.getProgramMeta(program);
+        const assembledProgram = new Uint8Array(meta.length);
 
-        const assembledSections = program.sections.map(section => {
-            const assembled = this.sectionAssembler.assemble(section, lookup);
-            totalLength += assembled.length * BYTES_PER_LINE[section.type];
-
-            return {
-                type: section.type,
-                assembled,
-            };
-        });
-
-        const assembledProgram = new Uint8Array(totalLength);
         let offset = 0;
-        for (const section of assembledSections) {
-            const bytes = BYTES_PER_LINE[section.type];
-            for (const line of section.assembled) {
-                for (let i = bytes-1; i >= 0; i--) {
-                    assembledProgram[offset++] = (line >> (8*i)) & 0xff;
-                }
+        for (const line of program.lines) {
+            const assembler = this.assemblers[line.type];
+            const data = assembler.assemble(line, meta.lookup);
+            const bytes = BYTES_PER_LINE[line.type];
+
+            for (let i = bytes-1; i >= 0; i--) {
+                assembledProgram[offset++] = (data >> (8 * i) & 0xff);
             }
         }
 
         return assembledProgram;
     }
+
+    static builder() {
+        return new ProgramAssemblerBuilder();
+    }
+}
+
+class ProgramAssemblerBuilder {
+    constructor() {
+        this.assemblers = {};
+    }
+
+    addAssembler(lineType, assembler) {
+        this.assemblers[lineType] = assembler;
+        return this;
+    }
+
+    build() {
+        return new ProgramAssembler(this.assemblers);
+    }
 }
 
 
-export default ProgramAssembler;
+export {
+    ProgramAssembler,
+};

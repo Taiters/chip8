@@ -1,8 +1,3 @@
-const Sections = {
-    INSTRUCTIONS: 'INSTRUCTIONS',
-    DATA: 'DATA',
-};
-
 const Operands = {
     REGISTER: 'REGISTER',
     ADDRESS: 'ADDRESS',
@@ -40,8 +35,8 @@ const Mnemonics = {
 
 const TokenTypes = {
     MNEMONIC: 'MNEMONIC',
-    SECTION_DEFINITION: 'SECTION_DEFINITION',
-    SECTION_IDENTIFIER: 'SECTION_IDENTIFIER',
+    LABEL: 'LABEL',
+    IDENTIFIER: 'IDENTIFIER',
     REGISTER: 'REGISTER',
     HEX: 'HEX',
     BIN: 'BIN',
@@ -60,9 +55,15 @@ const TokenTypes = {
     INVALID_TOKEN: 'INVALID_TOKEN',
 };
 
+const LineTypes = {
+    INSTRUCTION: 'INSTRUCTION',
+    DATA: 'DATA',
+};
+
+
 export {
-    Sections,
     Operands,
     Mnemonics,
     TokenTypes,
+    LineTypes,
 };

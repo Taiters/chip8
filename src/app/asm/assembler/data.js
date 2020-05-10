@@ -1,8 +1,10 @@
 class DataAssembler {
     assemble(line) {
-        return line.value;
+        return line.token.value;
     }
 }
 
 
-export default DataAssembler;
+export {
+    DataAssembler,
+};

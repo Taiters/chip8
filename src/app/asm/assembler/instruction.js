@@ -2,7 +2,7 @@ import {
     Operands
 } from '../constants';
 import {
-    SectionNotFoundException,
+    LabelNotFoundException,
     UnknownInstructionException,
 } from './exceptions';
 
@@ -20,9 +20,7 @@ class InstructionAssembler {
             throw new UnknownInstructionException(instruction.token);
         }
 
-        const assembled = mode.assemble(instruction, lookup);
-
-        return assembled;
+        return mode.assemble(instruction, lookup);
     }
 
     static builder() {
@@ -109,7 +107,7 @@ const ModeAssemblers = {
         const address = lookup[addressName.token.value];
 
         if (!address)
-            throw new SectionNotFoundException(addressName.token);
+            throw new LabelNotFoundException(addressName.token);
         
         return mask | address;
     },

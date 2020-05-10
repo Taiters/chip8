@@ -11,11 +11,11 @@ const example = `// An example program where a face jumps about. Wait for it to 
 // X: down
 
 // Jump to main entry point (Feels cleaner this way. You do you)
-JP $main
+JP main
 
 // Lets draw a face
 // Indents don't matter. But we're not animals
-:smile
+smile:
     0b00100100
     0b00100100
     0b00000000
@@ -24,44 +24,44 @@ JP $main
     0b00111100
 
 
-:moveVertical
+moveVertical:
     // If we're not moving up, jump to "moveDown"
     SE v3, 0
-    JP $moveDown
-    JP $moveUp
+    JP moveDown
+    JP moveUp
     
-:moveUp
+moveUp:
     SUB v1, v4
     SNE v1, 0 // If we're at the top
     LD v3, 1  // Set our direction to DOWN
     RET
     
-:moveDown
+moveDown:
     ADD v1, 1
     SNE v1, 26 // If we're at the bottom
     LD v3, 0   // Set our direction to UP
     RET
         
         
-:moveHorizontal
+moveHorizontal:
     // Same idea as move vertical
     SE v2, 0
-    JP $moveRight
-    JP $moveLeft
+    JP moveRight
+    JP moveLeft
     
-:moveLeft
+moveLeft:
     SUB v0, v4
     SNE v0, 0
     LD v2, 1
     RET
     
-:moveRight
+moveRight:
     ADD v0, 1
     SNE v0, 56
     LD v2, 0
     RET
     
-:checkToggle
+checkToggle:
     LD v6, DT // Load the delay timer value into v6
     SE v6, 0 // If it is not 0, return
     RET
@@ -71,40 +71,40 @@ JP $main
     LD DT, v5 // Reset the delay timer
     RET
 
-:update
-    CALL $checkToggle
+update:
+    CALL checkToggle
     SE v7, 1 // If not moving automatically, jump to "manualMove"
-    JP $moveManual
-    CALL $moveVertical
-    CALL $moveHorizontal
+    JP moveManual
+    CALL moveVertical
+    CALL moveHorizontal
     RET
     
-:moveManual
+moveManual:
     SKNP v9 // Check our left key
-    JP $moveLeft
+    JP moveLeft
     SKNP vA // Check our right key
-    JP $moveRight
+    JP moveRight
     SKNP vB // Check our up key
-    JP $moveUp
+    JP moveUp
     SKNP vC // Check our down key
-    JP $moveDown
+    JP moveDown
     RET
 
 
-:draw
+draw:
     CLS // Clear the screen. A classic
     DRW v0, v1, 6 // Draw our face (6 bytes) at our X and X coords (v0 & v1)
     RET
 
 
-:mainLoop
+mainLoop:
     // Infinite loop. Update -> Draw -> Forever -> And -> Ever
-    CALL $update
-    CALL $draw
-    JP $mainLoop
+    CALL update
+    CALL draw
+    JP mainLoop
 
 
-:main
+main:
     // Initialize a bunch of registers
     
     // Set start X and Y coords
@@ -132,11 +132,12 @@ JP $main
     LD vC, 0 // Move down (0 maps to the X key)
     
     // Point I at our smile in memory for drawing later
-    LD I, $smile
+    LD I, smile
     
     // Make some calls
-    CALL $draw
-    CALL $mainLoop
+    CALL draw
+    CALL mainLoop
+
 `;
 
 export default example;

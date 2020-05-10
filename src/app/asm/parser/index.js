@@ -1,18 +1,16 @@
 import { ProgramParser } from './program';
-import { SectionParser } from './section';
 import { InstructionParser } from './instruction';
 import { DataParser } from './data';
 import { OperandsParser, OperandDefinitions } from './operands';
 import {
-    Sections,
     TokenTypes,
     Mnemonics,
     Operands,
 } from '../constants';
 
 
-const parser = new ProgramParser(SectionParser.builder()
-    .addSection(Sections.INSTRUCTIONS, [TokenTypes.MNEMONIC], InstructionParser.builder()
+const parser = ProgramParser.builder()
+    .addParser([TokenTypes.MNEMONIC], InstructionParser.builder()
 
         // CLS - 00E0
         .addInstruction(Mnemonics.CLS, OperandsParser.noArgs())
@@ -132,12 +130,9 @@ const parser = new ProgramParser(SectionParser.builder()
 
         .build())
     
-    .addSection(Sections.DATA, [
-        TokenTypes.BIN,
-        TokenTypes.HEX,
-        TokenTypes.DEC,
-    ], new DataParser())
-    .build());
+    .addParser([TokenTypes.BIN, TokenTypes.HEX, TokenTypes.DEC], new DataParser())
+
+    .build();
 
 
 export default parser;

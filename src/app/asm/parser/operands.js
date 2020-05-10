@@ -16,7 +16,7 @@ const OperandDefinitions = {
     },
     ADDRESS: {
         type: Operands.ADDRESS,
-        types: [TokenTypes.SECTION_IDENTIFIER]
+        types: [TokenTypes.IDENTIFIER]
     },
     BYTE: {
         type: Operands.BYTE,

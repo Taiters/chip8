@@ -1,20 +1,19 @@
 import {
     Operands,
     Mnemonics,
-    Sections,
+    LineTypes,
 } from '../constants';
 import {
     InstructionAssembler,
     InstructionModes,
     ModeAssemblers,
 } from './instruction';
-import ProgramAssembler from './program';
-import SectionAssembler from './section';
-import DataAssembler from './data';
+import { ProgramAssembler } from './program';
+import { DataAssembler } from './data';
 
 
-const assembler = new ProgramAssembler(SectionAssembler.builder()
-    .addAssembler(Sections.INSTRUCTIONS, InstructionAssembler.builder()
+const assembler = ProgramAssembler.builder()
+    .addAssembler(LineTypes.INSTRUCTION, InstructionAssembler.builder()
         .withInstruction(Mnemonics.CLS, i => i.value(0x00E0))
         .withInstruction(Mnemonics.RET, i => i.value(0x00EE))
         .withInstruction(Mnemonics.CALL, i => i
@@ -100,8 +99,8 @@ const assembler = new ProgramAssembler(SectionAssembler.builder()
         .withInstruction(Mnemonics.SKNP, i => i
             .addMode(InstructionModes.X(0xE0A1)))
         .build())
-    .addAssembler(Sections.DATA, new DataAssembler())
-    .build());
+    .addAssembler(LineTypes.DATA, new DataAssembler())
+    .build();
 
 
 export default assembler;
