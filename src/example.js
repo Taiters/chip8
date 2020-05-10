@@ -10,6 +10,27 @@ const example = `; An example program where a face jumps about. Wait for it to h
 ; W: up
 ; X: down
 
+; Some definitions. These must appear before any other instructions
+DEFINE X_COORD, v0
+DEFINE Y_COORD, v1
+
+DEFINE IS_MOVING_DOWN, v2
+DEFINE IS_MOVING_RIGHT, v3
+DEFINE IS_MANUAL_CONTROL, v4
+
+DEFINE TOGGLE_DELAY, v5
+DEFINE TOGGLE_KEY, v6
+
+DEFINE MOVE_UP_KEY, v7
+DEFINE MOVE_RIGHT_KEY, v8
+DEFINE MOVE_DOWN_KEY, v9
+DEFINE MOVE_LEFT_KEY, vA
+
+DEFINE ONE, vB
+
+DEFINE RIGHT_LIMIT, 56
+DEFINE BOTTOM_LIMIT, 26
+
 ; Jump to main entry point (Feels cleaner this way. You do you)
 JP main
 
@@ -25,75 +46,87 @@ smile:
 
 
 moveVertical:
-    ; If we're not moving up, jump to "moveDown"
-    SE v3, 0
+    ; If we're not moving down, jump to "moveUp"
+    SE IS_MOVING_DOWN, 0
     JP moveDown
     JP moveUp
     
 moveUp:
-    SUB v1, v4
-    SNE v1, 0 ; If we're at the top
-    LD v3, 1  ; Set our direction to DOWN
+    SNE Y_COORD, 0
+    RET
+    
+    SUB Y_COORD, ONE
+    SNE Y_COORD, 0       ; If we're at the top
+    LD IS_MOVING_DOWN, 1 ; start moviing down
     RET
     
 moveDown:
-    ADD v1, 1
-    SNE v1, 26 ; If we're at the bottom
-    LD v3, 0   ; Set our direction to UP
+    SNE Y_COORD, BOTTOM_LIMIT
+    RET
+    
+    ADD Y_COORD, 1
+    SNE Y_COORD, BOTTOM_LIMIT ; If we're at the bottom
+    LD IS_MOVING_DOWN, 0      ; start moving up
     RET
         
         
 moveHorizontal:
     ; Same idea as move vertical
-    SE v2, 0
+    SE IS_MOVING_RIGHT, 0
     JP moveRight
     JP moveLeft
     
 moveLeft:
-    SUB v0, v4
-    SNE v0, 0
-    LD v2, 1
+    SNE X_COORD, 0
+    RET
+    
+    SUB X_COORD, ONE
+    SNE X_COORD, 0
+    LD IS_MOVING_RIGHT, 1
     RET
     
 moveRight:
-    ADD v0, 1
-    SNE v0, 56
-    LD v2, 0
+    SNE X_COORD, RIGHT_LIMIT
+    RET
+    
+    ADD X_COORD, 1
+    SNE X_COORD, RIGHT_LIMIT
+    LD IS_MOVING_RIGHT, 0
     RET
     
 checkToggle:
-    LD v6, DT ; Load the delay timer value into v6
-    SE v6, 0 ; If it is not 0, return
+    LD vC, DT ; Load the delay timer value
+    SE vC, 0 ; If it is not 0, return
     RET
-    SKP v8 ; If our toggle key is pressed, flip the flag, otherwise return
+    SKP TOGGLE_KEY ; If our toggle key is pressed, flip the flag, otherwise return
     RET
-    XOR v7, vE
-    LD DT, v5 ; Reset the delay timer
+    XOR IS_MANUAL_CONTROL, ONE
+    LD DT, TOGGLE_DELAY ; Reset the delay timer
     RET
 
 update:
     CALL checkToggle
-    SE v7, 1 ; If not moving automatically, jump to "manualMove"
+    SE IS_MANUAL_CONTROL, 0 ; If not moving automatically, jump to "moveManual"
     JP moveManual
     CALL moveVertical
     CALL moveHorizontal
     RET
     
-moveManual:
-    SKNP v9 ; Check our left key
-    JP moveLeft
-    SKNP vA ; Check our right key
-    JP moveRight
-    SKNP vB ; Check our up key
+moveManual: 
+    SKNP MOVE_UP_KEY    ; Check our up key
     JP moveUp
-    SKNP vC ; Check our down key
+    SKNP MOVE_RIGHT_KEY ; Check our right key
+    JP moveRight
+    SKNP MOVE_DOWN_KEY  ; Check our down key
     JP moveDown
+    SKNP MOVE_LEFT_KEY  ; Check our left key
+    JP moveLeft
     RET
 
 
 draw:
     CLS ; Clear the screen. A classic
-    DRW v0, v1, 6 ; Draw our face (6 bytes) at our X and X coords (v0 & v1)
+    DRW X_COORD, Y_COORD, 6 ; Draw our face (6 bytes) at our X and X coords (v0 & v1)
     RET
 
 
@@ -105,39 +138,32 @@ mainLoop:
 
 
 main:
-    ; Initialize a bunch of registers
+    ; Initialize a bunch of values
+    LD X_COORD, 0
+    LD Y_COORD, 0
+    LD IS_MOVING_RIGHT, 1
+    LD IS_MOVING_DOWN, 1
+    LD IS_MANUAL_CONTROL, 0
     
-    ; Set start X and Y coords
-    LD v0, 0 ; X
-    LD v1, 0 ; Y
-    
-    ; Set automation direction and flag
-    LD v2, 1 ; Horizontal (1 = right, 0 = left)
-    LD v3, 1 ; Vertical (1 = down, 0 = up)
-    LD v7, 1 ; Auto move flag (1 = yes, 0 = no)
-    
-    ; Random things
-    LD v4, 1 ; Set to 1 for SUB operations
-    LD vE, 1 ; Always 1
-    
-    ; Delay between toggle checks, stops it flipping the flag multiple times in a 
+    ; Delay between toggle checks, stops the value flipping the flag multiple times in a 
     ; single press
-    LD v5, 30
+    LD TOGGLE_DELAY, 30
     
     ; Set movement keys
-    LD v8, 8 ; Toggle auto move (8 maps to the S key)
-    LD v9, 7 ; Move left (7 maps to the A key)
-    LD vA, 9 ; Move right (9 maps to the D key)
-    LD vB, 5 ; Move up (5 maps to the W key)
-    LD vC, 0 ; Move down (0 maps to the X key)
+    LD TOGGLE_KEY, 8     ; (8 maps to the S key)
+    LD MOVE_UP_KEY, 5    ; (5 maps to the W key)
+    LD MOVE_RIGHT_KEY, 9 ; (9 maps to the D key)
+    LD MOVE_DOWN_KEY, 0  ; (0 maps to the X key)
+    LD MOVE_LEFT_KEY, 7  ; (7 maps to the A key)
+    
+    LD ONE, 1
     
     ; Point I at our smile in memory for drawing later
     LD I, smile
     
     ; Make some calls
     CALL draw
-    CALL mainLoop
-
+    JP mainLoop
 `;
 
 export default example;

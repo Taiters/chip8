@@ -1,6 +1,6 @@
 import { TokenTypes } from '../constants';
 import { TokenStream } from './tokenStream';
-import { DuplicateLabelException, UnexpectedTokenException } from './exceptions';
+import { ExistingLabelException, UnexpectedTokenException } from './exceptions';
 import { expectNextToken } from './utils';
 
 
@@ -22,18 +22,49 @@ class ProgramParser {
         return null;
     }
 
+    parseDefinitions(tokens) {
+        const definitions = {};
+        
+        tokens.skip(TokenTypes.WS, TokenTypes.EOL, TokenTypes.COMMENT);
+        while(tokens.peek().type === TokenTypes.DEFINE) {
+            tokens.next();
+            tokens.skip(TokenTypes.WS);
+
+            const identifier = expectNextToken(tokens, TokenTypes.IDENTIFIER);
+
+            tokens.skip(TokenTypes.WS);
+            expectNextToken(tokens, TokenTypes.COMMA);
+            tokens.skip(TokenTypes.WS);
+
+            const value = expectNextToken(tokens, 
+                TokenTypes.REGISTER,
+                TokenTypes.HEX,
+                TokenTypes.BIN,
+                TokenTypes.DEC
+            );
+
+            definitions[identifier.value] = value;
+            tokens.skip(TokenTypes.WS, TokenTypes.COMMENT);
+            expectNextToken(tokens, TokenTypes.EOL);
+            tokens.skip(TokenTypes.WS, TokenTypes.EOL, TokenTypes.COMMENT);
+        }
+
+        return definitions;
+    }
+
     parse(src) {
         const tokens = new TokenStream(src);
-        const lines = [];
         const labels = new Set();
+        const lines = [];
+        const definitions = this.parseDefinitions(tokens);
 
         tokens.skip(TokenTypes.WS, TokenTypes.EOL, TokenTypes.COMMENT);
         while(tokens.peek().type !== TokenTypes.EOF) {
             const label = this.getLabel(tokens);
 
             if (label) {
-                if (labels.has(label.value))
-                    throw new DuplicateLabelException(label);
+                if (labels.has(label.value) || label.value in definitions)
+                    throw new ExistingLabelException(label);
 
                 labels.add(label.value);
             }
@@ -52,7 +83,7 @@ class ProgramParser {
                 throw new UnexpectedTokenException(nextToken, allValidTokens);
             }
 
-            const result = parser.parse(tokens);
+            const result = parser.parse(tokens, definitions);
             result['label'] = label;
 
             lines.push(result);
@@ -60,7 +91,7 @@ class ProgramParser {
         }
 
         return {
-            lines
+            lines,
         };
     }
 

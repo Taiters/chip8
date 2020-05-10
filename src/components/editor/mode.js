@@ -41,12 +41,17 @@ ace.define('ace/mode/chip8_highlight_rules', ['require', 'exports', 'module', 'a
                     caseInsensitive: true
                 },
                 {
+                    token: 'support.type',
+                    regex: getRegex(TokenTypes.DEFINE),
+                    caseInsensitive: true,
+                },
+                {
                     token: 'variable.parameter',
                     regex: getRegex(TokenTypes.IDENTIFIER),
                     caseInsensitive: true,
                 },
                 { 
-                    token: 'comment.line.double-slash', 
+                    token: 'comment.line.semi-colon', 
                     regex: getRegex(TokenTypes.COMMENT),
                 }
             ],

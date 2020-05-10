@@ -8,7 +8,7 @@ class InstructionParser {
         this.instructionDefinitions = instructionDefinitions;
     }
 
-    parse(tokens) {
+    parse(tokens, definitions) {
         const mnemonicToken = expectNextToken(tokens, TokenTypes.MNEMONIC);
         const mnemonic = mnemonicToken.value;
 
@@ -18,7 +18,7 @@ class InstructionParser {
                 mnemonic,
                 type: LineTypes.INSTRUCTION,
                 token: mnemonicToken,
-                operands: this.instructionDefinitions[mnemonic].parse(tokens)
+                operands: this.instructionDefinitions[mnemonic].parse(tokens, definitions)
             };
         }
 
@@ -35,8 +35,8 @@ class InstructionParserBuilder {
         this.instructionDefinitions = {};
     }
 
-    addInstruction(mnemonic, argsParser) {
-        this.instructionDefinitions[mnemonic] = argsParser;
+    addInstruction(mnemonic, operandsParser) {
+        this.instructionDefinitions[mnemonic] = operandsParser;
         return this;
     }
 

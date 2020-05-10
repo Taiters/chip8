@@ -36,6 +36,7 @@ const Mnemonics = {
 const TokenTypes = {
     MNEMONIC: 'MNEMONIC',
     IDENTIFIER: 'IDENTIFIER',
+    DEFINE: 'DEFINE',
     REGISTER: 'REGISTER',
     HEX: 'HEX',
     BIN: 'BIN',

@@ -68,12 +68,22 @@ class OperandsParser {
         this.operandDefinitions = operandDefinitions;
     }
 
-    parse(tokens) {
+    getOperandToken(tokens, definitions) {
+        const token = tokens.next();
+
+        if (token.type === TokenTypes.IDENTIFIER && token.value in definitions)
+            return definitions[token.value];
+        
+        return token;
+    }
+
+    parse(tokens, definitions) {
         const operands = [];
         if (this.operandDefinitions.length == 0)
             return operands;
 
-        const operandToken = tokens.next();
+        const operandToken = this.getOperandToken(tokens, definitions);
+
         for(const operandDefinition of this.operandDefinitions) {
             if (operandDefinition.types.includes(operandToken.type)) {
                 const value = operandToken.value;
@@ -92,7 +102,7 @@ class OperandsParser {
                     expectNextToken(tokens, TokenTypes.COMMA);
                     tokens.skip(TokenTypes.WS);
 
-                    return operands.concat(operandDefinition.next.parse(tokens));
+                    return operands.concat(operandDefinition.next.parse(tokens, definitions));
                 } else {
                     return operands;
                 }

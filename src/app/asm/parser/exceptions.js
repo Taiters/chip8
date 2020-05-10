@@ -26,9 +26,9 @@ class NoTokenMatchException extends AsmException {
     }
 }
 
-class DuplicateLabelException extends AsmException {
+class ExistingLabelException extends AsmException {
     constructor(token) {
-        super(token, `Duplicate label: ${token.value}`);
+        super(token, `Label already in use: ${token.value}`);
     }
 }
 
@@ -38,5 +38,5 @@ export {
     UnknownInstructionException,
     ValidationException,
     NoTokenMatchException,
-    DuplicateLabelException,
+    ExistingLabelException,
 };

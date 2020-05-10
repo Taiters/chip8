@@ -7,12 +7,12 @@ import {
 const Tokens = [
     {
         type: TokenTypes.MNEMONIC,
-        match: new RegExp(`(${Object.values(Mnemonics).join('|')})`, 'i'),
+        match: new RegExp(`(?:${Object.values(Mnemonics).join('|')})(?![A-Z])`, 'i'),
         value: (match) => Mnemonics[match.toUpperCase()],
     },
     {
         type: TokenTypes.REGISTER,
-        match: /v[0-9A-F]/i,
+        match: /v[0-9A-F](?![A-Z])/i,
         value: (match) => parseInt(match.slice(1), 16),
     },
     {
@@ -32,35 +32,39 @@ const Tokens = [
     },
     {
         type: TokenTypes.DELAY_TIMER,
-        match: /DT/i,
+        match: /DT(?![A-Z])/i,
     },
     {
         type: TokenTypes.SOUND_TIMER,
-        match: /ST/i,
+        match: /ST(?![A-Z])/i,
     },
     {
         type: TokenTypes.K,
-        match: /K/i,
+        match: /K(?![A-Z])/i,
     },
     {
         type: TokenTypes.I,
-        match: /I/i,
+        match: /I(?![A-Z])/i,
     },
     {
         type: TokenTypes.F,
-        match: /F/i,
+        match: /F(?![A-Z])/i,
     },
     {
         type: TokenTypes.B,
-        match: /B/i,
+        match: /B(?![A-Z])/i,
     },
     {
         type: TokenTypes.COMMA,
         match: /,/,
     },
     {
+        type: TokenTypes.DEFINE,
+        match: /DEFINE(?![A-Z])/i,
+    },
+    {
         type: TokenTypes.IDENTIFIER,
-        match: /[A-Z_-]+/i,
+        match: /[A-Z_-]+\b/i,
     },
     {
         type: TokenTypes.WS,
