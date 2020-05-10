@@ -77,4 +77,6 @@ class TokenStream {
 }
 
 
-export default TokenStream;
+export {
+    TokenStream,
+};

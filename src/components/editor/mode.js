@@ -16,7 +16,7 @@ ace.define('ace/mode/chip8_highlight_rules', ['require', 'exports', 'module', 'a
             start: [
                 {
                     token: 'support.function',
-                    regex: withBoundary(getRegex(TokenTypes.INSTRUCTION)),
+                    regex: withBoundary(getRegex(TokenTypes.MNEMONIC)),
                     caseInsensitive: true
                 },
                 {

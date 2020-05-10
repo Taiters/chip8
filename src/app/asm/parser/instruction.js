@@ -9,19 +9,19 @@ class InstructionParser {
     }
 
     parse(tokens) {
-        const instructionToken = expectNextToken(tokens, TokenTypes.INSTRUCTION);
-        const instruction = instructionToken.value;
+        const mnemonicToken = expectNextToken(tokens, TokenTypes.MNEMONIC);
+        const mnemonic = mnemonicToken.value;
 
-        if (instruction in this.instructionDefinitions) {
+        if (mnemonic in this.instructionDefinitions) {
             tokens.skip(TokenTypes.WS);
             return {
-                instruction,
-                token: instructionToken,
-                args: this.instructionDefinitions[instruction].parse(tokens)
+                mnemonic,
+                token: mnemonicToken,
+                operands: this.instructionDefinitions[mnemonic].parse(tokens)
             };
         }
 
-        throw new UnknownInstructionException(instructionToken);
+        throw new UnknownInstructionException(mnemonicToken);
     }
 
     static builder() {
@@ -34,8 +34,8 @@ class InstructionParserBuilder {
         this.instructionDefinitions = {};
     }
 
-    addInstruction(instruction, argsParser) {
-        this.instructionDefinitions[instruction] = argsParser;
+    addInstruction(mnemonic, argsParser) {
+        this.instructionDefinitions[mnemonic] = argsParser;
         return this;
     }
 
@@ -45,4 +45,6 @@ class InstructionParserBuilder {
 }
 
 
-export default InstructionParser;
+export {
+    InstructionParser,
+};

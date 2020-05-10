@@ -3,7 +3,7 @@ const Sections = {
     DATA: 'DATA',
 };
 
-const Arguments = {
+const Operands = {
     REGISTER: 'REGISTER',
     ADDRESS: 'ADDRESS',
     BYTE: 'BYTE',
@@ -16,7 +16,7 @@ const Arguments = {
     B: 'B',
 };
 
-const Instructions = {
+const Mnemonics = {
     CLS: 'CLS',
     RET: 'RET',
     JP: 'JP',
@@ -39,7 +39,7 @@ const Instructions = {
 };
 
 const TokenTypes = {
-    INSTRUCTION: 'INSTRUCTION',
+    MNEMONIC: 'MNEMONIC',
     SECTION_DEFINITION: 'SECTION_DEFINITION',
     SECTION_IDENTIFIER: 'SECTION_IDENTIFIER',
     REGISTER: 'REGISTER',
@@ -62,7 +62,7 @@ const TokenTypes = {
 
 export {
     Sections,
-    Arguments,
-    Instructions,
+    Operands,
+    Mnemonics,
     TokenTypes,
 };

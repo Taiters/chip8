@@ -1,5 +1,5 @@
 import { TokenTypes } from '../constants';
-import TokenStream from './tokenStream';
+import { TokenStream } from './tokenStream';
 
 
 class ProgramParser {
@@ -23,4 +23,6 @@ class ProgramParser {
 }
 
 
-export default ProgramParser;
+export {
+    ProgramParser,
+};

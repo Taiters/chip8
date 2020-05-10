@@ -1,5 +1,5 @@
 import {
-    Arguments
+    Operands
 } from '../constants';
 import {
     SectionNotFoundException,
@@ -13,7 +13,7 @@ class InstructionAssembler {
     }
 
     assemble(instruction, lookup) {
-        const key = [instruction.instruction, ...instruction.args.map(a => a.type)].join('_');
+        const key = [instruction.mnemonic, ...instruction.operands.map(a => a.type)].join('_');
         const mode = this.instructionModes[key];
 
         if (!mode) {
@@ -35,12 +35,12 @@ class InstructionAssemblerBuilder {
         this.instructionModes = {};
     }
 
-    withInstruction(instruction, builderCallback) {
+    withInstruction(mnemonic, builderCallback) {
         const builder = new InstructionBuilder();
         builderCallback(builder);
 
         for (const mode of builder.build()) {
-            const key = [instruction, ...mode.expectedArgs].join('_');
+            const key = [mnemonic, ...mode.expectedOperands].join('_');
             this.instructionModes[key] = mode;
         }
 
@@ -78,11 +78,11 @@ class InstructionBuilder {
 
 class InstructionModeBuilder {
     constructor() {
-        this.expectedArgs = [];
+        this.expectedOperands = [];
     }
 
-    addArg(arg) {
-        this.expectedArgs.push(arg);
+    addOperand(operand) {
+        this.expectedOperands.push(operand);
         return this;
     }
 
@@ -97,7 +97,7 @@ class InstructionModeBuilder {
 
     build() {
         return {
-            expectedArgs: this.expectedArgs,
+            expectedOperands: this.expectedOperands,
             assemble: this.assemble,
         };
     }
@@ -105,7 +105,7 @@ class InstructionModeBuilder {
 
 const ModeAssemblers = {
     NNN: (mask) => (instruction, lookup) => {
-        const addressName = instruction.args.find(a => a.type == Arguments.ADDRESS);
+        const addressName = instruction.operands.find(a => a.type == Operands.ADDRESS);
         const address = lookup[addressName.token.value];
 
         if (!address)
@@ -114,26 +114,26 @@ const ModeAssemblers = {
         return mask | address;
     },
     XYN: (mask) => (instruction) => {
-        const x = instruction.args[0].token.value;
-        const y = instruction.args[1].token.value;
-        const n = instruction.args[2].token.value;
+        const x = instruction.operands[0].token.value;
+        const y = instruction.operands[1].token.value;
+        const n = instruction.operands[2].token.value;
 
         return mask | (x << 8) | (y << 4) | n;
     },
     XKK: (mask) => (instruction) => {
-        const x = instruction.args[0].token.value;
-        const kk = instruction.args[1].token.value;
+        const x = instruction.operands[0].token.value;
+        const kk = instruction.operands[1].token.value;
 
         return mask | (x << 8) | kk;
     },
     XY: (mask) => (instruction) => {
-        const x = instruction.args[0].token.value;
-        const y = instruction.args[1].token.value;
+        const x = instruction.operands[0].token.value;
+        const y = instruction.operands[1].token.value;
 
         return mask | (x << 8) | (y << 4);
     },
     X: (mask) => (instruction) => {
-        const x = instruction.args.find(a => a.type === Arguments.REGISTER);
+        const x = instruction.operands.find(a => a.type === Operands.REGISTER);
 
         return mask | (x.token.value << 8);
     },
@@ -141,23 +141,23 @@ const ModeAssemblers = {
 
 const InstructionModes = {
     NNN: (mask) => (builder) => builder
-        .addArg(Arguments.ADDRESS)
+        .addOperand(Operands.ADDRESS)
         .withAssembler(ModeAssemblers.NNN(mask)),
     XYN: (mask) => (builder) => builder
-        .addArg(Arguments.REGISTER)
-        .addArg(Arguments.REGISTER)
-        .addArg(Arguments.NIBBLE)
+        .addOperand(Operands.REGISTER)
+        .addOperand(Operands.REGISTER)
+        .addOperand(Operands.NIBBLE)
         .withAssembler(ModeAssemblers.XYN(mask)),
     XKK: (mask) => (builder) => builder
-        .addArg(Arguments.REGISTER)
-        .addArg(Arguments.BYTE)
+        .addOperand(Operands.REGISTER)
+        .addOperand(Operands.BYTE)
         .withAssembler(ModeAssemblers.XKK(mask)),
     XY: (mask) => (builder) => builder
-        .addArg(Arguments.REGISTER)
-        .addArg(Arguments.REGISTER)
+        .addOperand(Operands.REGISTER)
+        .addOperand(Operands.REGISTER)
         .withAssembler(ModeAssemblers.XY(mask)),
     X: (mask) => (builder) => builder
-        .addArg(Arguments.REGISTER)
+        .addOperand(Operands.REGISTER)
         .withAssembler(ModeAssemblers.X(mask)),
 };
 

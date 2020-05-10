@@ -1,14 +1,14 @@
 import {
     TokenTypes,
-    Instructions
+    Mnemonics,
 } from './constants';
 
 
 const Tokens = [
     {
-        type: TokenTypes.INSTRUCTION,
-        match: new RegExp(`(${Object.values(Instructions).join('|')})`, 'i'),
-        value: (match) => Instructions[match.toUpperCase()],
+        type: TokenTypes.MNEMONIC,
+        match: new RegExp(`(${Object.values(Mnemonics).join('|')})`, 'i'),
+        value: (match) => Mnemonics[match.toUpperCase()],
     },
     {
         type: TokenTypes.SECTION_DEFINITION,

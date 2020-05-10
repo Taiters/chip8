@@ -9,6 +9,7 @@ const DATA_TOKENS = [
     TokenTypes.DEC,
 ];
 
+// parses single byte from <hex|bin|dec>
 class DataParser {
     parse(tokens) {
         const token = expectNextToken(tokens, ...DATA_TOKENS);
@@ -21,4 +22,6 @@ class DataParser {
 }
 
 
-export default DataParser;
+export {
+    DataParser,
+};

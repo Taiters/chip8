@@ -84,4 +84,6 @@ class SectionParserBuilder {
 }
 
 
-export default SectionParser;
+export {
+    SectionParser,
+};
