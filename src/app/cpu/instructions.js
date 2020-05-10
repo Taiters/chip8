@@ -217,9 +217,9 @@ const Instructions = {
         const hundreds = Math.floor(vx / 100);
         const tens = Math.floor(vx / 10) % 10;
         const ones = vx % 10;
-        cpu.mem[cpu.i] = hundreds;
-        cpu.mem[cpu.i + 1] = tens;
-        cpu.mem[cpu.i + 2] = ones;
+        cpu.memory[cpu.i] = hundreds;
+        cpu.memory[cpu.i + 1] = tens;
+        cpu.memory[cpu.i + 2] = ones;
         cpu.pc += 2;
     },
 
@@ -227,7 +227,7 @@ const Instructions = {
         const x = opcode.x;
         for (let i = 0; i <= x; i++) {
             const register = cpu.registers[i];
-            cpu.mem[cpu.i + i] = register;
+            cpu.memory[cpu.i + i] = register;
         }
         // TODO: Double check this step
         cpu.i = cpu.i + x + 1;
@@ -237,7 +237,7 @@ const Instructions = {
     LD_REGISTER_I: (cpu, opcode) => {
         const x = opcode.x;
         for (let i = 0; i <= x; i++) {
-            const value = cpu.mem[cpu.i + i];
+            const value = cpu.memory[cpu.i + i];
             cpu.registers[i] = value;
         }
         cpu.i = cpu.i + x + 1;
