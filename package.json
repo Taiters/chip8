@@ -8,7 +8,7 @@
         "build": "webpack",
         "flow": "flow",
         "start": "webpack-dev-server -d --host 0.0.0.0",
-        "postinstall": "webpack -p"
+        "postinstall": "flow check && webpack -p"
     },
     "keywords": [],
     "author": "Daniel Tait <dantait91@gmail.com>",
