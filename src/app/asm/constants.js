@@ -1,3 +1,4 @@
+// @flow
 const Operands = {
     REGISTER: 'REGISTER',
     ADDRESS: 'ADDRESS',
@@ -61,6 +62,18 @@ const LineTypes = {
     DATA: 'DATA',
 };
 
+
+type Operand = $Keys<typeof Operands>;
+type Mnemonic = $Keys<typeof Mnemonics>;
+type TokenType = $Keys<typeof TokenTypes>;
+type LineType = $Keys<typeof LineTypes>;
+
+export type {
+    Operand,
+    Mnemonic,
+    TokenType,
+    LineType,
+};
 
 export {
     Operands,

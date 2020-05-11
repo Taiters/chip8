@@ -1,4 +1,6 @@
+// @flow
 import { TokenTypes, LineTypes } from '../constants';
+import { TokenStream } from './tokenStream';
 import { expectNextToken } from './utils';
 import { ValidationException } from './exceptions';
 
@@ -7,22 +9,21 @@ const DATA_TOKENS = [
     TokenTypes.HEX,
     TokenTypes.BIN,
     TokenTypes.DEC,
-    TokenTypes.IDENTIFIER,
 ];
 
-// parses single byte from <hex|bin|dec>
 class DataParser {
-    parse(tokens) {
+    parse(tokens: TokenStream) {
         const token = expectNextToken(tokens, ...DATA_TOKENS);
+        const value = token.value;
 
-        if (0 <= token.value && token.value <= 0xFF) {
+        if (typeof value === 'number' && 0 <= value && value <= 0xFF) {
             return {
                 type: LineTypes.DATA,
                 token,
             };
         }
 
-        throw new ValidationException('Invalid byte in data', token);
+        throw new ValidationException(token, `Invalid byte value: ${value}`);
     }
 }
 

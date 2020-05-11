@@ -5,6 +5,7 @@ env:
 extends: 
   - 'eslint:recommended'
   - 'plugin:react/recommended'
+  - 'plugin:flowtype/recommended'
 parserOptions:
   ecmaFeatures:
     jsx: true
@@ -12,6 +13,7 @@ parserOptions:
   sourceType: module
 plugins:
   - react
+  - flowtype
 rules:
   indent:
     - error

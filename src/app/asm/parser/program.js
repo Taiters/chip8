@@ -23,7 +23,7 @@ class ProgramParser {
     }
 
     parseDefinitions(tokens) {
-        const definitions = {};
+        const definitions = new Map();
         
         tokens.skip(TokenTypes.WS, TokenTypes.EOL, TokenTypes.COMMENT);
         while(tokens.peek().type === TokenTypes.DEFINE) {
@@ -43,7 +43,12 @@ class ProgramParser {
                 TokenTypes.DEC
             );
 
-            definitions[identifier.value] = value;
+            if (typeof identifier.value === 'string') {
+                definitions.set(identifier.value, value);
+            } else {
+                throw 'Expected string value in definition identifier';
+            }
+
             tokens.skip(TokenTypes.WS, TokenTypes.COMMENT);
             expectNextToken(tokens, TokenTypes.EOL);
             tokens.skip(TokenTypes.WS, TokenTypes.EOL, TokenTypes.COMMENT);

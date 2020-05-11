@@ -1,10 +1,19 @@
+// @flow
+import type {
+    TokenType,
+} from './constants';
 import {
     TokenTypes,
     Mnemonics,
 } from './constants';
 
+type TokenDefinition = {
+    type: TokenType,
+    match: RegExp,
+    value(match: string): string | number,
+}
 
-const Tokens = [
+const Tokens: Array<TokenDefinition> = [
     {
         type: TokenTypes.MNEMONIC,
         match: new RegExp(`(?:${Object.values(Mnemonics).join('|')})(?![A-Z])`, 'i'),
@@ -33,46 +42,57 @@ const Tokens = [
     {
         type: TokenTypes.DELAY_TIMER,
         match: /DT(?![A-Z])/i,
+        value: (match) => match,
     },
     {
         type: TokenTypes.SOUND_TIMER,
         match: /ST(?![A-Z])/i,
+        value: (match) => match,
     },
     {
         type: TokenTypes.K,
         match: /K(?![A-Z])/i,
+        value: (match) => match,
     },
     {
         type: TokenTypes.I,
         match: /I(?![A-Z])/i,
+        value: (match) => match,
     },
     {
         type: TokenTypes.F,
         match: /F(?![A-Z])/i,
+        value: (match) => match,
     },
     {
         type: TokenTypes.B,
         match: /B(?![A-Z])/i,
+        value: (match) => match,
     },
     {
         type: TokenTypes.COMMA,
         match: /,/,
+        value: (match) => match,
     },
     {
         type: TokenTypes.DEFINE,
         match: /DEFINE(?![A-Z])/i,
+        value: (match) => match,
     },
     {
         type: TokenTypes.IDENTIFIER,
         match: /[A-Z_-]+\b/i,
+        value: (match) => match,
     },
     {
         type: TokenTypes.WS,
         match: /[\t ]+/,
+        value: (match) => match,
     },
     {
         type: TokenTypes.EOL,
         match: /(?:\r?\n)/,
+        value: (match) => match,
     },
     {
         type: TokenTypes.COMMENT,
@@ -82,14 +102,17 @@ const Tokens = [
     {
         type: TokenTypes.COLON,
         match: /:/,
+        value: (match) => match,
     },
     {
         type: TokenTypes.EOF,
         match: /^$/,
+        value: (match) => match,
     },
     {
         type: TokenTypes.INVALID_TOKEN,
-        match: /\S+/,
+        match: /.*/,
+        value: (match) => match,
     },
 ];
 
@@ -98,8 +121,16 @@ const tokenLookup = Tokens.reduce((t, current) => {
     return t;
 }, {});
 
-const getToken = (type) => tokenLookup[type];
+const getToken = (type: TokenType) => tokenLookup[type];
 
+
+export type Token = {
+    type: TokenType,
+    value: string | number,
+    raw: string,
+    column: number,
+    line: number,
+};
 
 export {
     Tokens,

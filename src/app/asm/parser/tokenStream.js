@@ -1,10 +1,17 @@
+// @flow
+import type { Token } from '../tokens';
+import type { TokenType } from '../constants';
 import { Tokens } from '../tokens';
 import { TokenTypes } from '../constants';
-import { NoTokenMatchException } from './exceptions';
 
 
 class TokenStream {
-    constructor(src) {
+    remainingSrc: string
+    currentLine: number
+    currentColumn: number
+    nextToken: ?Token
+
+    constructor(src: string) {
         this.remainingSrc = src;
         this.currentLine = 1;
         this.currentColumn = 1;
@@ -12,7 +19,7 @@ class TokenStream {
         this.nextToken = null;
     }
 
-    readNextToken() {
+    readNextToken(): Token {
         for (const token of Tokens) {
             const match = this.remainingSrc.match(token.match);
             if (match === null || match.index !== 0)
@@ -21,7 +28,7 @@ class TokenStream {
             const result = match[0];
             this.remainingSrc = this.remainingSrc.slice(result.length);
 
-            const nextToken = {
+            const nextToken: Token = {
                 type: token.type,
                 value: 'value' in token ? token.value(result) : result,
                 raw: result,
@@ -39,13 +46,10 @@ class TokenStream {
             return nextToken;
         }
 
-        throw new NoTokenMatchException(
-            this.currentLine,
-            this.currentColumn,
-            this.remainingSrc.split(/\n/)[0]);
+        throw 'Unexpected token';
     }
 
-    skip(...typesToSkip) {
+    skip(...typesToSkip: Array<TokenType>) {
         let nextToken = this.peek();
         while (nextToken.type !== TokenTypes.EOF) {
             if (!typesToSkip.includes(nextToken.type))
@@ -56,7 +60,7 @@ class TokenStream {
         }
     }
 
-    next() {
+    next(): Token {
         if (this.nextToken) {
             const nextToken = this.nextToken;
             this.nextToken = null;
@@ -67,7 +71,7 @@ class TokenStream {
         return this.readNextToken();
     }
 
-    peek() {
+    peek(): Token {
         if (this.nextToken)
             return this.nextToken;
 

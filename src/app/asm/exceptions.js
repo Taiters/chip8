@@ -1,10 +1,19 @@
+// @flow
+import type { Token } from './tokens';
+
+
 class AsmException {
-    constructor({line, column}, message) {
-        this.line = line;
-        this.column = column;
+    line: number;
+    column: number;
+    message: string;
+
+    constructor(token: Token, message: string) {
+        this.line = token.line;
+        this.column = token.column;
         this.message = message;
     }
 }
+
 
 export {
     AsmException,

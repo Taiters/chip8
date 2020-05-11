@@ -1,24 +1,35 @@
+// @flow
+import type { Operand, TokenType } from '../constants';
+import type { TokenStream } from './tokenStream';
+import type { Token } from '../tokens';
 import { expectNextToken } from './utils';
-import {
-    Operands,
-    TokenTypes
-} from '../constants';
+import { Operands, TokenTypes } from '../constants';
 import {
     UnexpectedTokenException,
     ValidationException
 } from './exceptions';
 
 
-const OperandDefinitions = {
-    REGISTER: {
+type OperandDefinition = {
+    type: Operand,
+    types: Array<TokenType>,
+    validator(value: any): [boolean, string],
+};
+
+const noValidator = () => [true, ''];
+
+const OperandDefinitions: Map<Operand, OperandDefinition> = new Map([
+    [Operands.REGISTER, {
         type: Operands.REGISTER,
-        types: [TokenTypes.REGISTER]
-    },
-    ADDRESS: {
+        types: [TokenTypes.REGISTER],
+        validator: noValidator,
+    }],
+    [Operands.ADDRESS, {
         type: Operands.ADDRESS,
-        types: [TokenTypes.IDENTIFIER]
-    },
-    BYTE: {
+        types: [TokenTypes.IDENTIFIER],
+        validator: noValidator,
+    }],
+    [Operands.BYTE, {
         type: Operands.BYTE,
         types: [
             TokenTypes.HEX,
@@ -26,8 +37,8 @@ const OperandDefinitions = {
             TokenTypes.DEC,
         ],
         validator: (value) => [0 <= value && value <= 0xFF, 'Invalid byte value'],
-    },
-    NIBBLE: {
+    }],
+    [Operands.NIBBLE, {
         type: Operands.NIBBLE,
         types: [
             TokenTypes.HEX,
@@ -35,82 +46,100 @@ const OperandDefinitions = {
             TokenTypes.DEC,
         ],
         validator: (value) => [0 <= value && value <= 0xF, 'Invalid 4 bit value'],
-    },
-    DELAY_TIMER: {
+    }],
+    [Operands.DELAY_TIMER, {
         type: Operands.DELAY_TIMER,
         types: [TokenTypes.DELAY_TIMER],
-    },
-    SOUND_TIMER: {
+        validator: noValidator,
+    }],
+    [Operands.SOUND_TIMER, {
         type: Operands.SOUND_TIMER,
         types: [TokenTypes.SOUND_TIMER],
-    },
-    KEY: {
+        validator: noValidator,
+    }],
+    [Operands.K, {
         type: Operands.K,
         types: [TokenTypes.K],
-    },
-    FONT: {
+        validator: noValidator,
+    }],
+    [Operands.F, {
         type: Operands.F,
         types: [TokenTypes.F],
-    },
-    I: {
+        validator: noValidator,
+    }],
+    [Operands.I, {
         type: Operands.I,
         types: [TokenTypes.I],
-    },
-    B: {
+        validator: noValidator,
+    }],
+    [Operands.B, {
         type: Operands.B,
         types: [TokenTypes.B],
-    }
+        validator: noValidator,
+    }]
+]);
+
+function operand(key: Operand): ?OperandDefinition {
+    return OperandDefinitions.get(key);
+}
+
+type OperandParserDefinition = {
+    operandDefinition: OperandDefinition,
+    next: ?OperandsParser,
 };
 
 // Parses <menomic> [operand, ...]
 class OperandsParser {
-    constructor(operandDefinitions) {
-        this.operandDefinitions = operandDefinitions;
+    operandParserDefinitions: Array<OperandParserDefinition>;
+
+    constructor(operandParserDefinitions: Array<OperandParserDefinition>) {
+        this.operandParserDefinitions = operandParserDefinitions;
     }
 
-    getOperandToken(tokens, definitions) {
+    getOperandToken(tokens: TokenStream, definitions: Map<string, Token>): Token {
         const token = tokens.next();
 
-        if (token.type === TokenTypes.IDENTIFIER && token.value in definitions)
-            return definitions[token.value];
+        if (token.type === TokenTypes.IDENTIFIER && typeof token.value === 'string')
+            return definitions.get(token.value) || token;
         
         return token;
     }
 
-    parse(tokens, definitions) {
+    parse(tokens: TokenStream, definitions: Map<string, Token>) {
         const operands = [];
-        if (this.operandDefinitions.length == 0)
+        if (this.operandParserDefinitions.length == 0)
             return operands;
 
         const operandToken = this.getOperandToken(tokens, definitions);
 
-        for(const operandDefinition of this.operandDefinitions) {
+        for(const parserDefinition of this.operandParserDefinitions) {
+            const operandDefinition = parserDefinition.operandDefinition;
             if (operandDefinition.types.includes(operandToken.type)) {
                 const value = operandToken.value;
-                if (operandDefinition.validator) {
-                    const [result, err] = operandDefinition.validator(value);
-                    if (!result)
-                        throw new ValidationException(operandToken, err);
-                }
+                const [result, err] = operandDefinition.validator(value);
+
+                if (!result)
+                    throw new ValidationException(operandToken, err);
 
                 operands.push({
                     type: operandDefinition.type,
                     token: operandToken,
                 });
-                if (operandDefinition.next) {
+                if (parserDefinition.next != null) {
+                    const next = parserDefinition.next;
                     tokens.skip(TokenTypes.WS);
                     expectNextToken(tokens, TokenTypes.COMMA);
                     tokens.skip(TokenTypes.WS);
 
-                    return operands.concat(operandDefinition.next.parse(tokens, definitions));
+                    return operands.concat(next.parse(tokens, definitions));
                 } else {
                     return operands;
                 }
             }
         }
 
-        const allOperandTypes = this.operandDefinitions.reduce((types, definition) => {
-            for(const type of definition.types) {
+        const allOperandTypes = this.operandParserDefinitions.reduce((types, definition) => {
+            for(const type of definition.operandDefinition.types) {
                 types.add(type);
             }
 
@@ -120,43 +149,41 @@ class OperandsParser {
         throw new UnexpectedTokenException(operandToken, allOperandTypes);
     }
 
-    static arg(operandDefinition) {
+    static arg(operandDefinition: OperandDefinition): OperandsParser {
         return OperandsParser.builder()
             .addOperand(operandDefinition)
             .build();
     }
 
-    static noArgs() {
+    static noArgs(): OperandsParser {
         return new OperandsParser([]);
     }
 
-    static builder() {
+    static builder(): OperandsParserBuilder {
         return new OperandsParserBuilder();
     }
 }
 
 class OperandsParserBuilder {
+    operandParserDefinitions: Array<OperandParserDefinition>;
     constructor() {
-        this.operandDefinitions = [];
+        this.operandParserDefinitions = [];
     }
 
-    addOperand(operandDefinition, next) {
-        this.operandDefinitions.push({
-            type: operandDefinition.type,
-            types: operandDefinition.types,
-            validator: operandDefinition.validator,
-            next: next
+    addOperand(operandDefinition: OperandDefinition, next: ?OperandsParser): OperandsParserBuilder {
+        this.operandParserDefinitions.push({
+            operandDefinition,
+            next,
         });
         return this;
     }
 
-    build() {
-        return new OperandsParser(this.operandDefinitions);
+    build(): OperandsParser {
+        return new OperandsParser(this.operandParserDefinitions);
     }
 }
 
-
 export {
     OperandsParser,
-    OperandDefinitions,
+    operand,
 };
