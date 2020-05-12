@@ -13,8 +13,8 @@ class TokenStream {
 
     constructor(src: string) {
         this.remainingSrc = src;
-        this.currentLine = 1;
-        this.currentColumn = 1;
+        this.currentLine = 0;
+        this.currentColumn = 0;
 
         this.nextToken = null;
     }
@@ -38,7 +38,7 @@ class TokenStream {
 
             if (token.type === TokenTypes.EOL) {
                 this.currentLine += 1;
-                this.currentColumn = 1;
+                this.currentColumn = 0;
             } else {
                 this.currentColumn += result.length;
             }

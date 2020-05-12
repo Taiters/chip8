@@ -4,13 +4,12 @@ import React, {
     useRef,
 } from 'react';
 import ReactDOM from 'react-dom';
-import jss from 'jss';
-import preset from 'jss-preset-default';
 
 import { AsmException } from 'chip8/app/asm/exceptions';
 import { parser, assembler } from 'chip8/app/asm';
 import { cpu } from 'chip8/app/cpu';
-import { Keymap } from './config';
+import { Keymap } from 'chip8/config';
+import { bootstrapJss } from 'chip8/bootstrap';
 
 import Container from 'chip8/components/container';
 import Header from 'chip8/components/header';
@@ -19,17 +18,7 @@ import Display from 'chip8/components/display';
 import example from 'chip8/example';
 
 
-jss.setup(preset());
-jss.createStyleSheet({
-    '@global': {
-        'window, html, body, .app': {
-            margin: 0,
-            padding: 0,
-            height: '100%',
-            backgroundColor: '#1D2021',
-        },
-    },
-}).attach();
+bootstrapJss();
 
 
 function useCpu() {
@@ -142,6 +131,9 @@ function App() {
                     <Container direction={Container.Direction.VERTICAL}>
                         <Container.Child>
                             <Display gfx={gfx} />
+                        </Container.Child>
+                        <Container.Child>
+
                         </Container.Child>
                     </Container>
                 </Container.Child>
