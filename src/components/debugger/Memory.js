@@ -5,6 +5,7 @@ import React, {
 } from 'react';
 import { createUseStyles } from 'react-jss';
 import { FixedSizeList } from 'react-window';
+import { List, ListItem } from './List';
 
 
 const useStyles = createUseStyles({
@@ -12,53 +13,26 @@ const useStyles = createUseStyles({
         height: '100%',
         display: 'flex',
     },
-    address: {
-        padding: [[0, 8]],
-        margin: 0,
-        color: '#9b9891',
-        display: 'inline-block',
-    },
     value: {
         padding: [[0, 16]],
-        fontSize: '1.2em',
     },
     prefix: {
         fontSize: '0.75em',
     },
-    stackContainer: {
-        width: '33%',
-        height: 'calc(100% - 16px)',
-        padding: 8,
+    memoryContainer: {
+        height: '100%',
     },
     stackLine: {
-        height: '30px',
-        lineHeight: '30px',
+        color: '#9b9891'
     },
-    stackLines: {
-        height: 'calc(100% - 18px)',
-        overflowY: 'auto',
-    },
-    memoryContainer: {
-        width: '67%',
-        height: 'calc(100% - 8px)',
-        paddingTop: 8,
-    },
-    sectionTitle: {
-        margin: [[8, 0, 0, 8]],
-        height: 14,
-        color: '#9b9891',
+    activeStackLine: {
+        color: '#fbf3e3',
     }
 });
 
 const hex = (value) => `${value.toString(16).padStart(2, '0').toUpperCase()}`;
 const bin = (value) => `${value.toString(2).padStart(8, '0').toUpperCase()}`;
 const dec = (value) => value;
-
-function Address({address}) {
-    const classes = useStyles();
-
-    return <span className={classes.address}>0x{address.toString(16).padStart(3, '0').toUpperCase()}</span>;
-}
 
 function Value({value, prefix}) {
     const classes = useStyles();
@@ -75,21 +49,24 @@ class MemoryLine extends React.PureComponent {
         const memory = this.props.data[this.props.index];
         const style = {
             ...this.props.style,
-            lineHeight: '30px',
+            lineHeight: '20px',
         };
+
+        const address = `0x${this.props.index.toString(16).padStart(3, '0').toUpperCase()}`;
 
         return (
             <div style={style}>
-                <Address address={this.props.index} />
-                <Value value={hex(memory)} prefix='0x' />
-                <Value value={bin(memory)} prefix='0b' />
-                <Value value={dec(memory)} />
+                <ListItem name={address}>
+                    <Value value={hex(memory)} prefix='0x' />
+                    <Value value={bin(memory)} prefix='0b' />
+                    <Value value={dec(memory)} />
+                </ListItem>
             </div>
         );
     }
 }
 
-function useContainerHeight() {
+function useFillContainer() {
     const [height, setHeight] = useState(0);
     const containerRef = useRef();
 
@@ -98,12 +75,11 @@ function useContainerHeight() {
             if (containerRef.current != null) {
                 const container = containerRef.current;
                 const containerHeight = container.getBoundingClientRect().height;
-                const titleHeight = container.firstChild.getBoundingClientRect().height + 16;
-                setHeight(containerHeight - titleHeight);
+                setHeight(containerHeight);
             }
         };
-        updateHeight();
 
+        updateHeight();
         window.addEventListener('resize', updateHeight);
 
         return () => window.removeEventListener('resize', updateHeight);
@@ -115,12 +91,12 @@ function useContainerHeight() {
 function MemoryList({memory}) {
     const list = useRef();
     const classes = useStyles();
-    const [containerRef, containerHeight] = useContainerHeight();
+    const [containerRef, containerHeight] = useFillContainer();
 
     const listProps = {
         itemCount: memory.length,
         height: containerHeight,
-        itemSize: 30,
+        itemSize: 20,
         width: '100%',
         itemData: memory,
     };
@@ -133,7 +109,6 @@ function MemoryList({memory}) {
 
     return (
         <div ref={containerRef} className={classes.memoryContainer}>
-            <p className={classes.sectionTitle}>Memory:</p>
             <FixedSizeList ref={list} {...listProps}>
                 {MemoryLine}
             </FixedSizeList>
@@ -154,26 +129,26 @@ export default function Memory ({memory, stack, sp}) {
     const classes = useStyles();
 
     const stackLines = stack.map((v, i) => {
-        const pointer = sp-1 === i ? ' <' : null;
+        const name = i.toString().padStart(2, '0');
+        const lineClass = `${classes.stackLine} ${sp - 1 === i ? classes.activeStackLine : ''}`;
+
         return (
-            <div key={i} className={classes.stackLine}>
-                <span className={classes.address}>{i.toString().padStart(2, '0')}</span>
-                <span className={classes.value}>
-                    <span className={classes.prefix}>0x</span>{v.toString(16).padStart(4, '0').toUpperCase()}{pointer}
+            <ListItem key={i} name={name}>
+                <span className={lineClass}>
+                    0x{v.toString(16).padStart(3, '0').toUpperCase()}
                 </span>
-            </div>
+            </ListItem>
         );
     });
 
     return (
         <div className={classes.container}>
-            <div className={classes.stackContainer}>
-                <p className={classes.sectionTitle}>Stack:</p>
-                <div className={classes.stackLines}>
-                    {stackLines}
-                </div>
-            </div>
-            <MemoizedMemoryList memory={memory} />
+            <List title="Stack">
+                {stackLines}
+            </List>
+            <List title="Memory">
+                <MemoizedMemoryList memory={memory} />
+            </List>
         </div>
     );
 }
