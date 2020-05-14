@@ -6,6 +6,7 @@ import React, {
 import { createUseStyles } from 'react-jss';
 import { FixedSizeList } from 'react-window';
 import { List, ListItem } from './List';
+import Value from './Value';
 
 
 const useStyles = createUseStyles({
@@ -13,36 +14,22 @@ const useStyles = createUseStyles({
         height: '100%',
         display: 'flex',
     },
-    value: {
-        padding: [[0, 16]],
-    },
-    prefix: {
-        fontSize: '0.75em',
-    },
     memoryContainer: {
         height: '100%',
     },
-    stackLine: {
-        color: '#9b9891'
-    },
     activeStackLine: {
-        color: '#fbf3e3',
+        position: 'relative',
+        '&:after': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgb(255, 255, 255, 0.1)',
+        }
     }
 });
-
-const hex = (value) => `${value.toString(16).padStart(2, '0').toUpperCase()}`;
-const bin = (value) => `${value.toString(2).padStart(8, '0').toUpperCase()}`;
-const dec = (value) => value;
-
-function Value({value, prefix}) {
-    const classes = useStyles();
-    let prefixComponent = null;
-    if (prefix != null) {
-        prefixComponent = <span className={classes.prefix}>{prefix}</span>;
-    }
-
-    return <span className={classes.value}>{prefixComponent}{value}</span>;
-}
 
 class MemoryLine extends React.PureComponent {
     render() {
@@ -57,9 +44,7 @@ class MemoryLine extends React.PureComponent {
         return (
             <div style={style}>
                 <ListItem name={address}>
-                    <Value value={hex(memory)} prefix='0x' />
-                    <Value value={bin(memory)} prefix='0b' />
-                    <Value value={dec(memory)} />
+                    <Value value={memory} hex={2} bin dec />
                 </ListItem>
             </div>
         );
@@ -133,10 +118,8 @@ export default function Memory ({memory, stack, sp}) {
         const lineClass = `${classes.stackLine} ${sp - 1 === i ? classes.activeStackLine : ''}`;
 
         return (
-            <ListItem key={i} name={name}>
-                <span className={lineClass}>
-                    0x{v.toString(16).padStart(3, '0').toUpperCase()}
-                </span>
+            <ListItem key={i} name={name} className={lineClass}>
+                <Value value={v} hex={3} dec />
             </ListItem>
         );
     });

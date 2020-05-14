@@ -27,8 +27,8 @@ const useStyles = createUseStyles({
     name: {
         display: 'inline-block',
         marginRight: 16,
+        minWidth: 20,
         color: '#9b9891',
-        width: 30,
         fontSize: '0.9em',
     }
 });
@@ -46,11 +46,11 @@ export function List({title, children}) {
     );
 }
 
-export function ListItem({name, children}) {
+export function ListItem({name, className, children}) {
     const classes = useStyles();
 
     return (
-        <div className={classes.item}>
+        <div className={`${classes.item} ${className}`}>
             <span className={classes.name}>{name}</span>
             {children}
         </div>

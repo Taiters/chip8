@@ -2,6 +2,7 @@ import React from 'react';
 import { createUseStyles } from 'react-jss';
 
 import { List, ListItem } from './List';
+import Value from './Value';
 
 
 const useStyles = createUseStyles({
@@ -18,7 +19,7 @@ export default function Registers ({registers, pc, sp, dt, st, i}) {
         const name = `v${index.toString(16).toUpperCase()}`;
         return (
             <ListItem key={index} name={name}>
-                {value}
+                <Value value={value} hex={2} dec />
             </ListItem>
         );
     });
@@ -29,11 +30,23 @@ export default function Registers ({registers, pc, sp, dt, st, i}) {
                 {registerList}
             </List>
             <List title="Special Use">
-                <ListItem name="PC">{pc}</ListItem>
-                <ListItem name="SP">{sp}</ListItem>
-                <ListItem name="I">{i}</ListItem>
-                <ListItem name="DT">{dt}</ListItem>
-                <ListItem name="ST">{st}</ListItem>
+                <ListItem name="PC">
+                    <Value value={pc} hex={3} dec /> 
+                </ListItem>
+                <ListItem name="I">
+                    <Value value={i} hex={3} dec /> 
+                </ListItem>
+                <ListItem></ListItem>
+                <ListItem name="DT">
+                    <Value value={dt} hex={2} dec /> 
+                </ListItem>
+                <ListItem name="ST">
+                    <Value value={st} hex={2} dec />
+                </ListItem>
+                <ListItem></ListItem>
+                <ListItem name="SP">
+                    <Value value={sp} hex={1} dec />
+                </ListItem>
             </List>
         </div>
     );
