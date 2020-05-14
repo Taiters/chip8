@@ -25,6 +25,15 @@ module.exports = {
                 }]
             },
             {
+                test: /\.(txt)$/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        outputPath: 'examples/',
+                    }
+                }]
+            },
+            {
                 test: /\.jsx?$/,
                     use: [
                         'babel-loader',

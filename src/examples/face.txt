@@ -1,4 +1,4 @@
-const example = `; An example program where a face jumps about. Wait for it to hit the corner 
+; An example program where a face jumps about. Wait for it to hit the corner 
 ; and you win. How exciting
 ;
 ; If you'd rather take control, you can also press the "S" key to toggle manual 
@@ -164,6 +164,3 @@ main:
     ; Make some calls
     CALL draw
     JP mainLoop
-`;
-
-export default example;
