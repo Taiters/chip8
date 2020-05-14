@@ -44,22 +44,23 @@ function useRenderer(gfx) {
         if (ctx === null)
             return;
 
-        let clsRequest = null;
-        let timeout = null;
-        if (gfx.every(v => v === 0)) {
-            // If this is clearing the screen, wait a short period
-            // encase something actually wants to draw (Avoids the flashing look)
-            timeout = setTimeout(() => {
-                clsRequest = requestAnimationFrame(() => drawGfx(gfx, ctx, true));
-            }, 20);
-        } else {
-            drawGfx(gfx, ctx);
-        }
+        drawGfx(gfx, ctx);
+        // let clsRequest = null;
+        // let timeout = null;
+        // if (gfx.every(v => v === 0)) {
+        //     // If this is clearing the screen, wait a short period
+        //     // encase something actually wants to draw (Avoids the flashing look)
+        //     timeout = setTimeout(() => {
+        //         clsRequest = requestAnimationFrame(() => drawGfx(gfx, ctx, true));
+        //     }, 20);
+        // } else {
+        //     drawGfx(gfx, ctx);
+        // }
 
-        return () => {
-            clearTimeout(timeout);
-            cancelAnimationFrame(clsRequest);
-        };
+        // return () => {
+        //     clearTimeout(timeout);
+        //     cancelAnimationFrame(clsRequest);
+        // };
     }, [gfx, ctx]);
 
     return captureCtx;

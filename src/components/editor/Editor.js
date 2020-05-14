@@ -24,6 +24,11 @@ const useStyles = createUseStyles({
         position: 'absolute',
         borderRadius: 0,
         backgroundColor: 'rgb(255, 0, 0, 0.5)',
+    },
+    currentLine: {
+        position:'absolute',
+        borderRadius: 0,
+        backgroundColor: 'rgb(255, 255, 255, 0.125)',
     }
 });
 
@@ -43,7 +48,7 @@ const errorToRange = (error) => new Range(
 
 function useErrors(ace, errors, classes) {
     useEffect(() => {
-        if (ace.current && errors != null) {
+        if (ace.current != null&& errors != null) {
             const session = ace.current.editor.getSession();
             const annotations = [];
             const markers = [];
@@ -65,11 +70,26 @@ function useErrors(ace, errors, classes) {
     }, [ace, errors]);
 }
 
-export default function Editor({code, errors, onChange, onFocus, onBlur}) {
+const useSrcMap = (ace, srcMap, pc, classes) => {
+    useEffect(() => {
+        if (ace.current != null && srcMap != null && pc != null) {
+            const session = ace.current.editor.getSession();
+            const line = srcMap[pc - 0x200];
+
+            const marker = session.addMarker(new Range(line, 0, line, 1), classes.currentLine, 'fullLine');
+            ace.current.editor.scrollToLine(line, true);
+
+            return () => session.removeMarker(marker);
+        }
+    }, [ace, srcMap, pc]);
+};
+
+export default function Editor({code, srcMap, pc, errors, onChange, onFocus, onBlur}) {
     const classes = useStyles();
     const ace = useRef();
 
     useErrors(ace, errors, classes);
+    useSrcMap(ace, srcMap, pc, classes);
 
     return (
         <div className={classes.container}>

@@ -39,7 +39,11 @@ class Cpu {
         if (this.blocked)
             return;
 
-        const opcode = new Opcode((this.memory[this.pc] << 8) | this.memory[this.pc + 1]);
+        const value = (this.memory[this.pc] << 8) | this.memory[this.pc + 1];
+        if (value === 0)
+            return;
+
+        const opcode = new Opcode(value);
         const instruction = this.instructions.find(i => (opcode.value & i.mask) === i.match);
 
         instruction.execute(this, opcode);

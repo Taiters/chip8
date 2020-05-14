@@ -1,6 +1,7 @@
 import React, {
     useState,
     useEffect,
+    useMemo,
     useRef,
 } from 'react';
 import ReactDOM from 'react-dom';
@@ -15,6 +16,7 @@ import { Keymap } from './config';
 import Container from 'chip8/components/container';
 import Header from 'chip8/components/header';
 import Editor from 'chip8/components/editor';
+import Controls from 'chip8/components/controls';
 import Display from 'chip8/components/display';
 import Debugger from 'chip8/components/debugger';
 import example from 'chip8/example';
@@ -46,7 +48,7 @@ const getCpuState = () => ({
     i: cpu.i,
 });
 
-function useCpu() {
+function useCpu(paused) {
     const [cpuState, setCpuState] = useState(getCpuState());
     const animationRequest = useRef();
 
@@ -58,22 +60,28 @@ function useCpu() {
     };
 
     useEffect(() => {
-        animationRequest.current = requestAnimationFrame(update60hz);
-        return () => cancelAnimationFrame(animationRequest.current);
-    }, [animationRequest]);
+        if (!paused) {
+            animationRequest.current = requestAnimationFrame(update60hz);
+            return () => cancelAnimationFrame(animationRequest.current);
+        }
+    }, [animationRequest, paused]);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            cpu.tick();
-        }, 2);
+        if (!paused) {
+            const interval = setInterval(() => {
+                cpu.tick();
+            }, 2);
 
-        return () => clearInterval(interval);
-    }, []);
+            return () => clearInterval(interval);
+        }
+    }, [paused]);
 
     return cpuState;
 }
 
 function useAssembler(code) {
+    const [rom, setRom] = useState([]);
+    const [srcMap, setSrcMap] = useState([]);
     const [errors, setErrors] = useState([]);
 
     useEffect(() => {
@@ -81,8 +89,9 @@ function useAssembler(code) {
         const timeout = setTimeout(() => {
             try {
                 const program = parser.parse(code);
-                const [rom, ] = assembler.assemble(program);
-                cpu.load(rom);
+                const [rom, srcMap] = assembler.assemble(program);
+                setSrcMap(srcMap);
+                setRom(rom);
             } catch(err) {
                 if (err instanceof AsmException)
                     setErrors([err]);
@@ -94,7 +103,7 @@ function useAssembler(code) {
         return () => clearTimeout(timeout);
     }, [code]);
 
-    return errors;
+    return [rom, srcMap, errors];
 }
 
 function useInput(active) {
@@ -133,10 +142,27 @@ function useInput(active) {
 function App() {
     const [code, setCode] = useState(example);
     const [focus, setFocus] = useState(false);
-    const cpu = useCpu();
-    const errors = useAssembler(code);
+    const [paused, setPaused] = useState(false);
+    const [rom, srcMap, errors] = useAssembler(code);
+    const cpuState = useCpu(paused);
 
     useInput(!focus);
+    useEffect(() => {
+        cpu.load(rom), 
+        setPaused(false);
+    }, [rom]);
+
+    const editor = useMemo(() => (
+        <Editor
+            focus={focus}
+            errors={errors} 
+            srcMap={srcMap}
+            code={code}
+            pc={paused ? cpuState.pc : null}
+            onFocus={() => setFocus(true)}
+            onBlur={() => setFocus(false)}
+            onChange={(code) => setCode(code)} />
+    ), [focus, errors, srcMap, code, paused && cpuState.pc]);
 
     return (
         <Container direction={Container.Direction.VERTICAL}>
@@ -145,21 +171,22 @@ function App() {
             </Container.Child>
             <Container>
                 <Container.Child width="50%">
-                    <Editor
-                        focus={focus}
-                        errors={errors} 
-                        code={code}
-                        onFocus={() => setFocus(true)}
-                        onBlur={() => setFocus(false)}
-                        onChange={(code) => setCode(code)} />
+                    {editor}
                 </Container.Child>
                 <Container.Child width="50%">
                     <Container direction={Container.Direction.VERTICAL}>
-                        <Container.Child height="50%">
-                            <Display gfx={cpu.gfx} />
+                        <Container.Child>
+                            <Controls 
+                                paused={paused}
+                                onRestart={() => cpu.load(rom) }
+                                onStep={() => cpu.tick() }
+                                onTogglePause={() => setPaused(!paused) } />
                         </Container.Child>
-                        <Container.Child height="50%">
-                            <Debugger {...cpu} />
+                        <Container.Child height="calc(50% - 20px">
+                            <Display gfx={cpuState.gfx} />
+                        </Container.Child>
+                        <Container.Child height="calc(50% - 20px)">
+                            <Debugger {...cpuState} />
                         </Container.Child>
                     </Container>
                 </Container.Child>
