@@ -37,6 +37,8 @@ jss.createStyleSheet({
 const getCpuState = () => ({
     gfx: cpu.gfx.slice(),
     registers: Array.from(cpu.registers),
+    memory: Array.from(cpu.memory),
+    stack: Array.from(cpu.stack),
     pc: cpu.pc,
     sp: cpu.sp,
     dt: cpu.delayTimer,

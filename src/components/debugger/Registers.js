@@ -4,8 +4,10 @@ import { createUseStyles } from 'react-jss';
 
 const useStyles = createUseStyles({
     container: {
-        padding: [[0, 8]],
+        padding: [[10, 8]],
         display: 'flex',
+        height: 'calc(100% - 20px)',
+        overflowY: 'auto',
     },
     registerList: {
         listStyle: 'none',
@@ -19,7 +21,6 @@ const useStyles = createUseStyles({
     registerName: {
         display: 'inline-block',
         padding: [[4, 8]],
-        // width: 16,
         color: '#9b9891',
     },
     registerValue: {

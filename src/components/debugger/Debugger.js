@@ -4,12 +4,12 @@ import { createUseStyles } from 'react-jss';
 
 import Registers from './Registers';
 import Memory from './Memory';
-import Keyboard from './Keyboard';
 
 
 const useStyles = createUseStyles({
     tabs: {
         '-webkit-tap-highlight-color': 'transparent',
+        height: '100%',
     },
     tab: {
         display: 'inline-block',
@@ -21,6 +21,8 @@ const useStyles = createUseStyles({
         padding: [[8, 16]],
         cursor: 'pointer',
         fontSize: '1em',
+        height: 22,
+        lineHeight: '22px',
     },
     selectedTab: {
         background: '#ebdab4',
@@ -28,11 +30,13 @@ const useStyles = createUseStyles({
     },
     list: {
         backgroundColor: '#5b5545',
-        margin: [[0, 0, 10]],
+        margin: 0,
         padding: 0,
+        height: 40
     },
     panel: {
         display: 'none',
+        height: 'calc(100% - 40px)',
     },
     selectedPanel: {
         display: 'block',
@@ -41,17 +45,13 @@ const useStyles = createUseStyles({
 
 const views = [
     {
-        title: 'REG',
+        title: 'REGISTERS',
         component: Registers,
     },
     {
-        title: 'MEM',
+        title: 'MEMORY',
         component: Memory,
     },
-    {
-        title: 'KEY',
-        component: Keyboard,
-    }
 ];
 
 export default function Debugger(props) {
