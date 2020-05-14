@@ -69,14 +69,21 @@ const Display = ({gfx}) => {
     const captureCtx = useRenderer(gfx);
 
     return (
-        <canvas 
-            style={{
-                width: '100%'
-            }}
-            ref={captureCtx} 
-            width={SCREEN_WIDTH}
-            height={SCREEN_HEIGHT} >
-        </canvas>
+        <div style={{
+            height: '100%',
+            backgroundColor: 'rgb(45, 40, 38)',
+        }}>
+            <canvas 
+                style={{
+                    height: '100%',
+                    margin: '0 auto',
+                    display: 'block',
+                }}
+                ref={captureCtx} 
+                width={SCREEN_WIDTH}
+                height={SCREEN_HEIGHT} >
+            </canvas>
+        </div>
     );
 };
 

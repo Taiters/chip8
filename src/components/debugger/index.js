@@ -1,43 +1,4 @@
-import React, {
-    useMemo,
-    useState,
-} from 'react';
-import ReactJson from 'react-json-view';
-
-function DebuggerButton({hidden, onClick}) {
-    const text = hidden ? 'Show' : 'Hide';
-    return <button onClick={onClick}>{text}</button>;
-}
-
-// Temp debugger
-function Debugger ({data}) {
-    const [hidden, setHidden] = useState(true);
-    const reactJson = useMemo(() => {
-        if (hidden)
-            return null;
-
-        return (
-            <ReactJson 
-                theme='mocha'
-                style={{
-                    width: '100%',
-                    height: 300,
-                    overflow: 'auto',
-                }}
-                src={data} />
-        );
-    }, [data, hidden]);
-
-    return (
-        <React.Fragment>
-            <pre style={{color: 'white'}}>Parser debug view (Slow)</pre>
-            <DebuggerButton
-                hidden={hidden}
-                onClick={() => setHidden(!hidden)} />
-            {reactJson}
-        </React.Fragment>
-    );
-}
+import Debugger from './Debugger';
 
 
 export default Debugger;

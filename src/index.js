@@ -16,6 +16,7 @@ import Container from 'chip8/components/container';
 import Header from 'chip8/components/header';
 import Editor from 'chip8/components/editor';
 import Display from 'chip8/components/display';
+import Debugger from 'chip8/components/debugger';
 import example from 'chip8/example';
 
 
@@ -27,6 +28,8 @@ jss.createStyleSheet({
             padding: 0,
             height: '100%',
             backgroundColor: '#1D2021',
+            color: '#fbf3e3',
+            fontFamily: 'monospace',
         },
     },
 }).attach();
@@ -59,10 +62,10 @@ function useCpu() {
 }
 
 function useAssembler(code) {
-    const [error, setError] = useState(null);
+    const [errors, setErrors] = useState([]);
 
     useEffect(() => {
-        setError(null);
+        setErrors([]);
         const timeout = setTimeout(() => {
             try {
                 const program = parser.parse(code);
@@ -70,7 +73,7 @@ function useAssembler(code) {
                 cpu.load(rom);
             } catch(err) {
                 if (err instanceof AsmException)
-                    setError(err);
+                    setErrors([err]);
                 else
                     console.error(err); // eslint-disable-line no-console
             }
@@ -79,7 +82,7 @@ function useAssembler(code) {
         return () => clearTimeout(timeout);
     }, [code]);
 
-    return error;
+    return errors;
 }
 
 function useInput(active) {
@@ -119,7 +122,7 @@ function App() {
     const [code, setCode] = useState(example);
     const [focus, setFocus] = useState(false);
     const gfx = useCpu();
-    const error = useAssembler(code);
+    const errors = useAssembler(code);
 
     useInput(!focus);
 
@@ -132,7 +135,7 @@ function App() {
                 <Container.Child width="50%">
                     <Editor
                         focus={focus}
-                        error={error} 
+                        errors={errors} 
                         code={code}
                         onFocus={() => setFocus(true)}
                         onBlur={() => setFocus(false)}
@@ -140,8 +143,11 @@ function App() {
                 </Container.Child>
                 <Container.Child width="50%">
                     <Container direction={Container.Direction.VERTICAL}>
-                        <Container.Child>
+                        <Container.Child height="50%">
                             <Display gfx={gfx} />
+                        </Container.Child>
+                        <Container.Child height="50%">
+                            <Debugger />
                         </Container.Child>
                     </Container>
                 </Container.Child>
