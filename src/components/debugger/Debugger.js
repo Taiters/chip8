@@ -54,7 +54,7 @@ const views = [
     }
 ];
 
-export default function Debugger() {
+export default function Debugger(props) {
     const classes = useStyles();
     const tabStyles = {
         className: classes.tab,
@@ -70,7 +70,7 @@ export default function Debugger() {
     for (const view of views) {
         tabs.push(<Tab {...tabStyles} key={view.title}>{view.title}</Tab>);
         panels.push(<TabPanel {...panelStyles} key={view.title}>{
-            React.createElement(view.component, {})
+            React.createElement(view.component, props)
         }</TabPanel>);
 
     }

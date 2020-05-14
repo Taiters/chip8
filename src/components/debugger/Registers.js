@@ -1,8 +1,72 @@
 import React from 'react';
+import { createUseStyles } from 'react-jss';
 
 
-export default function Registers () {
+const useStyles = createUseStyles({
+    container: {
+        padding: [[0, 8]],
+        display: 'flex',
+    },
+    registerList: {
+        listStyle: 'none',
+        margin: 0,
+        padding: 0,
+        flex: '1 1 auto',
+    },
+    item: {
+        marginBottom: 4,
+    },
+    registerName: {
+        display: 'inline-block',
+        padding: [[4, 8]],
+        // width: 16,
+        color: '#9b9891',
+    },
+    registerValue: {
+        fontSize: '1.3em',
+    }
+});
+
+export default function Registers ({registers, pc, sp, dt, st, i}) {
+    const classes = useStyles();
+
+    const registerList = registers.map((value, index) => {
+        const name = `v${index.toString(16).toUpperCase()}`;
+        return (
+            <li key={index} className={classes.item}>
+                <span className={classes.registerName}>{name}</span>
+                <span className={classes.registerValue}>{value}</span>
+            </li>
+        );
+    });
+
     return (
-        <h1>REGISTERS</h1>
+        <div className={classes.container}>
+            <ul className={classes.registerList}>
+                {registerList}
+            </ul>
+            <ul className={classes.registerList}>
+                <li className={classes.item}>
+                    <span className={classes.registerName}>PC</span>
+                    <span className={classes.registerValue}>{pc}</span>
+                </li>
+                <li className={classes.item}>
+                    <span className={classes.registerName}>SP</span>
+                    <span className={classes.registerValue}>{sp}</span>
+                </li>
+                <li className={classes.item}>
+                    <span className={classes.registerName}>I</span>
+                    <span className={classes.registerValue}>{i}</span>
+                </li>
+                <li className={classes.item}>
+                    <span className={classes.registerName}>DT</span>
+                    <span className={classes.registerValue}>{dt}</span>
+                </li>
+                <li className={classes.item}>
+                    <span className={classes.registerName}>ST</span>
+                    <span className={classes.registerValue}>{st}</span>
+                </li>
+            </ul>
+        </div>
     );
 }

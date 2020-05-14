@@ -34,14 +34,24 @@ jss.createStyleSheet({
     },
 }).attach();
 
+const getCpuState = () => ({
+    gfx: cpu.gfx.slice(),
+    registers: Array.from(cpu.registers),
+    pc: cpu.pc,
+    sp: cpu.sp,
+    dt: cpu.delayTimer,
+    st: cpu.soundTimer,
+    i: cpu.i,
+});
 
 function useCpu() {
-    const [gfx, setGfx] = useState([]);
+    const [cpuState, setCpuState] = useState(getCpuState());
     const animationRequest = useRef();
 
     const update60hz = () => {
-        setGfx(cpu.gfx.slice());
         cpu.updateTimers();
+
+        setCpuState(getCpuState());
         animationRequest.current = requestAnimationFrame(update60hz);
     };
 
@@ -58,7 +68,7 @@ function useCpu() {
         return () => clearInterval(interval);
     }, []);
 
-    return gfx;
+    return cpuState;
 }
 
 function useAssembler(code) {
@@ -69,7 +79,7 @@ function useAssembler(code) {
         const timeout = setTimeout(() => {
             try {
                 const program = parser.parse(code);
-                const rom = assembler.assemble(program);
+                const [rom, ] = assembler.assemble(program);
                 cpu.load(rom);
             } catch(err) {
                 if (err instanceof AsmException)
@@ -121,7 +131,7 @@ function useInput(active) {
 function App() {
     const [code, setCode] = useState(example);
     const [focus, setFocus] = useState(false);
-    const gfx = useCpu();
+    const cpu = useCpu();
     const errors = useAssembler(code);
 
     useInput(!focus);
@@ -144,10 +154,10 @@ function App() {
                 <Container.Child width="50%">
                     <Container direction={Container.Direction.VERTICAL}>
                         <Container.Child height="50%">
-                            <Display gfx={gfx} />
+                            <Display gfx={cpu.gfx} />
                         </Container.Child>
                         <Container.Child height="50%">
-                            <Debugger />
+                            <Debugger {...cpu} />
                         </Container.Child>
                     </Container>
                 </Container.Child>

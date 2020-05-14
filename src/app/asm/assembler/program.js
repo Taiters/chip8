@@ -30,6 +30,7 @@ class ProgramAssembler {
     assemble(program) {
         const meta = this.getProgramMeta(program);
         const assembledProgram = new Uint8Array(meta.length);
+        const srcMap = [];
 
         let offset = 0;
         for (const line of program.lines) {
@@ -38,11 +39,12 @@ class ProgramAssembler {
             const bytes = BYTES_PER_LINE[line.type];
 
             for (let i = bytes-1; i >= 0; i--) {
+                srcMap[offset] = line.token.line;
                 assembledProgram[offset++] = (data >> (8 * i) & 0xff);
             }
         }
 
-        return assembledProgram;
+        return [assembledProgram, srcMap];
     }
 
     static builder() {
