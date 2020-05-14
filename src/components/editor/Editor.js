@@ -1,6 +1,4 @@
 import brace from 'brace'; // eslint-disable-line no-unused-vars
-import 'brace/theme/gruvbox';
-import './mode';
 
 import React, {
     useRef,
@@ -8,7 +6,10 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
-import { createUseStyles } from 'react-jss';
+import { createUseStyles, useTheme } from 'react-jss';
+
+import './mode';
+import './theme';
 
 
 const Range = brace.acequire('ace/range').Range;
@@ -20,14 +21,14 @@ const useStyles = createUseStyles({
     },
     marker: {
         position: 'absolute',
-        backgroundColor: 'rgba(255, 55, 101, 0.3)',
+        backgroundColor: (theme) => theme.colors.primary,
     },
     breakpoint: {
         '&:before': {
             content: '""',
             width: 12,
             height: 12,
-            backgroundColor: '#6682FF',
+            backgroundColor: (theme) => theme.colors.secondaryDark,
             display: 'block',
             borderRadius: 6,
             position: 'absolute',
@@ -106,7 +107,8 @@ function useGutterListener(ace, onGutterClick) {
 }
 
 export default function Editor({code, errors, breakpoints, onChange, onFocus, onBlur, onGutterClick}) {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles(theme);
     const ace = useRef();
 
     useErrors(ace, errors, classes);
@@ -125,7 +127,7 @@ export default function Editor({code, errors, breakpoints, onChange, onFocus, on
                 onFocus={onFocus}
                 onBlur={onBlur}
                 setOptions={{ printMargin: null }}
-                theme='gruvbox' />
+                theme='chip8' />
         </div>
     );
 }
