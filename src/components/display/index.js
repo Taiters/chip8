@@ -71,6 +71,7 @@ const Display = ({gfx}) => {
     return (
         <div style={{
             height: '100%',
+            maxWidth: '100%',
             backgroundColor: 'rgb(45, 40, 38)',
         }}>
             <canvas 
