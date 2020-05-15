@@ -43,7 +43,7 @@ function App() {
     const [paused, setPaused] = useState(false);
 
     const cpuState = useCpu(cpu, paused, !focus);
-    const [project, setProject] = useProject('example_face');
+    const [project, setProject] = useProject();
     const [rom, srcMap, errors] = useAssembler(project.code);
 
     useEffect(() => cpu.load(rom), [rom]);

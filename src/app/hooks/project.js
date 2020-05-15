@@ -3,23 +3,23 @@ import {
     useEffect,
 } from 'react';
 
-import { getProject } from 'chip8/app/projects';
+import { projectStore, getExamples, loadExample } from 'chip8/app/projects';
 
 
-export default function useProject(projectId) {
-    const [project, setProject] = useState({projectId});
+export default function useProject() {
+    const [project, setProject] = useState({});
 
     useEffect(() => {
-        const proj = getProject(projectId);
-        setProject(project => ({...project, title: proj.title}));
+        const currentProjectId = projectStore.current();
 
-        proj.loadCode().then(code => {
-            setProject(project => ({
-                ...project,
-                code,
-            }));
-        });
-    }, [projectId]);
+        if (currentProjectId != null) {
+            setProject(projectStore.get(currentProjectId));
+            return;
+        }
+
+        const examples = getExamples();
+        loadExample(examples[0]).then(setProject);
+    }, []);
 
     return [project, setProject];
 }
