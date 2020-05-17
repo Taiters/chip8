@@ -1,13 +1,14 @@
 import React, {
     useState,
-    useEffect,
     useMemo,
+    useEffect,
 } from 'react';
 import ReactDOM from 'react-dom';
 import jss from 'jss';
 import preset from 'jss-preset-default';
 
 import { createCpu } from 'chip8/app/cpu';
+import { loadExample, ProjectStore } from 'chip8/app/projects';
 import {
     useCpu,
     useAssembler,
@@ -20,6 +21,10 @@ import Editor from 'chip8/components/editor';
 import Controls from 'chip8/components/controls';
 import Display from 'chip8/components/display';
 import Debugger from 'chip8/components/debugger';
+import Modal from 'chip8/components/modal';
+import NewProject from 'chip8/components/newProject';
+import OpenProject from 'chip8/components/openProject';
+import ErrorBoundary from 'chip8/components/error';
 
 
 jss.setup(preset());
@@ -37,16 +42,17 @@ jss.createStyleSheet({
 }).attach();
 
 const cpu = createCpu();
+const projectStore = new ProjectStore(window.localStorage);
 
 function App() {
     const [focus, setFocus] = useState(false);
     const [paused, setPaused] = useState(false);
+    const [newProjectVisible, setNewProjectVisible] = useState(false);
+    const [openProjectVisible, setOpenProjectVisible] = useState(false);
 
     const cpuState = useCpu(cpu, paused, !focus);
-    const [project, setProject] = useProject();
-    const [rom, srcMap, errors] = useAssembler(project.code);
-
-    useEffect(() => cpu.load(rom), [rom]);
+    const [project, setProject] = useProject(projectStore);
+    const [rom, srcMap, errors] = useAssembler(cpu, project.code);
 
     const editor = useMemo(() => (
         <Editor
@@ -60,35 +66,87 @@ function App() {
             onChange={(code) => setProject(project => ({...project, code}))} />
     ), [focus, errors, srcMap, project.code, paused && cpuState.pc]);
 
+    useEffect(() => {
+        const saveHandler = (e) => {
+            if (e.key === 's' && e.metaKey) {
+                e.preventDefault();
+
+                saveProject();
+            }
+        };
+        window.addEventListener('keydown', saveHandler);
+        
+        return () => window.removeEventListener('keydown', saveHandler);
+    }, [project]);
+
+    const createNewProject = (newProject) => {
+        const id = projectStore.save(newProject);
+        projectStore.setCurrent(id);
+
+        setProject({...newProject, id});
+    };
+
+    const saveProject = () => {
+        if (!project.user || project.id == null) {
+            createNewProject(project);
+        } else {
+            projectStore.save(project);
+        }
+    };
+
     return (
-        <Container direction={Container.Direction.VERTICAL}>
-            <Container.Child>
-                <Header 
-                    project={project.title} />
-            </Container.Child>
-            <Container>
-                <Container.Child width="50%">
-                    {editor}
+        <ErrorBoundary>
+            <Container direction={Container.Direction.VERTICAL}>
+                <Container.Child>
+                    <Header
+                        project={project}
+                        onNew={() => setNewProjectVisible(true)}
+                        onOpen={() => setOpenProjectVisible(true)}
+                        onSave={saveProject} />
+
                 </Container.Child>
-                <Container.Child width="50%">
-                    <Container direction={Container.Direction.VERTICAL}>
-                        <Container.Child>
-                            <Controls 
-                                paused={paused}
-                                onRestart={() => cpu.load(rom) }
-                                onStep={() => cpu.tick() }
-                                onTogglePause={() => setPaused(!paused) } />
-                        </Container.Child>
-                        <Container.Child height="calc(50% - 20px">
-                            <Display gfx={cpuState.gfx} />
-                        </Container.Child>
-                        <Container.Child height="calc(50% - 20px)">
-                            <Debugger {...cpuState} />
-                        </Container.Child>
-                    </Container>
-                </Container.Child>
+                <Container>
+                    <Container.Child width="50%">
+                        {editor}
+                    </Container.Child>
+                    <Container.Child width="50%">
+                        <Container direction={Container.Direction.VERTICAL}>
+                            <Container.Child>
+                                <Controls 
+                                    paused={paused}
+                                    onRestart={() => cpu.load(rom) }
+                                    onStep={() => cpu.tick() }
+                                    onTogglePause={() => setPaused(!paused) } />
+                            </Container.Child>
+                            <Container.Child height="calc(50% - 20px">
+                                <Display gfx={cpuState.gfx} />
+                            </Container.Child>
+                            <Container.Child height="calc(50% - 20px)">
+                                <Debugger {...cpuState} />
+                            </Container.Child>
+                        </Container>
+                    </Container.Child>
+                </Container>
             </Container>
-        </Container>
+            <Modal title='New project' visible={newProjectVisible} onClose={() => setNewProjectVisible(false)}>
+                <NewProject onProject={(project) => {
+                    setNewProjectVisible(false);
+                    createNewProject(project);
+                }} />
+            </Modal>
+            <Modal title='Open project' visible={openProjectVisible} onClose={() => setOpenProjectVisible(false)}>
+                <OpenProject
+                    projectStore={projectStore}
+                    onOpenProject={project => {
+                        setOpenProjectVisible(false);
+                        setProject(project);
+                    }} 
+                    onOpenExample={example => {
+                        setOpenProjectVisible(false);
+                        loadExample(example).then(setProject);
+                    }}/>
+            </Modal>
+        </ErrorBoundary>
     );
 }
 

@@ -3,7 +3,8 @@
 export type Project = {
     id: ?string,
     title: string,
-    code: string
+    code: string,
+    user: bool,
 };
 
 export type Example = {

@@ -3,23 +3,42 @@ import {
     useEffect,
 } from 'react';
 
-import { projectStore, getExamples, loadExample } from 'chip8/app/projects';
+import { getExamples, loadExample } from 'chip8/app/projects';
 
 
-export default function useProject() {
+const isNewProject = (project) => project.user && project.id == null;
+
+export default function useProject(projectStore) {
     const [project, setProject] = useState({});
 
     useEffect(() => {
-        const currentProjectId = projectStore.current();
+        const currentProjectId = projectStore.getCurrent();
 
         if (currentProjectId != null) {
-            setProject(projectStore.get(currentProjectId));
-            return;
+            const currentProject = projectStore.get(currentProjectId);
+            if (currentProject != null) {
+                setProject(currentProject);
+                return;
+            } else {
+                projectStore.clearCurrent();
+            }
         }
 
         const examples = getExamples();
         loadExample(examples[0]).then(setProject);
     }, []);
+
+    useEffect(() => {
+        if (isNewProject(project)) {
+            const id = projectStore.save(project);
+            projectStore.setCurrent(id);
+
+            setProject((project) => ({...project, id}));
+
+            console.log('Saved new project'); // eslint-disable-line no-console
+        }
+        
+    }, [project]);
 
     return [project, setProject];
 }

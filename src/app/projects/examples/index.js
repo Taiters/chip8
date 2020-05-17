@@ -19,6 +19,7 @@ export function loadExample(name: string): Promise<?Project> {
 
     return example.load().then(code => ({
         id: null,
+        user: false,
         title: example.title,
         code,
     }));

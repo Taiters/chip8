@@ -14,29 +14,40 @@ export default class ProjectStore {
         this.store = store;
     }
 
-    all(): Map<string, Project> {
+    all(): {[string]: Project} {
         const serialized = this.store.getItem(PROJECTS_KEY);
         if (serialized != null)
             return JSON.parse(serialized);
         
-        return new Map<string, Project>();
+        return {};
     }
 
-    save(project: Project) {
+    save(project: Project): string {
         const id = project.id || uuidv4();
         const projects = this.all();
 
-        projects.set(id, project);
+        project.id = id;
+        projects[id] = project;
 
         this.store.setItem(PROJECTS_KEY, JSON.stringify(projects));
+
+        return id;
     }
 
     get(id: string): ?Project {
         const projects = this.all();
-        return projects.get(id);
+        return projects[id];
     }
 
-    current(): ?string {
+    getCurrent(): ?string {
         return this.store.getItem(CURRENT_PROJECT);
+    }
+
+    clearCurrent() {
+        this.store.removeItem(CURRENT_PROJECT);
+    }
+
+    setCurrent(id: string) {
+        this.store.setItem(CURRENT_PROJECT, id);
     }
 }

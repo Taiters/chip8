@@ -7,7 +7,7 @@ import { parser, assembler } from 'chip8/app/asm';
 import { AsmException } from 'chip8/app/asm/exceptions';
 
 
-export default function useAssembler(code) {
+export default function useAssembler(cpu, code) {
     const [rom, setRom] = useState([]);
     const [srcMap, setSrcMap] = useState([]);
     const [errors, setErrors] = useState([]);
@@ -34,6 +34,8 @@ export default function useAssembler(code) {
 
         return () => clearTimeout(timeout);
     }, [code]);
+
+    useEffect(() => cpu.load(rom), [rom]);
 
     return [rom, srcMap, errors];
 }

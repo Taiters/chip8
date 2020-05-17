@@ -32,8 +32,9 @@ function useUpdate60hz(cpu, paused, setState) {
     useEffect(() => {
         if (!paused) {
             animationRequest.current = requestAnimationFrame(update60hz);
-            return () => cancelAnimationFrame(animationRequest.current);
         }
+
+        return () => cancelAnimationFrame(animationRequest.current);
     }, [animationRequest, paused]);
 }
 

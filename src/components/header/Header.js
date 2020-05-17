@@ -1,6 +1,11 @@
-import React from 'react';
+import React, {
+    useState,
+    useEffect,
+    useRef,
+} from 'react';
 import { createUseStyles } from 'react-jss';
 
+import { DropdownMenu, DropdownItem } from './Dropdown';
 import logoImg from './chip8-logo.png';
 
 
@@ -19,19 +24,6 @@ const useStyles = createUseStyles({
         display: 'flex',
         flex: '1 1 auto',
     },
-    menuItem: {
-        border: 'none',
-        padding: 'none',
-        display: 'block',
-        textAlign: 'center',
-        backgroundColor: '#1D2021',
-        color: '#fbf3e3',
-        fontFamily: 'monospace',
-        cursor: 'pointer',
-        margin: [[0, 2]],
-        fontSize: '1em',
-        width: 80,
-    },
     currentProject: {
         lineHeight: '42px',
     },
@@ -40,8 +32,24 @@ const useStyles = createUseStyles({
     }
 });
 
-export default function Header({project}) {
+export default function Header({project, onNew, onSave, onOpen}) {
     const classes = useStyles();
+    const fileRef = useRef();
+    const [fileMenuVisible, setFileMenuVisible] = useState(false);
+
+    useEffect(() => {
+        if (!fileMenuVisible || fileRef.current == null)
+            return;
+        
+        const handleClick = (e) => {
+            if (!fileRef.current.contains(e.target))
+                setFileMenuVisible(false);
+        };
+
+        window.addEventListener('click', handleClick);
+
+        return () => window.removeEventListener('click', handleClick);
+    }, [fileMenuVisible, fileRef]);
 
     return (
         <div className={classes.header}>
@@ -49,12 +57,23 @@ export default function Header({project}) {
                 <img src={logoImg} />
             </div>
             <div className={classes.menu}>
-                {/* <button className={classes.menuItem} onClick={onNew}>New</button>
-                <button className={classes.menuItem} onClick={onOpen}>Open</button>
-                <button className={classes.menuItem} onClick={onOpen}>Docs</button> */}
+                <DropdownMenu title='File' ref={fileRef} visible={fileMenuVisible} onToggle={() => setFileMenuVisible(!fileMenuVisible)}>
+                    <DropdownItem title='New' onClick={() => {
+                        setFileMenuVisible(false);
+                        onNew();
+                    }} />
+                    <DropdownItem title='Open' onClick={() => {
+                        setFileMenuVisible(false);
+                        onOpen();
+                    }} />
+                    <DropdownItem title='Save' onClick={() => {
+                        setFileMenuVisible(false);
+                        onSave();
+                    }} />
+                </DropdownMenu>
             </div>
             <div className={classes.currentProject}>
-                <span className={classes.project}>Project:</span> {project}
+                <span className={classes.project}>Project:</span> {project.title}
             </div>
         </div>
     );
