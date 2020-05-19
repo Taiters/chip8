@@ -1,12 +1,19 @@
-import { TokenTypes } from '../constants';
+import { TokenTypes, Operands } from '../constants';
 import { TokenStream } from './tokenStream';
 import { ExistingLabelException, UnexpectedTokenException } from './exceptions';
+import { OperandsParser, operand } from './operands';
 import { expectNextToken } from './utils';
 
 
 class ProgramParser {
     constructor(parsers) {
         this.parsers = parsers;
+        this.definitionParsers = {
+            [Operands.REGISTER]: OperandsParser.builder().addOperand(operand(Operands.REGISTER)).build(),
+            [Operands.BYTE]: OperandsParser.builder().addOperand(operand(Operands.BYTE)).build(),
+            [Operands.NIBBLE]: OperandsParser.builder().addOperand(operand(Operands.NIBBLE)).build(),
+            [Operands.ADDRESS]: OperandsParser.builder().addOperand(operand(Operands.ADDRESS)).build(),
+        };
     }
 
     getLabel(tokens) {
@@ -30,21 +37,15 @@ class ProgramParser {
             tokens.next();
             tokens.skip(TokenTypes.WS);
 
+            const type = expectNextToken(tokens, TokenTypes.OPERAND_TYPE);
+            tokens.skip(TokenTypes.WS);
             const identifier = expectNextToken(tokens, TokenTypes.IDENTIFIER);
 
-            tokens.skip(TokenTypes.WS);
-            expectNextToken(tokens, TokenTypes.COMMA);
-            tokens.skip(TokenTypes.WS);
+            const parser = this.definitionParsers[type.value];
 
-            const value = expectNextToken(tokens, 
-                TokenTypes.REGISTER,
-                TokenTypes.HEX,
-                TokenTypes.BIN,
-                TokenTypes.DEC
-            );
-
+            tokens.skip(TokenTypes.WS);
             if (typeof identifier.value === 'string') {
-                definitions.set(identifier.value, value);
+                definitions.set(identifier.value, parser.parse(tokens, definitions)[0]);
             } else {
                 throw 'Expected string value in definition identifier';
             }

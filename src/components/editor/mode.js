@@ -46,6 +46,11 @@ ace.define('ace/mode/chip8_highlight_rules', ['require', 'exports', 'module', 'a
                     caseInsensitive: true,
                 },
                 {
+                    token: 'support.type',
+                    regex: getRegex(TokenTypes.OPERAND_TYPE),
+                    caseInsensitive: true,
+                },
+                {
                     token: 'variable.parameter',
                     regex: getRegex(TokenTypes.IDENTIFIER),
                     caseInsensitive: true,

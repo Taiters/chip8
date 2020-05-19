@@ -4,6 +4,7 @@ import type {
 } from './constants';
 import {
     TokenTypes,
+    Operands,
     Mnemonics,
 } from './constants';
 
@@ -80,8 +81,18 @@ const Tokens: Array<TokenDefinition> = [
         value: (match) => match,
     },
     {
+        type: TokenTypes.OPERAND_TYPE,
+        match: new RegExp(`(?:${Operands.REGISTER}|${Operands.ADDRESS}|${Operands.BYTE}|${Operands.NIBBLE})`, 'i'),
+        value: (match) => match,
+    },
+    {
         type: TokenTypes.IDENTIFIER,
         match: /[A-Z_-]+\b/i,
+        value: (match) => match,
+    },
+    {
+        type: TokenTypes.PLUS,
+        match: /\+/,
         value: (match) => match,
     },
     {

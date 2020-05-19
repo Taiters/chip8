@@ -103,37 +103,37 @@ class InstructionModeBuilder {
 
 const ModeAssemblers = {
     NNN: (mask) => (instruction, lookup) => {
-        const addressName = instruction.operands.find(a => a.type == Operands.ADDRESS);
-        const address = lookup[addressName.token.value];
+        const addressOperand = instruction.operands.find(a => a.type == Operands.ADDRESS);
+        const address = lookup[addressOperand.value.identifier];
 
         if (!address)
-            throw new LabelNotFoundException(addressName.token);
+            throw new LabelNotFoundException(addressOperand.token);
         
-        return mask | address;
+        return mask | (address + addressOperand.value.offset);
     },
     XYN: (mask) => (instruction) => {
-        const x = instruction.operands[0].token.value;
-        const y = instruction.operands[1].token.value;
-        const n = instruction.operands[2].token.value;
+        const x = instruction.operands[0].value;
+        const y = instruction.operands[1].value;
+        const n = instruction.operands[2].value;
 
         return mask | (x << 8) | (y << 4) | n;
     },
     XKK: (mask) => (instruction) => {
-        const x = instruction.operands[0].token.value;
-        const kk = instruction.operands[1].token.value;
+        const x = instruction.operands[0].value;
+        const kk = instruction.operands[1].value;
 
         return mask | (x << 8) | kk;
     },
     XY: (mask) => (instruction) => {
-        const x = instruction.operands[0].token.value;
-        const y = instruction.operands[1].token.value;
+        const x = instruction.operands[0].value;
+        const y = instruction.operands[1].value;
 
         return mask | (x << 8) | (y << 4);
     },
     X: (mask) => (instruction) => {
         const x = instruction.operands.find(a => a.type === Operands.REGISTER);
 
-        return mask | (x.token.value << 8);
+        return mask | (x.value << 8);
     },
 };
 

@@ -21,7 +21,6 @@ class Cpu {
         this.i = 0;
         this.blocked = false;
         this.keyCallback = null;
-
         this.memory.set(font);
         this.gfx.fill(0);
         this.keys.fill(false);
