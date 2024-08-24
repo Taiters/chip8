@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-target-blank */
+
 import React from 'react';
 
 import { createUseStyles } from 'react-jss';
@@ -6,6 +8,9 @@ import { createUseStyles } from 'react-jss';
 const useStyles = createUseStyles({
     help: {
         maxWidth: '700px',
+        '& a': {
+            color: '#acd994',
+        }
     }
 });
 
@@ -24,8 +29,10 @@ export default function Help() {
             <p>Already have a CHIP-8 ROM? Load it directly into the emulator and start playing or modifying it right away.</p>
             <h3>Learn & Experiment</h3>
             <p>Whether you&#39;re a seasoned developer or new to CHIP-8, this emulator is a great way to learn and experiment with low-level programming.</p>
-            <p>For a detailed guide on the assembly-like syntax, available commands, and more advanced features, please visit the Documentation Page.</p>
+            <p>For a detailed guide on the assembly-like syntax, available commands, and more advanced features, please visit the <a href="https://github.com/Taiters/chip8/blob/master/docs/docs.md" alt="Link to documentation">Documentation Page</a>.</p>
             <p>Feel free to explore, experiment, and create your own CHIP-8 masterpieces! Enjoy your coding journey!</p>
+            <hr/>
+            <p style={{textAlign: 'center'}}>© 2024 <a alt="Personal site" target="_blank" href="https://dotslashdan.com">Dan Tait</a> | <a target="_blank" alt="Github repository" href="https://github.com/Taiters/chip8">Github</a></p>
         </div>
     );
 }
