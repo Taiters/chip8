@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 
 const version = process.env.TRAVIS_BUILD_NUMBER || 'local';
@@ -57,7 +58,12 @@ module.exports = {
             templateParameters: {
                 version: version
             },
-        })
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: path.resolve(__dirname, 'src', 'static'), to: path.resolve(__dirname, 'dist') },
+            ],
+        }),
     ]
 };
 

@@ -163,7 +163,6 @@ class OperandsParser {
 
         if (definedOperand != null) {
             const operandDefinition = this.operandParserDefinitions.find(definition => definition.operandDefinition.type === definedOperand.type);
-            debugger; // eslint-disable-line no-debugger
             if (operandDefinition != null) {
                 operands.push(definedOperand);
 
