@@ -7,6 +7,7 @@ import { getExamples, loadExample } from 'chip8/app/projects';
 
 
 const isNewProject = (project) => project.user && project.id == null;
+const isPersistedProject = (project) => project.rom != null;
 
 export default function useProject(projectStore) {
     const [project, setProject] = useState({});
@@ -29,7 +30,7 @@ export default function useProject(projectStore) {
     }, []);
 
     useEffect(() => {
-        if (isNewProject(project)) {
+        if (isNewProject(project) && isPersistedProject(project)) {
             const id = projectStore.save(project);
             projectStore.setCurrent(id);
 

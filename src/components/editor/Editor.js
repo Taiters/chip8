@@ -29,6 +29,11 @@ const useStyles = createUseStyles({
         position:'absolute',
         borderRadius: 0,
         backgroundColor: 'rgb(255, 255, 255, 0.125)',
+    },
+    notAvailable: {
+        textAlign: 'center',
+        fontSize: '1.5em',
+        color: '#9b9891',
     }
 });
 
@@ -84,7 +89,7 @@ const useSrcMap = (ace, srcMap, pc, classes) => {
     }, [ace, srcMap, pc]);
 };
 
-export default function Editor({code, srcMap, pc, errors, onChange, onFocus, onBlur}) {
+export default function Editor({project, srcMap, pc, errors, onChange, onFocus, onBlur}) {
     const classes = useStyles();
     const ace = useRef();
 
@@ -93,17 +98,21 @@ export default function Editor({code, srcMap, pc, errors, onChange, onFocus, onB
 
     return (
         <div className={classes.container}>
-            <AceEditor 
-                ref={ace}
-                width='100%'
-                height='100%'
-                mode='chip8'
-                value={code}
-                onChange={onChange}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                setOptions={{ printMargin: null }}
-                theme='gruvbox' />
+            {project.rom == null ? (
+                <AceEditor 
+                    ref={ace}
+                    width='100%'
+                    height='100%'
+                    mode='chip8'
+                    value={project.code}
+                    onChange={onChange}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    setOptions={{ printMargin: null }}
+                    theme='gruvbox' />
+            ) : (
+                <p className={classes.notAvailable}>Editor not available for imported ROMs.</p>
+            )}
         </div>
     );
 }

@@ -66,6 +66,13 @@ const useStyles = createUseStyles({
             backgroundColor: '#373737',
         }
     },
+    dropdownItemDisabled: {
+        cursor: 'default',
+        color: '#9b9891',
+        '&:hover': {
+            backgroundColor: '#1D2021',
+        }
+    }
 });
 
 
@@ -83,10 +90,11 @@ export const DropdownMenu = React.forwardRef(function DropdownMenu({title, visib
     );
 });
 
-export function DropdownItem({title, onClick}) {
+export function DropdownItem({title, onClick, disabled=false}) {
     const classes = useStyles();
+    const className = `${classes.dropdownItem} ${disabled ? classes.dropdownItemDisabled : ''}`;
     
     return (
-        <button className={classes.dropdownItem} onClick={onClick}>{title}</button>
+        <button disabled={disabled} className={className} onClick={onClick}>{title}</button>
     );
 }

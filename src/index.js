@@ -52,14 +52,14 @@ function App() {
 
     const cpuState = useCpu(cpu, paused, !focus);
     const [project, setProject] = useProject(projectStore);
-    const [rom, srcMap, errors] = useAssembler(cpu, project.code);
+    const [rom, srcMap, errors] = useAssembler(cpu, project);
 
     const editor = useMemo(() => (
         <Editor
             focus={focus}
             errors={errors} 
             srcMap={srcMap}
-            code={project.code}
+            project={project}
             pc={paused ? cpuState.pc : null}
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}
@@ -112,6 +112,29 @@ function App() {
             .then(writeable => writeable.close());
     };
 
+    const importROM = () => {
+        window.showOpenFilePicker({
+            types: [
+                {
+                    description: 'Chip-8 ROM file',
+                    accept: { 'application/octet-stream': ['.ch8'] },
+                },
+            ],
+            multiple: false,
+        })
+            .then(([handle]) => handle.getFile())
+            .then(file => {
+                const reader = new FileReader();
+                reader.addEventListener('load', () => {
+                    setProject({
+                        title: file.name,
+                        rom: new Uint8Array(reader.result),
+                    });
+                });
+                reader.readAsArrayBuffer(file);
+            });
+    };
+
     return (
         <ErrorBoundary>
             <Container direction={Container.Direction.VERTICAL}>
@@ -121,7 +144,8 @@ function App() {
                         onNew={() => setNewProjectVisible(true)}
                         onOpen={() => setOpenProjectVisible(true)}
                         onSave={saveProject} 
-                        onExportROM={exportROM} />
+                        onExportROM={exportROM}
+                        onImportROM={importROM} />
 
                 </Container.Child>
                 <Container>

@@ -3,7 +3,8 @@
 export type Project = {
     id: ?string,
     title: string,
-    code: string,
+    code: ?string,
+    rom: ?Uint8Array,
     user: bool,
 };
 

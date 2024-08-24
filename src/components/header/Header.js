@@ -32,7 +32,7 @@ const useStyles = createUseStyles({
     }
 });
 
-export default function Header({project, onNew, onSave, onOpen, onExportROM}) {
+export default function Header({project, onNew, onSave, onOpen, onExportROM, onImportROM}) {
     const classes = useStyles();
     const fileRef = useRef();
     const [fileMenuVisible, setFileMenuVisible] = useState(false);
@@ -66,18 +66,22 @@ export default function Header({project, onNew, onSave, onOpen, onExportROM}) {
                         setFileMenuVisible(false);
                         onOpen();
                     }} />
-                    <DropdownItem title='Save' onClick={() => {
+                    <DropdownItem title='Save' disabled={project.rom} onClick={() => {
                         setFileMenuVisible(false);
                         onSave();
                     }} />
-                    <DropdownItem title='Export ROM' onClick={() => {
+                    <DropdownItem title='Export ROM' disabled={project.rom} onClick={() => {
                         setFileMenuVisible(false);
                         onExportROM();
+                    }} />
+                    <DropdownItem title='Import ROM' onClick={() => {
+                        setFileMenuVisible(false);
+                        onImportROM();
                     }} />
                 </DropdownMenu>
             </div>
             <div className={classes.currentProject}>
-                <span className={classes.project}>Project:</span> {project.title}
+                <span className={classes.project}>{project.rom != null ? 'ROM' : 'Project'}:</span> {project.title}
             </div>
         </div>
     );

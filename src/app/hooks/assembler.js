@@ -7,10 +7,13 @@ import { parser, assembler } from 'chip8/app/asm';
 import { AsmException } from 'chip8/app/asm/exceptions';
 
 
-export default function useAssembler(cpu, code) {
+export default function useAssembler(cpu, project) {
     const [rom, setRom] = useState([]);
     const [srcMap, setSrcMap] = useState([]);
     const [errors, setErrors] = useState([]);
+
+    const code = project.code;
+    const projectRom = project.rom;
 
     useEffect(() => {
         setErrors([]);
@@ -35,7 +38,19 @@ export default function useAssembler(cpu, code) {
         return () => clearTimeout(timeout);
     }, [code]);
 
-    useEffect(() => cpu.load(rom), [rom]);
+    useEffect(() => {
+        if (projectRom != null) {
+            setRom(projectRom);
+        }
+    }, [projectRom]);
+
+    useEffect(() => {
+        try {
+            cpu.load(rom);
+        } catch {
+            alert('Could not load this ROM');
+        }
+    }, [rom]);
 
     return [rom, srcMap, errors];
 }
