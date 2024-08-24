@@ -51,6 +51,7 @@ function App() {
     const [paused, setPaused] = useState(false);
     const [newProjectVisible, setNewProjectVisible] = useState(false);
     const [openProjectVisible, setOpenProjectVisible] = useState(false);
+    const [mobileWarningVisible, setMobileWarningVisible] = useState(window.innerWidth <= 500);
     const [helpVisible, setHelpVisible] = useState(false);
 
     const cpuState = useCpu(cpu, paused, !focus);
@@ -195,6 +196,11 @@ function App() {
             </Modal>
             <Modal title='Help' visible={helpVisible} onClose={() => setHelpVisible(false)}>
                 <Help />
+            </Modal>
+            <Modal title='Small screen warning' visible={mobileWarningVisible} onClose={() => setMobileWarningVisible(false)}>
+                <h2>Welcome to this Web-Based CHIP-8 Emulator!</h2>
+                <p>It looks like you&#39;re on a mobile device / small screen.</p>
+                <p>This works best on a desktop / larger screen. However you&#39;re welcome to carry on and give it a try!</p>
             </Modal>
         </ErrorBoundary>
     );
