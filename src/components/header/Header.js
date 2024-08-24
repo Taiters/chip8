@@ -24,6 +24,23 @@ const useStyles = createUseStyles({
         display: 'flex',
         flex: '1 1 auto',
     },
+    menuItem: {
+        border: 'none',
+        padding: 'none',
+        display: 'block',
+        textAlign: 'center',
+        backgroundColor: '#1D2021',
+        color: '#fbf3e3',
+        fontFamily: 'monospace',
+        cursor: 'pointer',
+        margin: [[8, 2]],
+        fontSize: '1em',
+        width: 100,
+
+        '&:hover': {
+            backgroundColor: '#353936',
+        }
+    },
     currentProject: {
         lineHeight: '42px',
     },
@@ -32,24 +49,31 @@ const useStyles = createUseStyles({
     }
 });
 
-export default function Header({project, onNew, onSave, onOpen, onExportROM, onImportROM}) {
-    const classes = useStyles();
-    const fileRef = useRef();
-    const [fileMenuVisible, setFileMenuVisible] = useState(false);
+const useMenu = () => {
+    const menuRef = useRef();
+    const [menuVisible, setMenuVisible] = useState(false);
 
     useEffect(() => {
-        if (!fileMenuVisible || fileRef.current == null)
+        if (!menuVisible || menuRef.current == null)
             return;
         
         const handleClick = (e) => {
-            if (!fileRef.current.contains(e.target))
-                setFileMenuVisible(false);
+            if (!menuRef.current.contains(e.target))
+                setMenuVisible(false);
         };
 
         window.addEventListener('click', handleClick);
 
         return () => window.removeEventListener('click', handleClick);
-    }, [fileMenuVisible, fileRef]);
+    }, [menuVisible, menuRef]);
+
+    return [menuRef, menuVisible, setMenuVisible];
+};
+
+export default function Header({project, onNew, onSave, onOpen, onExportROM, onImportROM, onHelp}) {
+    const classes = useStyles();
+    const [fileRef, fileMenuVisible, setFileMenuVisible] = useMenu();
+    const [romRef, romMenuVisible, setRomMenuVisible] = useMenu();
 
     return (
         <div className={classes.header}>
@@ -70,6 +94,8 @@ export default function Header({project, onNew, onSave, onOpen, onExportROM, onI
                         setFileMenuVisible(false);
                         onSave();
                     }} />
+                </DropdownMenu>
+                <DropdownMenu title='ROMs' ref={romRef} visible={romMenuVisible} onToggle={() => setRomMenuVisible(!romMenuVisible)}>
                     <DropdownItem title='Export ROM' disabled={project.rom} onClick={() => {
                         setFileMenuVisible(false);
                         onExportROM();
@@ -78,7 +104,9 @@ export default function Header({project, onNew, onSave, onOpen, onExportROM, onI
                         setFileMenuVisible(false);
                         onImportROM();
                     }} />
+                    <DropdownItem title='Find ROMS' href='https://github.com/kripod/chip8-roms' />
                 </DropdownMenu>
+                <button className={classes.menuItem} onClick={onHelp}>Help</button>
             </div>
             <div className={classes.currentProject}>
                 <span className={classes.project}>{project.rom != null ? 'ROM' : 'Project'}:</span> {project.title}

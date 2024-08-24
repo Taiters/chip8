@@ -26,6 +26,7 @@ import Modal from 'chip8/components/modal';
 import NewProject from 'chip8/components/newProject';
 import OpenProject from 'chip8/components/openProject';
 import ErrorBoundary from 'chip8/components/error';
+import Help from 'chip8/components/help';
 
 
 jss.setup(preset());
@@ -50,6 +51,7 @@ function App() {
     const [paused, setPaused] = useState(false);
     const [newProjectVisible, setNewProjectVisible] = useState(false);
     const [openProjectVisible, setOpenProjectVisible] = useState(false);
+    const [helpVisible, setHelpVisible] = useState(false);
 
     const cpuState = useCpu(cpu, paused, !focus);
     const [project, setProject] = useProject(projectStore);
@@ -142,6 +144,7 @@ function App() {
                 <Container.Child>
                     <Header
                         project={project}
+                        onHelp={() => setHelpVisible(true)}
                         onNew={() => setNewProjectVisible(true)}
                         onOpen={() => setOpenProjectVisible(true)}
                         onSave={saveProject} 
@@ -189,6 +192,9 @@ function App() {
                         setOpenProjectVisible(false);
                         loadExample(example).then(setProject);
                     }}/>
+            </Modal>
+            <Modal title='Help' visible={helpVisible} onClose={() => setHelpVisible(false)}>
+                <Help />
             </Modal>
         </ErrorBoundary>
     );
