@@ -32,7 +32,7 @@ const useStyles = createUseStyles({
     }
 });
 
-export default function Header({project, onNew, onSave, onOpen}) {
+export default function Header({project, onNew, onSave, onOpen, onExportROM}) {
     const classes = useStyles();
     const fileRef = useRef();
     const [fileMenuVisible, setFileMenuVisible] = useState(false);
@@ -69,6 +69,10 @@ export default function Header({project, onNew, onSave, onOpen}) {
                     <DropdownItem title='Save' onClick={() => {
                         setFileMenuVisible(false);
                         onSave();
+                    }} />
+                    <DropdownItem title='Export ROM' onClick={() => {
+                        setFileMenuVisible(false);
+                        onExportROM();
                     }} />
                 </DropdownMenu>
             </div>

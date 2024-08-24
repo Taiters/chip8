@@ -15,7 +15,7 @@ const useStyles = createUseStyles({
         cursor: 'pointer',
         margin: [[8, 2]],
         fontSize: '1em',
-        width: 80,
+        width: 100,
 
         '&:hover': {
             backgroundColor: '#353936',

@@ -94,6 +94,24 @@ function App() {
         }
     };
 
+    const exportROM = () => {
+        window.showSaveFilePicker({
+            suggestedName: `${project.title}.ch8`,
+            types: [
+                {
+                    description: 'Chip-8 ROM file',
+                    accept: { 'application/octet-stream': ['.ch8'] },
+                },
+            ]
+        })
+            .then(handle => handle.createWritable())
+            .then(writeable => {
+                writeable.write(rom);
+                return writeable;
+            })
+            .then(writeable => writeable.close());
+    };
+
     return (
         <ErrorBoundary>
             <Container direction={Container.Direction.VERTICAL}>
@@ -102,7 +120,8 @@ function App() {
                         project={project}
                         onNew={() => setNewProjectVisible(true)}
                         onOpen={() => setOpenProjectVisible(true)}
-                        onSave={saveProject} />
+                        onSave={saveProject} 
+                        onExportROM={exportROM} />
 
                 </Container.Child>
                 <Container>
