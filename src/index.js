@@ -6,6 +6,7 @@ import React, {
 import ReactDOM from 'react-dom';
 import jss from 'jss';
 import preset from 'jss-preset-default';
+import posthog from 'posthog-js';
 
 import { createCpu } from 'chip8/app/cpu';
 import { loadExample, ProjectStore } from 'chip8/app/projects';
@@ -193,6 +194,13 @@ function App() {
     );
 }
 
+posthog.init('phc_qRd1bCn3tqaADN5Rf1ZydGv1XCUOK50I3xkO8P5huXt',
+    {
+        api_host: 'https://eu.i.posthog.com',
+        person_profiles: 'identified_only',
+        persistence: 'localStorage',
+    }
+);
 
 ReactDOM.render(
     <App />,

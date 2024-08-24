@@ -21,6 +21,7 @@ export function loadExample(name: string): Promise<?Project> {
         id: null,
         user: false,
         title: example.title,
+        rom: null,
         code,
     }));
 }
