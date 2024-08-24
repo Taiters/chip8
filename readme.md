@@ -3,7 +3,11 @@
 
 Welcome to the Web-Based CHIP-8 Emulator! This project is an interactive emulator that allows you to create, edit, and run CHIP-8 programs directly in your browser. With a built-in assembly-like editor, you can write your own CHIP-8 programs, load external ROMs, and explore the world of retro gaming and low-level programming.
 
-![Screenshot of the CHIP-8 Emulator web page](/docs/screenshot.png)
+**Built in tools to create ROMs**
+![Screenshot of the CHIP-8 Emulator and Editor](/docs/screenshot.png)
+
+**Or simply import existing ROMs**
+![Screenshot of the CHIP-8 Emulator with an imported ROM](/docs/screenshot2.png)
 
 ## Notes
 

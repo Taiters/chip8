@@ -11,6 +11,10 @@ const useStyles = createUseStyles({
         '& a': {
             color: '#acd994',
         }
+    },
+    controls: {
+        display: 'flex',
+        alignItems: 'center',
     }
 });
 
@@ -19,6 +23,67 @@ export default function Help() {
     return (
         <div className={classes.help}>
             <h2>Welcome to this Web-Based CHIP-8 Emulator!</h2>
+            <h3>Controls</h3>
+            <p>CHIP-8 uses a 16-key hexadecimal keypad which is mapped to the keyboard as shown:</p>
+            <div className={classes.controls}>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>C</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>D</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>8</td>
+                            <td>9</td>
+                            <td>E</td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td>0</td>
+                            <td>B</td>
+                            <td>F</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <span style={{padding: '0 1em'}}> &gt;&gt; </span>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>Q</td>
+                            <td>W</td>
+                            <td>E</td>
+                            <td>R</td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td>S</td>
+                            <td>D</td>
+                            <td>F</td>
+                        </tr>
+                        <tr>
+                            <td>Z</td>
+                            <td>X</td>
+                            <td>C</td>
+                            <td>V</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <h3>Create & Edit Programs</h3>
             <p>Use the built-in editor to write your own CHIP-8 programs in an assembly-like syntax. The editor supports real-time debugging, making it easier for you to develop and test your code.</p>
             <h3>Inspect Memory & Registers</h3>
