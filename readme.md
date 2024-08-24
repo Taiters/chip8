@@ -1,101 +1,55 @@
-[![Build Status](https://travis-ci.org/Taiters/chip8-web.svg?branch=master)](https://travis-ci.org/Taiters/chip8-web)
+# Web-Based CHIP-8 Emulator with Assembly Editor
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4189b7ef-7f28-4672-b5cc-def7b67270b8/deploy-status)](https://app.netlify.com/sites/hopeful-kilby-c72aa0/deploys)
 
-# Chip8 Web
+Welcome to the Web-Based CHIP-8 Emulator! This project is an interactive emulator that allows you to create, edit, and run CHIP-8 programs directly in your browser. With a built-in assembly-like editor, you can write your own CHIP-8 programs, load external ROMs, and explore the world of retro gaming and low-level programming.
 
-A Chip8 emulator which runs in the browser along with tools to view the
-registers and instructions etc. The live version can be viewed on Heroku
-[here](http://chip8-web.herokuapp.com).
+![Screenshot of the CHIP-8 Emulator web page](/docs/screenshot.png)
 
-![Screenshot](docs/screenshot-2019-01-26.png)
+## Notes
+
+I built this as a hello world to emulators. Once that was working, I wanted to experiment with writing an assembler, and now this project exists!
+
+However.. as this was a learning project, it's not perfect, so expect there to be some bugs, or missing documentation etc. If you see anything which you'd like to fix, contributions are welcome!
+
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on
-either your local machine or docker for development and testing
-purposes. See deployment for notes on how to deploy the project on a
-live system.
+To start using the emulator:
 
-### Docker
+1. **Open the Emulator**: Visit the [CHIP-8 emulator](https://chip8.dotslashdan.com) in your web browser.
+2. **Create or Load a Program**: Use the built-in editor to write your own CHIP-8 program, or load an existing ROM.
+3. **Run Your Program**: Click the "Run" button to execute your program. Use the debug tools to pause, step through code, and inspect memory and registers.
+4. **Explore & Learn**: Experiment with different instructions and see how they affect the program's behavior.
 
-The project use has a `docker-compose.yml` at the root which can get you
-up and running quickly. The following will start the `webpack-dev-server`
-on port 9000. This will mount your current working directory so changes
-are reloaded.
+## Writing CHIP-8 Programs
 
-```
-docker-compose up
-```
+CHIP-8 programs are written using simple assembly-like syntax. The emulator supports a wide range of instructions, including:
 
-### Local Machine
+- **Control Flow**: `JP`, `CALL`, `RET`, `SE`, `SNE`
+- **Math Operations**: `ADD`, `SUB`, `SHL`, `SHR`
+- **Bitwise Operations**: `OR`, `AND`, `XOR`
+- **Graphics**: `DRW`
+- **Timers and Sound**: `LD`, `ST`, `DT`
 
-#### Prerequisites
+For a complete list of supported mnemonics and their usage, refer to the [Assembly Language Guide](/docs/docs.md).
 
-To avoid any versioning issues, we recommend using
-[nvm](https://github.com/creationix/nvm) to manage the version of node
-and npm used in the project.
+## Memory and Registers
 
+The emulator provides tools to inspect the state of memory and registers during program execution. You can:
 
-#### Installing
+- **View Memory**: See the contents of memory and how it changes as your program runs.
+- **Inspect Registers**: Monitor the values stored in the CHIP-8's registers (V0-VF, I, etc.).
 
-Install the dependencies
+## Documentation
 
-```
-npm install
-```
-
-Run the dev server
-
-```
-npm run start:dev
-```
-
-Once the project has finished building, you should be able to view it
-here: [http://localhost:9000](http://localhost:9000)
-
-## Running the tests
-
-This project uses [jest](https://jestjs.io/) for tests. They can be run
-with:
-
-```
-docker-compose run --rm app npm test
-```
-
-or for local machine:
-
-```
-npm test
-```
-
-## Deployment
-
-This project is deployed to Heroky via TravisCI. Any commits to master
-will be deployed automatically to
-[http://chip8-web.herokuapp.com](http://chip8-web.herokuapp.com/)
-
-## Built With
-
-* [webpack](http://www.dropwizard.io/1.0.2/docs/) - Module bundler
-* [Express.js](https://expressjs.com/) - Server framework used for Heroku deployment
-* [React](https://reactjs.org/) - UI library
+For a detailed explanation of the CHIP-8 assembly language, visit this [Documentation Page](/docs/docs.md). This guide includes a breakdown of each mnemonic, its usage, and examples.
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code
-of conduct, and the process for submitting pull requests to us.
+Contributions are welcome! If you encounter any issues, have suggestions, or want to contribute to the project, feel free to open an issue or submit a pull request.
 
-
-## Authors
-
-* **Daniel Tait** - *Initial work* - [Taiters](https://github.com/Taiters)
+See also the list of [contributors](CONTRIBUTORS.md) who participated in this project.
 
 ## License
 
-This project is licensed under the MIT License - see the
-[LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgements
-
-* [dmatlack/chip8](https://github.com/dmatlack/chip8/tree/master/roms) - *Chip8 ROMS*
-
-See also the list of [contributors](CONTRIBUTORS.md) who participated in this project.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
