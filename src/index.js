@@ -16,7 +16,6 @@ import {
 } from 'chip8/app/hooks';
 import { loadExample, ProjectStore } from 'chip8/app/projects';
 
-import { disassemble } from 'chip8/app/asm/disassembler/index';
 import Container from 'chip8/components/container';
 import Controls from 'chip8/components/controls';
 import Debugger from 'chip8/components/debugger';
@@ -136,8 +135,6 @@ function App() {
                         title: file.name,
                         rom,
                     });
-                    const result = disassemble(rom);
-                    console.log(result.join('\n'));
                 });
                 reader.readAsArrayBuffer(file);
             });

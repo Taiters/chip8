@@ -27,7 +27,7 @@ class DisassemblerOutput {
     }
 
     build() {
-        return Object.keys(this.lines).map(parseInt).sort().flatMap(address => {
+        return Object.keys(this.lines).sort(parseInt).flatMap(address => {
             if (address in this.labels) {
                 return [
                     '',
