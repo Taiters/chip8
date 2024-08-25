@@ -6,6 +6,12 @@ import {
 
 import { Keymap } from 'chip8/config';
 
+const TIMER_HZ = 60;
+const TICK_HZ = 500;
+
+const TIMER_TIME = 1000 / TIMER_HZ;
+const TICK_TIME = 1000 / TICK_HZ;
+const MAX_FRAME_TIME = TIMER_TIME;
 
 const getCpuState = (cpu) => ({
     gfx: cpu.gfx.slice(),
@@ -21,9 +27,29 @@ const getCpuState = (cpu) => ({
 
 function useUpdate60hz(cpu, paused, setState) {
     const animationRequest = useRef();
+    let previousTimestamp = 0;
+    let timerTimer = 0;
+    let tickTimer = 0;
 
-    const update60hz = () => {
-        cpu.updateTimers();
+    const update60hz = (timestamp) => {
+        const frameTime = Math.min(timestamp - previousTimestamp, MAX_FRAME_TIME);
+        timerTimer += frameTime;
+        tickTimer += frameTime;
+
+        previousTimestamp = timestamp;
+
+        if (timerTimer => TIMER_TIME) {
+            cpu.updateTimers();
+            timerTimer %= TIMER_TIME;
+        }
+
+        // CHIP-8 CPU ticks at 500hz, so we can just tick enough times here to achive this
+        // (This performs MUCH better than a separate interval)
+        const ticks = Math.floor(tickTimer / TICK_TIME);
+        for (let i = 0; i < ticks; i++) {
+            cpu.tick();
+        }
+        tickTimer %= TICK_TIME;
 
         setState(getCpuState(cpu));
         animationRequest.current = requestAnimationFrame(update60hz);
@@ -36,18 +62,6 @@ function useUpdate60hz(cpu, paused, setState) {
 
         return () => cancelAnimationFrame(animationRequest.current);
     }, [animationRequest, paused]);
-}
-
-function useUpdate500hz(cpu, paused) {
-    useEffect(() => {
-        if (!paused) {
-            const interval = setInterval(() => {
-                cpu.tick();
-            }, 0);
-
-            return () => clearInterval(interval);
-        }
-    }, [paused]);
 }
 
 function useInput(cpu, active) {
@@ -88,7 +102,6 @@ export default function useCpu(cpu, paused, acceptInput) {
     const [cpuState, setCpuState] = useState(getCpuState(cpu));
 
     useUpdate60hz(cpu, paused, setCpuState);
-    useUpdate500hz(cpu, paused);
     useInput(cpu, acceptInput);
 
     return cpuState;
