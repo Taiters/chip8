@@ -38,7 +38,7 @@ function useUpdate60hz(cpu, paused, setState) {
 
         previousTimestamp = timestamp;
 
-        if (timerTimer => TIMER_TIME) {
+        if (timerTimer >= TIMER_TIME) {
             cpu.updateTimers();
             timerTimer %= TIMER_TIME;
         }
@@ -46,8 +46,10 @@ function useUpdate60hz(cpu, paused, setState) {
         // CHIP-8 CPU ticks at 500hz, so we can just tick enough times here to achive this
         // (This performs MUCH better than a separate interval)
         const ticks = Math.floor(tickTimer / TICK_TIME);
-        for (let i = 0; i < ticks; i++) {
-            cpu.tick();
+        if (!paused) {
+            for (let i = 0; i < ticks; i++) {
+                cpu.tick();
+            }
         }
         tickTimer %= TICK_TIME;
 
@@ -56,9 +58,7 @@ function useUpdate60hz(cpu, paused, setState) {
     };
 
     useEffect(() => {
-        if (!paused) {
-            animationRequest.current = requestAnimationFrame(update60hz);
-        }
+        animationRequest.current = requestAnimationFrame(update60hz);
 
         return () => cancelAnimationFrame(animationRequest.current);
     }, [animationRequest, paused]);
@@ -104,5 +104,8 @@ export default function useCpu(cpu, paused, acceptInput) {
     useUpdate60hz(cpu, paused, setCpuState);
     useInput(cpu, acceptInput);
 
-    return cpuState;
+    return [cpuState, () => {
+        cpu.tick();
+        setCpuState(getCpuState(cpu));
+    }];
 }

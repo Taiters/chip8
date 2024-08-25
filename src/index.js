@@ -54,7 +54,7 @@ function App() {
     const [mobileWarningVisible, setMobileWarningVisible] = useState(window.innerWidth <= 500);
     const [helpVisible, setHelpVisible] = useState(false);
 
-    const cpuState = useCpu(cpu, paused, !focus);
+    const [cpuState, tickCPU] = useCpu(cpu, paused, !focus);
     const [project, setProject] = useProject(projectStore);
     const [rom, srcMap, errors] = useAssembler(cpu, project);
 
@@ -163,7 +163,7 @@ function App() {
                                 <Controls 
                                     paused={paused}
                                     onRestart={() => cpu.load(rom) }
-                                    onStep={() => cpu.tick() }
+                                    onStep={() => tickCPU()}
                                     onTogglePause={() => setPaused(!paused) } />
                             </Container.Child>
                             <Container.Child height="calc(50% - 20px">
