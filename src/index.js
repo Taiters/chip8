@@ -1,32 +1,32 @@
-import React, {
-    useState,
-    useMemo,
-    useEffect,
-} from 'react';
-import ReactDOM from 'react-dom';
 import jss from 'jss';
 import preset from 'jss-preset-default';
 import posthog from 'posthog-js';
+import {
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
+import { createRoot } from 'react-dom/client';
 
 import { createCpu } from 'chip8/app/cpu';
-import { loadExample, ProjectStore } from 'chip8/app/projects';
 import {
-    useCpu,
     useAssembler,
+    useCpu,
     useProject,
 } from 'chip8/app/hooks';
+import { loadExample, ProjectStore } from 'chip8/app/projects';
 
 import Container from 'chip8/components/container';
-import Header from 'chip8/components/header';
-import Editor from 'chip8/components/editor';
 import Controls from 'chip8/components/controls';
-import Display from 'chip8/components/display';
 import Debugger from 'chip8/components/debugger';
+import Display from 'chip8/components/display';
+import Editor from 'chip8/components/editor';
+import ErrorBoundary from 'chip8/components/error';
+import Header from 'chip8/components/header';
+import Help from 'chip8/components/help';
 import Modal from 'chip8/components/modal';
 import NewProject from 'chip8/components/newProject';
 import OpenProject from 'chip8/components/openProject';
-import ErrorBoundary from 'chip8/components/error';
-import Help from 'chip8/components/help';
 
 
 jss.setup(preset());
@@ -214,6 +214,4 @@ posthog.init('phc_qRd1bCn3tqaADN5Rf1ZydGv1XCUOK50I3xkO8P5huXt',
     }
 );
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('app'));
+createRoot(document.getElementById('app')).render(<App />);
