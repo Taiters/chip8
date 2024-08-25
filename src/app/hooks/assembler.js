@@ -1,9 +1,9 @@
 import {
-    useState,
     useEffect,
+    useState,
 } from 'react';
 
-import { parser, assembler } from 'chip8/app/asm';
+import { assembler, parser } from 'chip8/app/asm';
 import { AsmException } from 'chip8/app/asm/exceptions';
 
 
@@ -24,7 +24,6 @@ export default function useAssembler(cpu, project) {
             try {
                 const program = parser.parse(code);
                 const [rom, srcMap] = assembler.assemble(program);
-
                 setSrcMap(srcMap);
                 setRom(rom);
             } catch(err) {

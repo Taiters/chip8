@@ -97,11 +97,11 @@ export default function Header({project, onNew, onSave, onOpen, onExportROM, onI
                 </DropdownMenu>
                 <DropdownMenu title='ROMs' ref={romRef} visible={romMenuVisible} onToggle={() => setRomMenuVisible(!romMenuVisible)}>
                     <DropdownItem title='Export ROM' disabled={project.rom} onClick={() => {
-                        setFileMenuVisible(false);
+                        setRomMenuVisible(false);
                         onExportROM();
                     }} />
                     <DropdownItem title='Import ROM' onClick={() => {
-                        setFileMenuVisible(false);
+                        setRomMenuVisible(false);
                         onImportROM();
                     }} />
                     <DropdownItem title='Find ROMS' href='https://github.com/kripod/chip8-roms' />

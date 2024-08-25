@@ -113,7 +113,8 @@ function App() {
                 writeable.write(rom);
                 return writeable;
             })
-            .then(writeable => writeable.close());
+            .then(writeable => writeable.close())
+            .catch(() => {});
     };
 
     const importROM = () => {
@@ -130,13 +131,15 @@ function App() {
             .then(file => {
                 const reader = new FileReader();
                 reader.addEventListener('load', () => {
+                    const rom = new Uint8Array(reader.result);
                     setProject({
                         title: file.name,
-                        rom: new Uint8Array(reader.result),
+                        rom,
                     });
                 });
                 reader.readAsArrayBuffer(file);
-            });
+            })
+            .catch(() => {});
     };
 
     return (

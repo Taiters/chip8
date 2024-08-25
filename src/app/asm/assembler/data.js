@@ -6,5 +6,5 @@ class DataAssembler {
 
 
 export {
-    DataAssembler,
+    DataAssembler
 };

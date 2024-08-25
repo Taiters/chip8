@@ -1,13 +1,14 @@
 import brace from 'brace'; // eslint-disable-line no-unused-vars
 import 'brace/theme/gruvbox';
 
-import React, {
-    useRef,
+import {
     useEffect,
+    useRef,
 } from 'react';
-import { createUseStyles } from 'react-jss';
 import AceEditor from 'react-ace';
+import { createUseStyles } from 'react-jss';
 
+import { disassemble } from 'chip8/app/asm/disassembler/index';
 import './mode';
 
 
@@ -34,6 +35,21 @@ const useStyles = createUseStyles({
         textAlign: 'center',
         fontSize: '1.5em',
         color: '#9b9891',
+        padding: '0.5em',
+        fontFamily: 'monospace',
+
+        '& button': {
+            fontSize: '1em',
+            cursor: 'pointer',
+            background: 'none',
+            color: '#acd994',
+            border: 'none',
+            fontFamily: 'monospace',
+
+            '&:hover': {
+                textDecoration: 'underline',
+            }
+        }
     }
 });
 
@@ -96,9 +112,14 @@ export default function Editor({project, srcMap, pc, errors, onChange, onFocus, 
     useErrors(ace, errors, classes);
     useSrcMap(ace, srcMap, pc, classes);
 
+    const onDisassemble = () => {
+        const lines = disassemble(project.rom);
+        onChange(lines.join('\n'));
+    }
+
     return (
         <div className={classes.container}>
-            {project.rom == null ? (
+            {project.code != null ? (
                 <AceEditor 
                     ref={ace}
                     width='100%'
@@ -111,7 +132,11 @@ export default function Editor({project, srcMap, pc, errors, onChange, onFocus, 
                     setOptions={{ printMargin: null }}
                     theme='gruvbox' />
             ) : (
-                <p className={classes.notAvailable}>Editor not available for imported ROMs.</p>
+                    <div className={classes.notAvailable}>
+                        <p>The disassembler for imported ROMs is currently experimental and may be buggy.</p>
+                        <p>Once triggered, the program will attempt to run from the disassembled source, however broken..</p>
+                        <button onClick={onDisassemble}>Disassemble</button>
+                    </div>
             )}
         </div>
     );
