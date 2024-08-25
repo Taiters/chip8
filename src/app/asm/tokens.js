@@ -3,9 +3,9 @@ import type {
     TokenType,
 } from './constants';
 import {
-    TokenTypes,
-    Operands,
     Mnemonics,
+    Operands,
+    TokenTypes,
 } from './constants';
 
 type TokenDefinition = {
@@ -87,7 +87,7 @@ const Tokens: Array<TokenDefinition> = [
     },
     {
         type: TokenTypes.IDENTIFIER,
-        match: /[A-Z_-]+\b/i,
+        match: /[A-Z_]{1}[A-Z\d_-]+\b/i,
         value: (match) => match,
     },
     {
@@ -144,6 +144,5 @@ export type Token = {
 };
 
 export {
-    Tokens,
-    getToken,
+    getToken, Tokens
 };

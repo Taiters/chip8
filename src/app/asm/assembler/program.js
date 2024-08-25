@@ -69,5 +69,5 @@ class ProgramAssemblerBuilder {
 
 
 export {
-    ProgramAssembler,
+    ProgramAssembler
 };

@@ -16,6 +16,7 @@ import {
 } from 'chip8/app/hooks';
 import { loadExample, ProjectStore } from 'chip8/app/projects';
 
+import { disassemble } from 'chip8/app/asm/disassembler/index';
 import Container from 'chip8/components/container';
 import Controls from 'chip8/components/controls';
 import Debugger from 'chip8/components/debugger';
@@ -130,10 +131,13 @@ function App() {
             .then(file => {
                 const reader = new FileReader();
                 reader.addEventListener('load', () => {
+                    const rom = new Uint8Array(reader.result);
                     setProject({
                         title: file.name,
-                        rom: new Uint8Array(reader.result),
+                        rom,
                     });
+                    const result = disassemble(rom);
+                    console.log(result.join('\n'));
                 });
                 reader.readAsArrayBuffer(file);
             });

@@ -163,5 +163,5 @@ const InstructionModes = {
 export {
     InstructionAssembler,
     InstructionModes,
-    ModeAssemblers,
+    ModeAssemblers
 };
