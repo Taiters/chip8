@@ -1,7 +1,7 @@
 import {
+    useEffect,
     useRef,
     useState,
-    useEffect,
 } from 'react';
 
 import { Keymap } from 'chip8/config';
@@ -43,7 +43,7 @@ function useUpdate500hz(cpu, paused) {
         if (!paused) {
             const interval = setInterval(() => {
                 cpu.tick();
-            }, 2);
+            }, 0);
 
             return () => clearInterval(interval);
         }

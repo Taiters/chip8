@@ -7,7 +7,7 @@
         "test": "jest",
         "build": "webpack",
         "flow": "flow",
-        "start": "webpack-dev-server -d --host 0.0.0.0",
+        "start": "webpack-dev-server -d --host 0.0.0.0"
     },
     "keywords": [],
     "author": "Daniel Tait <dantait91@gmail.com>",
