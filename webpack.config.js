@@ -38,7 +38,6 @@ module.exports = {
                 test: /\.jsx?$/,
                     use: [
                         'babel-loader',
-                        'eslint-loader',
                     ]
             },
         ],
@@ -48,7 +47,7 @@ module.exports = {
         path: path.resolve(__dirname, 'dist')
     },
     devServer: {
-        contentBase: path.resolve(__dirname, 'dist'),
+        static: path.resolve(__dirname, 'dist'),
         compress: true,
         port: 9000,
     },
@@ -66,4 +65,3 @@ module.exports = {
         }),
     ]
 };
-
