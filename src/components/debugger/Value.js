@@ -18,10 +18,13 @@ const useStyles = createUseStyles({
     dec: {
         cursor: 'pointer',
     },
+    editForm: {
+        display: 'inline',
+    },
     edit: {
+        width: '70px',
         display: 'inline',
         backgroundColor: '#5b5545',
-        width: '70px',
         color: '#fbf3e3',
         border: 'none',
         outline: 'none',
@@ -31,7 +34,7 @@ const useStyles = createUseStyles({
 
 // const bin = (value) => `${value.toString(2).padStart(8, '0')}`;
 
-export default function Value({value, hex, bin, dec, className}) {
+export default function Value({value, hex, bin, dec, onEditValue, className}) {
     const classes = useStyles();
     const [editing, setEditing] = useState(false);
     const [editedValue, setEditedValue] = useState(value);
@@ -53,10 +56,20 @@ export default function Value({value, hex, bin, dec, className}) {
                 setEditing(false);
             }
         }
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                setEditing(false);
+            }
+        }
+
         window.addEventListener('click', handleClick);
+        window.addEventListener('keydown', handleEscape);
         inputRef.current.getElementsByTagName('input')[0].select();
 
-        return () => window.removeEventListener('click', handleClick);
+        return () => {
+            window.removeEventListener('click', handleClick);
+            window.removeEventListener('keydown', handleEscape);
+        };
     }, [editing, inputRef]);
 
     const hexComponent = hex ? (
@@ -76,7 +89,13 @@ export default function Value({value, hex, bin, dec, className}) {
     const decComponent = dec ? (
         <span ref={inputRef} className={`${classes.value} ${classes.dec}`} onClick={() => setEditing(true)}>
             {editing ? (
-                <input className={classes.edit} type="text" value={editedValue} onChange={(e) => setEditedValue(e.target.value)} />
+                <form className={classes.editForm} onSubmit={(e) => {
+                    e.preventDefault();
+                    onEditValue(editedValue);
+                    setEditing(false);
+                }}>
+                    <input className={classes.edit} type="text" value={editedValue} onChange={(e) => setEditedValue(e.target.value)} />
+                </form>
             ) : value}
         </span>
     ) : null;

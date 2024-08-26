@@ -54,7 +54,7 @@ function App() {
     const [mobileWarningVisible, setMobileWarningVisible] = useState(window.innerWidth <= 500);
     const [helpVisible, setHelpVisible] = useState(false);
 
-    const [cpuState, tickCPU] = useCpu(cpu, paused, !focus);
+    const [cpuState, mutateCpu, tickCPU] = useCpu(cpu, paused, !focus);
     const [project, setProject, saveAsProject, saveProject, openProject, confirmSave, confirmSaveModal] = useProject(projectStore);
     const [rom, srcMap, errors] = useAssembler(cpu, project);
 
@@ -166,7 +166,7 @@ function App() {
                                 <Display gfx={cpuState.gfx} />
                             </Container.Child>
                             <Container.Child height="calc(50% - 20px)">
-                                <Debugger {...cpuState} />
+                                <Debugger {...cpuState} mutateCpu={mutateCpu} />
                             </Container.Child>
                         </Container>
                     </Container.Child>
@@ -206,4 +206,8 @@ posthog.init('phc_qRd1bCn3tqaADN5Rf1ZydGv1XCUOK50I3xkO8P5huXt',
     }
 );
 
-createRoot(document.getElementById('app')).render(<App />);
+createRoot(document.getElementById('app')).render(
+    <ErrorBoundary>
+        <App />
+    </ErrorBoundary>
+);

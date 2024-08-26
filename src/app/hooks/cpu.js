@@ -2,6 +2,7 @@ import {
     useEffect,
     useRef,
     useState,
+    useCallback,
 } from 'react';
 
 import { Keymap } from 'chip8/config';
@@ -104,8 +105,14 @@ export default function useCpu(cpu, paused, acceptInput) {
     useUpdate60hz(cpu, paused, setCpuState);
     useInput(cpu, acceptInput);
 
-    return [cpuState, () => {
-        cpu.tick();
-        setCpuState(getCpuState(cpu));
-    }];
+    return [cpuState,
+        useCallback((cb) => {
+            cb(cpu);
+            setCpuState(getCpuState(cpu));
+        }, [cpu, setCpuState]),
+        () => {
+            cpu.tick();
+            setCpuState(getCpuState(cpu));
+        }
+    ];
 }

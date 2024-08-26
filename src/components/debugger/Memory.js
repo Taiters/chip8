@@ -6,6 +6,7 @@ import React, {
 import { createUseStyles } from 'react-jss';
 import { FixedSizeList } from 'react-window';
 import { List, ListItem } from './List';
+import {clamp} from 'chip8/utils.ts';
 import Value from './Value';
 
 
@@ -33,7 +34,8 @@ const useStyles = createUseStyles({
 
 class MemoryLine extends React.PureComponent {
     render() {
-        const memory = this.props.data[this.props.index];
+        const memory = this.props.data.memory[this.props.index]
+        const mutateCpu = this.props.data.mutateCpu;
         const style = {
             ...this.props.style,
             lineHeight: '20px',
@@ -41,10 +43,14 @@ class MemoryLine extends React.PureComponent {
 
         const address = `0x${this.props.index.toString(16).padStart(3, '0').toUpperCase()}`;
 
+        const handleEdit = (value) => {
+            mutateCpu(cpu => cpu.memory[this.props.index] = clamp(value, 0, 0xFF));
+        }
+
         return (
             <div style={style}>
                 <ListItem name={address}>
-                    <Value value={memory} hex={2} bin dec />
+                    <Value value={memory} hex={2} bin dec onEditValue={handleEdit}/>
                 </ListItem>
             </div>
         );
@@ -73,7 +79,7 @@ function useFillContainer() {
     return [containerRef, height];
 }
 
-function MemoryList({memory}) {
+function MemoryList({memory, mutateCpu}) {
     const list = useRef();
     const classes = useStyles();
     const [containerRef, containerHeight] = useFillContainer();
@@ -83,7 +89,10 @@ function MemoryList({memory}) {
         height: containerHeight,
         itemSize: 20,
         width: '100%',
-        itemData: memory,
+        itemData: {
+            memory,
+            mutateCpu,
+        }
     };
 
     useEffect(() => {
@@ -102,24 +111,33 @@ function MemoryList({memory}) {
 }
 
 const MemoizedMemoryList = React.memo(MemoryList, (a, b) => {
-    for (let i = 0; i < a.length; i++) {
-        if (a[i] !== b[i])
+    if (a.mutateCpu != b.mutateCpu) {
+        return true;
+    }
+    for (let i = 0; i < a.memory.length; i++) {
+        if (a.memory[i] !== b.memory[i])
             return false;
     }
 
     return true;
 });
 
-export default function Memory ({memory, stack, sp}) {
+export default function Memory ({memory, stack, sp, mutateCpu}) {
     const classes = useStyles();
 
     const stackLines = stack.map((v, i) => {
         const name = i.toString().padStart(2, '0');
         const lineClass = `${classes.stackLine} ${sp - 1 === i ? classes.activeStackLine : ''}`;
 
+        const handleEdit = (newValue) => {
+            mutateCpu(cpu => {
+                cpu.stack[i] = clamp(newValue, 0, 0xFFF);
+            });
+        }
+
         return (
             <ListItem key={i} name={name} className={lineClass}>
-                <Value value={v} hex={3} dec />
+                <Value value={v} hex={3} dec onEditValue={handleEdit}/>
             </ListItem>
         );
     });
@@ -130,7 +148,7 @@ export default function Memory ({memory, stack, sp}) {
                 {stackLines}
             </List>
             <List title="Memory">
-                <MemoizedMemoryList memory={memory} />
+                <MemoizedMemoryList memory={memory} mutateCpu={mutateCpu} />
             </List>
         </div>
     );
