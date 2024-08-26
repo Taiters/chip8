@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createUseStyles } from 'react-jss';
 
 
@@ -15,6 +15,17 @@ const useStyles = createUseStyles({
     prefix: {
         fontSize: '0.9em',
     },
+    dec: {
+        cursor: 'pointer',
+    },
+    edit: {
+        display: 'inline',
+        backgroundColor: '#5b5545',
+        width: '70px',
+        color: '#fbf3e3',
+        border: 'none',
+        outline: 'none',
+    },
 });
 
 
@@ -22,6 +33,31 @@ const useStyles = createUseStyles({
 
 export default function Value({value, hex, bin, dec, className}) {
     const classes = useStyles();
+    const [editing, setEditing] = useState(false);
+    const [editedValue, setEditedValue] = useState(value);
+    const inputRef = useRef();
+
+    useEffect(() => {
+        if (!editing) {
+            setEditedValue(value);
+        }
+    }, [value, editing]);
+
+    useEffect(() => {
+        if (!editing || inputRef.current == null) {
+            return;
+        }
+
+        const handleClick = (e) => {
+            if (!inputRef.current.contains(e.target)) {
+                setEditing(false);
+            }
+        }
+        window.addEventListener('click', handleClick);
+        inputRef.current.getElementsByTagName('input')[0].select();
+
+        return () => window.removeEventListener('click', handleClick);
+    }, [editing, inputRef]);
 
     const hexComponent = hex ? (
         <span className={`${classes.value} ${classes.hex}`}>
@@ -38,8 +74,10 @@ export default function Value({value, hex, bin, dec, className}) {
     ) : null;
 
     const decComponent = dec ? (
-        <span className={classes.value}>
-            {value}
+        <span ref={inputRef} className={`${classes.value} ${classes.dec}`} onClick={() => setEditing(true)}>
+            {editing ? (
+                <input className={classes.edit} type="text" value={editedValue} onChange={(e) => setEditedValue(e.target.value)} />
+            ) : value}
         </span>
     ) : null;
 
