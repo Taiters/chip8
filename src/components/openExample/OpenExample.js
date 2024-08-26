@@ -51,13 +51,8 @@ function ListItem({name, onClick}) {
     );
 }
 
-export default function OpenProject({projectStore, onOpenProject, onOpenExample}) {
+export default function OpenExample({onOpenExample}) {
     const classes = useStyles();
-    const projects = Object.entries(projectStore.all()).map(([id, project]) => <ListItem
-        key={id}
-        name={project.title}
-        onClick={() => onOpenProject(project)} />);
-    
     const examples = getExamples().map(example => <ListItem
         key={example}
         name={example}
@@ -65,12 +60,6 @@ export default function OpenProject({projectStore, onOpenProject, onOpenExample}
 
     return (
         <div className={classes.container}>
-            <div className={classes.projectListContainer}>
-                <span className={classes.projectListTitle}>User</span>
-                <div className={classes.projectList}>
-                    {projects}
-                </div>
-            </div>
             <div className={classes.projectListContainer}>
                 <span className={classes.projectListTitle}>Examples</span>
                 <div className={classes.projectList}>

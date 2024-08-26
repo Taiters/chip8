@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "noEmit": true,
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "paths": {
+            "chip8/*": ["./src/*"],
+        },
+        "types": [ "@types/wicg-file-system-access"]
+    }
+}

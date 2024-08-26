@@ -12,8 +12,8 @@ export default function useAssembler(cpu, project) {
     const [srcMap, setSrcMap] = useState([]);
     const [errors, setErrors] = useState([]);
 
-    const code = project.code;
-    const projectRom = project.rom;
+    const code = project?.code;
+    const projectRom = project?.rom;
 
     useEffect(() => {
         setErrors([]);

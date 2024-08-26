@@ -1,9 +1,8 @@
 export type Project = {
-    id: string | null,
     title: string,
     code: string | null,
     rom: Uint8Array | null,
-    user: boolean,
+    file: FileSystemHandle | null,
 };
 
 export type Example = {

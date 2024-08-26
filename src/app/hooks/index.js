@@ -1,6 +1,6 @@
 import useCpu from './cpu';
 import useAssembler from './assembler';
-import useProject from './project';
+import useProject from './project.ts';
 
 
 export {

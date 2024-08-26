@@ -70,7 +70,7 @@ const useMenu = () => {
     return [menuRef, menuVisible, setMenuVisible];
 };
 
-export default function Header({project, onNew, onSave, onOpen, onExportROM, onImportROM, onHelp}) {
+export default function Header({project, onOpenExample, onNew, onSave, onSaveAs, onOpen, onExportROM, onImportROM, onHelp}) {
     const classes = useStyles();
     const [fileRef, fileMenuVisible, setFileMenuVisible] = useMenu();
     const [romRef, romMenuVisible, setRomMenuVisible] = useMenu();
@@ -90,13 +90,21 @@ export default function Header({project, onNew, onSave, onOpen, onExportROM, onI
                         setFileMenuVisible(false);
                         onOpen();
                     }} />
-                    <DropdownItem title='Save' disabled={project.rom} onClick={() => {
+                    <DropdownItem title='Save' disabled={onSave == null} onClick={() => {
                         setFileMenuVisible(false);
                         onSave();
                     }} />
+                    <DropdownItem title='Save As' disabled={onSaveAs == null} onClick={() => {
+                        setFileMenuVisible(false);
+                        onSaveAs();
+                    }} />
+                    <DropdownItem title='Open Example' onClick={() => {
+                        setFileMenuVisible(false);
+                        onOpenExample();
+                    }} />
                 </DropdownMenu>
                 <DropdownMenu title='ROMs' ref={romRef} visible={romMenuVisible} onToggle={() => setRomMenuVisible(!romMenuVisible)}>
-                    <DropdownItem title='Export ROM' disabled={project.rom} onClick={() => {
+                    <DropdownItem title='Export ROM' disabled={project?.rom} onClick={() => {
                         setRomMenuVisible(false);
                         onExportROM();
                     }} />
@@ -109,7 +117,7 @@ export default function Header({project, onNew, onSave, onOpen, onExportROM, onI
                 <button className={classes.menuItem} onClick={onHelp}>Help</button>
             </div>
             <div className={classes.currentProject}>
-                <span className={classes.project}>{project.rom != null ? 'ROM' : 'Project'}:</span> {project.title}
+                <span className={classes.project}>{project?.code == null ? 'ROM' : 'Project'}:</span> {project?.title}
             </div>
         </div>
     );

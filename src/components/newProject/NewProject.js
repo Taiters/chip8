@@ -53,7 +53,6 @@ export default function NewProject({onProject}) {
 
                 onProject({
                     title: title || 'Untitled',
-                    user: true,
                     code: `; Project: ${title}\n\n`,
                 });
             }}>

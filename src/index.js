@@ -26,7 +26,7 @@ import Header from 'chip8/components/header';
 import Help from 'chip8/components/help';
 import Modal from 'chip8/components/modal';
 import NewProject from 'chip8/components/newProject';
-import OpenProject from 'chip8/components/openProject';
+import OpenExample from './components/openExample';
 
 
 jss.setup(preset());
@@ -50,12 +50,12 @@ function App() {
     const [focus, setFocus] = useState(false);
     const [paused, setPaused] = useState(false);
     const [newProjectVisible, setNewProjectVisible] = useState(false);
-    const [openProjectVisible, setOpenProjectVisible] = useState(false);
+    const [openExampleVisible, setOpenExampleVisible] = useState(false);
     const [mobileWarningVisible, setMobileWarningVisible] = useState(window.innerWidth <= 500);
     const [helpVisible, setHelpVisible] = useState(false);
 
     const [cpuState, tickCPU] = useCpu(cpu, paused, !focus);
-    const [project, setProject] = useProject(projectStore);
+    const [project, setProject, saveAsProject, saveProject, openProject] = useProject(projectStore);
     const [rom, srcMap, errors] = useAssembler(cpu, project);
 
     const editor = useMemo(() => (
@@ -68,7 +68,7 @@ function App() {
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}
             onChange={(code) => setProject(project => ({...project, code}))} />
-    ), [focus, errors, srcMap, project.code, paused && cpuState.pc]);
+    ), [focus, errors, srcMap, project?.code, paused && cpuState.pc]);
 
     useEffect(() => {
         const saveHandler = (e) => {
@@ -84,18 +84,7 @@ function App() {
     }, [project]);
 
     const createNewProject = (newProject) => {
-        const id = projectStore.save(newProject);
-        projectStore.setCurrent(id);
-
-        setProject({...newProject, id});
-    };
-
-    const saveProject = () => {
-        if (!project.user || project.id == null) {
-            createNewProject(project);
-        } else {
-            projectStore.save(project);
-        }
+        setProject(newProject);
     };
 
     const exportROM = () => {
@@ -103,7 +92,7 @@ function App() {
             suggestedName: `${project.title}.ch8`,
             types: [
                 {
-                    description: 'Chip-8 ROM file',
+                    description: 'CHIP-8 ROM file',
                     accept: { 'application/octet-stream': ['.ch8'] },
                 },
             ]
@@ -121,7 +110,7 @@ function App() {
         window.showOpenFilePicker({
             types: [
                 {
-                    description: 'Chip-8 ROM file',
+                    description: 'CHIP-8 ROM file',
                     accept: { 'application/octet-stream': ['.ch8'] },
                 },
             ],
@@ -149,9 +138,11 @@ function App() {
                     <Header
                         project={project}
                         onHelp={() => setHelpVisible(true)}
+                        onOpenExample={() => setOpenExampleVisible(true)}
                         onNew={() => setNewProjectVisible(true)}
-                        onOpen={() => setOpenProjectVisible(true)}
+                        onOpen={openProject}
                         onSave={saveProject} 
+                        onSaveAs={saveAsProject}
                         onExportROM={exportROM}
                         onImportROM={importROM} />
 
@@ -185,15 +176,10 @@ function App() {
                     createNewProject(project);
                 }} />
             </Modal>
-            <Modal title='Open project' visible={openProjectVisible} onClose={() => setOpenProjectVisible(false)}>
-                <OpenProject
-                    projectStore={projectStore}
-                    onOpenProject={project => {
-                        setOpenProjectVisible(false);
-                        setProject(project);
-                    }} 
+            <Modal title='Open Example' visible={openExampleVisible} onClose={() => setOpenExampleVisible(false)}>
+                <OpenExample
                     onOpenExample={example => {
-                        setOpenProjectVisible(false);
+                        setOpenExampleVisible(false);
                         loadExample(example).then(setProject);
                     }}/>
             </Modal>

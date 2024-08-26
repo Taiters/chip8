@@ -113,30 +113,32 @@ export default function Editor({project, srcMap, pc, errors, onChange, onFocus, 
     useSrcMap(ace, srcMap, pc, classes);
 
     const onDisassemble = () => {
-        const lines = disassemble(project.rom);
+        const lines = disassemble(project?.rom);
         onChange(lines.join('\n'));
     }
 
     return (
         <div className={classes.container}>
-            {project.code != null ? (
-                <AceEditor 
-                    ref={ace}
-                    width='100%'
-                    height='100%'
-                    mode='chip8'
-                    value={project.code}
-                    onChange={onChange}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
-                    setOptions={{ printMargin: null }}
-                    theme='gruvbox' />
-            ) : (
-                    <div className={classes.notAvailable}>
-                        <p>The disassembler for imported ROMs is currently experimental and may be buggy.</p>
-                        <p>Once triggered, the program will attempt to run from the disassembled source, however broken..</p>
-                        <button onClick={onDisassemble}>Disassemble</button>
-                    </div>
+            {project && (
+                project.code != null ? (
+                    <AceEditor 
+                        ref={ace}
+                        width='100%'
+                        height='100%'
+                        mode='chip8'
+                        value={project.code}
+                        onChange={onChange}
+                        onFocus={onFocus}
+                        onBlur={onBlur}
+                        setOptions={{ printMargin: null }}
+                        theme='gruvbox' />
+                ) : (
+                        <div className={classes.notAvailable}>
+                            <p>The disassembler for imported ROMs is currently experimental and may be buggy.</p>
+                            <p>Once triggered, the program will attempt to run from the disassembled source, however broken..</p>
+                            <button onClick={onDisassemble}>Disassemble</button>
+                        </div>
+                )
             )}
         </div>
     );
