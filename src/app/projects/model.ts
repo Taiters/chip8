@@ -1,11 +1,9 @@
-// @flow
-
 export type Project = {
-    id: ?string,
+    id: string | null,
     title: string,
-    code: ?string,
-    rom: ?Uint8Array,
-    user: bool,
+    code: string | null,
+    rom: Uint8Array | null,
+    user: boolean,
 };
 
 export type Example = {

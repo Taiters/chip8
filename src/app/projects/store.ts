@@ -14,7 +14,7 @@ export default class ProjectStore {
         this.store = store;
     }
 
-    all(): {[string]: Project} {
+    all(): Record<string, Project> {
         const serialized = this.store.getItem(PROJECTS_KEY);
         if (serialized != null)
             return JSON.parse(serialized);
@@ -34,12 +34,12 @@ export default class ProjectStore {
         return id;
     }
 
-    get(id: string): ?Project {
+    get(id: string): Project | null {
         const projects = this.all();
         return projects[id];
     }
 
-    getCurrent(): ?string {
+    getCurrent(): string | null {
         return this.store.getItem(CURRENT_PROJECT);
     }
 

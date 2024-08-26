@@ -35,7 +35,7 @@ module.exports = {
                 }]
             },
             {
-                test: /\.jsx?$/,
+                test: /\.(jsx?|tsx?)$/,
                     use: [
                         'babel-loader',
                     ]
