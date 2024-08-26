@@ -55,7 +55,7 @@ function App() {
     const [helpVisible, setHelpVisible] = useState(false);
 
     const [cpuState, tickCPU] = useCpu(cpu, paused, !focus);
-    const [project, setProject, saveAsProject, saveProject, openProject] = useProject(projectStore);
+    const [project, setProject, saveAsProject, saveProject, openProject, confirmSave, confirmSaveModal] = useProject(projectStore);
     const [rom, srcMap, errors] = useAssembler(cpu, project);
 
     const editor = useMemo(() => (
@@ -67,7 +67,7 @@ function App() {
             pc={paused ? cpuState.pc : null}
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}
-            onChange={(code) => setProject(project => ({...project, code}))} />
+            onChange={(code) => setProject(project => ({...project, code, unsavedChanges: true}))} />
     ), [focus, errors, srcMap, project?.code, paused && cpuState.pc]);
 
     useEffect(() => {
@@ -106,29 +106,31 @@ function App() {
             .catch(() => {});
     };
 
-    const importROM = () => {
-        window.showOpenFilePicker({
-            types: [
-                {
-                    description: 'CHIP-8 ROM file',
-                    accept: { 'application/octet-stream': ['.ch8'] },
-                },
-            ],
-            multiple: false,
-        })
-            .then(([handle]) => handle.getFile())
-            .then(file => {
-                const reader = new FileReader();
-                reader.addEventListener('load', () => {
-                    const rom = new Uint8Array(reader.result);
-                    setProject({
-                        title: file.name,
-                        rom,
-                    });
-                });
-                reader.readAsArrayBuffer(file);
+    const importROM = async () => {
+        confirmSave(() => {
+            window.showOpenFilePicker({
+                types: [
+                    {
+                        description: 'CHIP-8 ROM file',
+                        accept: { 'application/octet-stream': ['.ch8'] },
+                    },
+                ],
+                multiple: false,
             })
-            .catch(() => {});
+                .then(([handle]) => handle.getFile())
+                .then(file => {
+                    const reader = new FileReader();
+                    reader.addEventListener('load', () => {
+                        const rom = new Uint8Array(reader.result);
+                        setProject({
+                            title: file.name,
+                            rom,
+                        });
+                    });
+                    reader.readAsArrayBuffer(file);
+                })
+                .catch(() => {});
+        });
     };
 
     return (
@@ -138,7 +140,7 @@ function App() {
                     <Header
                         project={project}
                         onHelp={() => setHelpVisible(true)}
-                        onOpenExample={() => setOpenExampleVisible(true)}
+                        onOpenExample={() => confirmSave(() => setOpenExampleVisible(true))}
                         onNew={() => setNewProjectVisible(true)}
                         onOpen={openProject}
                         onSave={saveProject} 
@@ -191,6 +193,7 @@ function App() {
                 <p>It looks like you&#39;re on a mobile device / small screen.</p>
                 <p>This works best on a desktop / larger screen. However you&#39;re welcome to carry on and give it a try!</p>
             </Modal>
+            {confirmSaveModal}
         </ErrorBoundary>
     );
 }

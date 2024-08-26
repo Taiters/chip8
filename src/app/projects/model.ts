@@ -3,6 +3,7 @@ export type Project = {
     code: string | null,
     rom: Uint8Array | null,
     file: FileSystemHandle | null,
+    unsavedChanges: boolean,
 };
 
 export type Example = {

@@ -117,7 +117,11 @@ export default function Header({project, onOpenExample, onNew, onSave, onSaveAs,
                 <button className={classes.menuItem} onClick={onHelp}>Help</button>
             </div>
             <div className={classes.currentProject}>
-                <span className={classes.project}>{project?.code == null ? 'ROM' : 'Project'}:</span> {project?.title}
+                <span className={classes.project}>
+                    {project?.code == null ? 'ROM' : 'Project'}
+                    {project?.unsavedChanges && '*'}
+                    :
+                </span> {project?.title}
             </div>
         </div>
     );
