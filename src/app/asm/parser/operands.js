@@ -1,12 +1,11 @@
 // @flow
-import type { Operand, TokenType } from '../constants';
-import type { TokenStream } from './tokenStream';
-import type { Token } from '../tokens';
-import { expectNextToken } from './utils';
-import { Operands, TokenTypes } from '../constants';
-import {
-    UnexpectedOperandException,
-} from './exceptions';
+import type { Operand, TokenType } from "../constants";
+import type { Token } from "../tokens";
+import type { TokenStream } from "./tokenStream";
+
+import { Operands, TokenTypes } from "../constants";
+import { UnexpectedOperandException } from "./exceptions";
+import { expectNextToken } from "./utils";
 
 
 type OperandDefinition = {
@@ -227,6 +226,5 @@ class OperandsParserBuilder {
 }
 
 export {
-    OperandsParser,
-    operand,
+    operand, OperandsParser
 };

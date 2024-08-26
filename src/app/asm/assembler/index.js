@@ -1,15 +1,15 @@
 import {
-    Operands,
-    Mnemonics,
     LineTypes,
+    Mnemonics,
+    Operands,
 } from '../constants';
+import { DataAssembler } from './data';
 import {
     InstructionAssembler,
     InstructionModes,
     ModeAssemblers,
 } from './instruction';
 import { ProgramAssembler } from './program';
-import { DataAssembler } from './data';
 
 
 const assembler = ProgramAssembler.builder()

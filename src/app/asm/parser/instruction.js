@@ -1,6 +1,6 @@
-import { TokenTypes, LineTypes } from '../constants';
-import { expectNextToken } from './utils';
+import { LineTypes, TokenTypes } from '../constants';
 import { UnknownInstructionException } from './exceptions';
+import { expectNextToken } from './utils';
 
 
 class InstructionParser {
@@ -14,12 +14,15 @@ class InstructionParser {
 
         if (mnemonic in this.instructionDefinitions) {
             tokens.skip(TokenTypes.WS);
-            return {
-                mnemonic,
-                type: LineTypes.INSTRUCTION,
-                token: mnemonicToken,
-                operands: this.instructionDefinitions[mnemonic].parse(tokens, definitions)
-            };
+            try {
+                return {
+                    mnemonic,
+                    type: LineTypes.INSTRUCTION,
+                    token: mnemonicToken,
+                    operands: this.instructionDefinitions[mnemonic].parse(tokens, definitions)
+                };
+            } catch (err) {
+            }
         }
 
         throw new UnknownInstructionException(mnemonicToken);
@@ -47,5 +50,5 @@ class InstructionParserBuilder {
 
 
 export {
-    InstructionParser,
+    InstructionParser
 };

@@ -1,12 +1,12 @@
-import { ProgramParser } from './program';
-import { InstructionParser } from './instruction';
-import { DataParser } from './data';
-import { OperandsParser, operand } from './operands';
 import {
-    TokenTypes,
     Mnemonics,
     Operands,
+    TokenTypes,
 } from '../constants';
+import { DataParser } from './data';
+import { InstructionParser } from './instruction';
+import { OperandsParser, operand } from './operands';
+import { ProgramParser } from './program';
 
 
 const parser = ProgramParser.builder()
@@ -24,7 +24,8 @@ const parser = ProgramParser.builder()
             .addOperand({
                 type: Operands.REGISTER,
                 types: [TokenTypes.REGISTER],
-                validator: (value) => [value === 0, 'Only v0 is valid in this context (JP v0, addr)']
+                validator: (value) => [value === 0, 'Only v0 is valid in this context (JP v0, addr)'],
+                valueParser: (token) => token.value,
             }, OperandsParser.arg(operand(Operands.ADDRESS)))
             .build())
         

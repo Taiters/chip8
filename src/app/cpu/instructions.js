@@ -96,9 +96,9 @@ const Instructions = {
     },
 
     SHR_REGISTER_REGISTER: (cpu, opcode) => {
-        const vy = cpu.registers[opcode.y];
-        cpu.registers[0x0F] = vy & 1;
-        cpu.registers[opcode.x] = vy >> 1;
+        const vx = cpu.registers[opcode.x];
+        cpu.registers[0x0F] = vx & 1;
+        cpu.registers[opcode.x] = vx >> 1;
         cpu.pc += 2;
     },
 
@@ -112,9 +112,9 @@ const Instructions = {
     },
 
     SHL_REGISTER_REGISTER: (cpu, opcode) => {
-        const vy = cpu.registers[opcode.y];
-        cpu.registers[0x0F] = (vy & 128) >> 7;
-        cpu.registers[opcode.x] = (vy << 1) & 0xFF;
+        const vx = cpu.registers[opcode.x];
+        cpu.registers[0x0F] = (vx & 128) >> 7;
+        cpu.registers[opcode.x] = (vx << 1) & 0xFF;
         cpu.pc += 2;
     },
 
