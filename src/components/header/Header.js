@@ -104,7 +104,7 @@ export default function Header({project, onOpenExample, onNew, onSave, onSaveAs,
                     }} />
                 </DropdownMenu>
                 <DropdownMenu title='ROMs' ref={romRef} visible={romMenuVisible} onToggle={() => setRomMenuVisible(!romMenuVisible)}>
-                    <DropdownItem title='Export ROM' disabled={project?.rom} onClick={() => {
+                    <DropdownItem title='Export ROM' disabled={project?.code == null} onClick={() => {
                         setRomMenuVisible(false);
                         onExportROM();
                     }} />

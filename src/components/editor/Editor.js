@@ -134,8 +134,8 @@ export default function Editor({project, srcMap, pc, errors, onChange, onFocus, 
                         theme='gruvbox' />
                 ) : (
                         <div className={classes.notAvailable}>
-                            <p>The disassembler for imported ROMs is currently experimental and may be buggy.</p>
-                            <p>Once triggered, the program will attempt to run from the disassembled source, however broken..</p>
+                            <p>Running in ROM only mode.</p>
+                            <p>The disassembler is currently experimental, and may have bugs. If you run it, the program will run from the disassembled source which you can then edit.</p>
                             <button onClick={onDisassemble}>Disassemble</button>
                         </div>
                 )
