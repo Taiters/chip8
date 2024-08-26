@@ -114,7 +114,6 @@ export default function useProject(projectStore: ProjectStore) {
                 });
                 reader.readAsText(file);
             } catch (err) {
-                console.log(err);
             }
         });
     }
